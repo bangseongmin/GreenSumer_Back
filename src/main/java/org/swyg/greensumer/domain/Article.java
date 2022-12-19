@@ -1,14 +1,74 @@
 package org.swyg.greensumer.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
+@Getter
+@ToString
+@Table(indexes = {
+        @Index(columnList = "title"),
+        @Index(columnList = "hashtag"),
+        @Index(columnList = "createdAt"),
+        @Index(columnList = "createdBy")
+})
+@EntityListeners(AuditingEntityListener.class)
+@Entity
 public class Article {
-    private Long id;
-    private String title;
-    private String content;
 
-    private LocalDateTime createdAt;    // 생성일시
-    private String createdBy;           // 생성자
-    private LocalDateTime modifiedAt;   // 수정일시
-    private String modifiedBy;          // 수정자자
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Setter @Column(nullable = false) private String title;
+    @Setter @Column(nullable = false, length = 10000) private String content;
+
+    @Setter private String hashtag;
+    @Setter @Column(length = 2000) private String articleImages;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
+
+    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;                           // 생성일시
+    @CreatedBy @Column(nullable = false, length = 100) private String createdBy;                    // 생성자
+    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt;                  // 수정일시
+    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy;              // 수정자
+
+    protected Article() {}
+
+    private Article(String title, String content, String hashtag, String articleImages) {
+        this.title = title;
+        this.content = content;
+        this.hashtag = hashtag;
+        this.articleImages = articleImages;
+    }
+
+    public static Article of(String title, String content, String hashtag, String articleImages) {
+        return new Article(title, content, hashtag, articleImages);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if(!(o instanceof Article that)) return false;
+        return this.getId() != null && this.getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getId());
+    }
 }
