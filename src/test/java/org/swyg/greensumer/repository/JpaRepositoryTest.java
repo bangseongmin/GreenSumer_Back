@@ -39,7 +39,7 @@ public class JpaRepositoryTest {
         //Then
         assertThat(articles)
                 .isNotNull()
-                .hasSize(123);
+                .hasSize(250);
     }
 
     @DisplayName("insert 테스트")
@@ -49,7 +49,7 @@ public class JpaRepositoryTest {
         long previousCount = articleRepository.count();
 
         // When
-        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring", null));
+        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring", "public/images/123.png"));
 
         //Then
         assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
