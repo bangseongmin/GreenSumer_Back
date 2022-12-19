@@ -1,3 +1,6 @@
+-- 테스트 계정 TODO: 테스트용이지만 비밀번호가 노출된 데이터 세팅이지만 개선하는 것이 좋을 것으로 판단됨.
+insert into user_account(username, password, nickname, email, grade, created_at, created_by, modified_at, modified_by) values('artist', 'asdf1234', 'Artist', 1, 'artist@mail.com', 'I am Uno.', now(), 'artist', now(), 'artist');
+
 -- 게시글 250개
 insert into article (title, content, hashtag, article_image, created_by, modified_by, created_at, modified_at) values ('Ardea golieth', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', 'Purple', 'NuncPurus.tiff', 'Whitby', 'Sissie', '2022-08-30 00:24:30', '2022-09-24 11:11:45');
 insert into article (title, content, hashtag, article_image, created_by, modified_by, created_at, modified_at) values ('Cervus elaphus', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.', 'Goldenrod', 'Cursus.mp3', 'Catarina', 'Lauree', '2022-06-02 14:45:44', '2022-03-26 03:02:03');
