@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.swyg.greensumer.config.JpaConfig;
 import org.swyg.greensumer.domain.Article;
+import org.swyg.greensumer.domain.UserAccount;
+import org.swyg.greensumer.domain.constant.RoleType;
 
 import java.util.List;
 
@@ -19,13 +21,16 @@ public class JpaRepositoryTest {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public JpaRepositoryTest(
             @Autowired ArticleRepository articleRepository,
-            @Autowired ArticleCommentRepository articleCommentRepository
+            @Autowired ArticleCommentRepository articleCommentRepository,
+            @Autowired UserAccountRepository userAccountRepository
     ) {
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select 테스트")
@@ -47,9 +52,11 @@ public class JpaRepositoryTest {
     void givenTestData_whenInserting_thenWorksFine(){
         // Given
         long previousCount = articleRepository.count();
+        UserAccount user = userAccountRepository.save(UserAccount.of("artist", "pw", "mail@mail.com", "nickname", RoleType.USER));
+        Article article = Article.of(user, "new article", "new content", "#spring", "public/images/123.png");
 
         // When
-        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring", "public/images/123.png"));
+        Article savedArticle = articleRepository.save(article);
 
         //Then
         assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
