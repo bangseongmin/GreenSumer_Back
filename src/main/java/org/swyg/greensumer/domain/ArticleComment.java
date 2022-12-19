@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @ToString
 @Table(indexes = {
-        @Index(columnList = "content"),
+        @Index(name = "i_acomment", columnList = "content"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
@@ -32,7 +32,7 @@ public class ArticleComment {
     @ManyToOne(optional = false)
     private Article article;            // 게시글 (ID)
 
-    @Setter @Column(nullable = false, length = 2000)  private String content;             // 본문
+    @Setter @Column(nullable = false, length = 500)  private String content;             // 본문
 
     @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;                           // 생성일시
     @CreatedBy @Column(nullable = false, length = 100) private String createdBy;                    // 생성자

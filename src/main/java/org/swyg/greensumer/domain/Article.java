@@ -20,6 +20,7 @@ import java.util.Set;
 @Table(indexes = {
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
+        @Index(columnList = "article_image"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
@@ -35,7 +36,7 @@ public class Article {
     @Setter @Column(nullable = false, length = 10000) private String content;
 
     @Setter private String hashtag;
-    @Setter @Column(length = 2000) private String articleImages;
+    @Setter @Column(length = 500) private String article_image;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -49,11 +50,11 @@ public class Article {
 
     protected Article() {}
 
-    private Article(String title, String content, String hashtag, String articleImages) {
+    private Article(String title, String content, String hashtag, String article_image) {
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
-        this.articleImages = articleImages;
+        this.article_image = article_image;
     }
 
     public static Article of(String title, String content, String hashtag, String articleImages) {
