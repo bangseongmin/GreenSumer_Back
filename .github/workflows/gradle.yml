@@ -25,14 +25,6 @@ jobs:
         with: 
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           project: greensumer/greensumer
-          yaml: |-
-            name: myapp
-            app: html
-            options: 
-              git:
-                ref: ${{ github.ref }}
-                url: git@github.com:${{ github.repository }}.git
-              docbase: /docs
               
       - name: Set up JDK 17
         uses: actions/setup-java@v3
