@@ -6,11 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.domain.constant.SearchType;
+import org.swyg.greensumer.dto.UserAccountDto;
+import org.swyg.greensumer.dto.request.ArticleRequest;
 import org.swyg.greensumer.dto.response.ArticleResponse;
 import org.swyg.greensumer.dto.response.ArticleResponseDto;
 import org.swyg.greensumer.dto.response.ArticleWithCommentsResponse;
@@ -47,4 +46,32 @@ public class ArticleController {
 
         return ArticleResponseDto.of(article, article.articleCommentsResponse(), articleService.getArticleCount());
     }
+
+    @PostMapping("/create")
+    public String postNewArticle(ArticleRequest articleRequest) {
+        articleService.saveArticle(articleRequest.toDto(UserAccountDto.of("username", "asdf1234", "uno@mail.com", "Artist")));
+
+        return "redirect:/articles";
+    }
+
+    @GetMapping ("/{articleId}/update")
+    public ArticleResponse updateArticleView(@PathVariable Long articleId) {
+        return ArticleResponse.from(articleService.searchArticle(articleId));
+    }
+
+    @PostMapping ("/{articleId}/update")
+    public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest) {
+        // TODO: 인증 정보를 넣어줘야 한다.
+        articleService.updateArticle(articleId, articleRequest.toDto(UserAccountDto.of("username", "asdf1234", "uno@mail.com", "Artist")));
+
+        return "redirect:/articles/" + articleId;
+    }
+
+    @PostMapping ("/{articleId}/delete")
+    public String deleteArticle(@PathVariable Long articleId) {
+        // TODO: 인증 정보를 넣어줘야 한다.
+        articleService.deleteArticle(articleId);
+        return "redirect:/articles";
+    }
+
 }
