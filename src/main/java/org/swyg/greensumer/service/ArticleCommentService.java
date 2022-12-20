@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.swyg.greensumer.domain.Article;
 import org.swyg.greensumer.domain.ArticleComment;
+import org.swyg.greensumer.domain.UserAccount;
 import org.swyg.greensumer.dto.ArticleCommentDto;
 import org.swyg.greensumer.repository.ArticleCommentRepository;
 import org.swyg.greensumer.repository.ArticleRepository;
+import org.swyg.greensumer.repository.UserAccountRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -20,6 +23,7 @@ public class ArticleCommentService {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Transactional(readOnly = true)
     public List<ArticleCommentDto> searchArticleComments(Long articleId) {
@@ -31,9 +35,12 @@ public class ArticleCommentService {
 
     public void saveArticleComment(ArticleCommentDto dto) {
         try {
-            articleCommentRepository.save(dto.toEntity(articleRepository.getReferenceById(dto.articleId())));
+            Article article = articleRepository.getReferenceById(dto.articleId());
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().id());
+            articleCommentRepository.save(dto.toEntity(article, userAccount));
+
         } catch (EntityNotFoundException e) {
-            log.warn("댓글 저장 실패. 댓글의 게시글을 찾을 수 없습니다 - dto: {}", dto);
+            log.warn("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}", e.getLocalizedMessage());
         }
     }
 
