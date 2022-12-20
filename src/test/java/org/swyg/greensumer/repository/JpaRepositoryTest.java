@@ -12,7 +12,7 @@ import org.swyg.greensumer.domain.constant.RoleType;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(JpaConfig.class)
 @DataJpaTest
