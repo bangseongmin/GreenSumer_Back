@@ -31,4 +31,13 @@ public class ArticleCommentController {
         return "redirect:/articles/" + articleId;
     }
 
+    @PostMapping("/{commentId}/update")
+    public String updateArticleComment(@RequestBody ArticleCommentRequest articleCommentRequest) {
+        // TODO: 인증 정보를 넣어줘야 한다.
+        articleCommentService.updateArticleComment(articleCommentRequest.toDto(UserAccountDto.of(
+                "artist", "pw", "artist@mail.com", "nickname"
+        )));
+
+        return "redirect:/articles/" + articleCommentRequest.articleId();
+    }
 }

@@ -76,4 +76,27 @@ class ArticleCommentControllerTest {
         then(articleCommentService).should().deleteArticleComment(articleCommentId);
     }
 
+    @DisplayName("[view][POST] 댓글 수정 - 정상 호출")
+    @Test
+    void givenArticleCommentInfo_whenRequesting_thenUpdateArticleComment() throws Exception {
+        // Given
+        long articleId = 1L;
+        long articleCommentId = 1L;
+        ArticleCommentRequest request = ArticleCommentRequest.of(articleId, "test comment");
+        willDoNothing().given(articleCommentService).updateArticleComment(any(ArticleCommentDto.class));
+        Gson gson = new Gson();
+        String content = gson.toJson(request);
+
+        // When & Then
+        mvc.perform(
+                post("/comments/" + articleCommentId + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("articleId", String.valueOf(articleId))
+                        .content(content)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/articles/" + articleId))
+                .andExpect(redirectedUrl("/articles/" + articleId));
+        then(articleCommentService).should().updateArticleComment(any(ArticleCommentDto.class));
+    }
 }
