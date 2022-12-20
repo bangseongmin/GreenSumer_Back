@@ -1,5 +1,11 @@
 package org.swyg.greensumer.service;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.swyg.greensumer.domain.Article;
 import org.swyg.greensumer.domain.ArticleComment;
 import org.swyg.greensumer.domain.UserAccount;
@@ -8,13 +14,6 @@ import org.swyg.greensumer.dto.ArticleCommentDto;
 import org.swyg.greensumer.dto.UserAccountDto;
 import org.swyg.greensumer.repository.ArticleCommentRepository;
 import org.swyg.greensumer.repository.ArticleRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
