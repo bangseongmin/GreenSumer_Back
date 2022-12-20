@@ -27,7 +27,7 @@ jobs:
           project: greensumer/greensumer
           yaml: |-
             name: greensumer-back
-            app: myapp
+            app: greensumer-back
             options: 
               git:
                 ref: ${{ github.ref }}
