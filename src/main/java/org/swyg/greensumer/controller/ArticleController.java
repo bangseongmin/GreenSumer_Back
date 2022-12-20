@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.swyg.greensumer.domain.constant.SearchType;
-import org.swyg.greensumer.dto.ArticlesResponse;
 import org.swyg.greensumer.dto.response.ArticleResponse;
 import org.swyg.greensumer.dto.response.ArticleWithCommentsResponse;
+import org.swyg.greensumer.dto.response.ArticlesResponse;
 import org.swyg.greensumer.service.ArticleService;
 import org.swyg.greensumer.service.PaginationService;
 
@@ -36,11 +36,12 @@ public class ArticleController {
         Page<ArticleResponse> articles = articleService.searchArticles(searchType, searchValue, pageable).map(ArticleResponse::from);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
 
-        return ArticlesResponse.of(articles, barNumbers, articleService.getArticleCount());
+        return ArticlesResponse.of(articles, barNumbers, SearchType.values());
     }
 
-    @GetMapping("/articles/{article_id}")
+    @GetMapping("/{article_id}")
     public ArticleWithCommentsResponse articles(@PathVariable Long article_id){
+        // TODO: articleService.getArticleCount() 어떻게 전달할 것인지
 
         return ArticleWithCommentsResponse.from(articleService.searchArticle(article_id));
     }
