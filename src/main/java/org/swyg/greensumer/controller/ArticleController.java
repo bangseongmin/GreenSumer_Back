@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.swyg.greensumer.domain.constant.SearchType;
 import org.swyg.greensumer.dto.response.ArticleResponse;
+import org.swyg.greensumer.dto.response.ArticleResponseDto;
 import org.swyg.greensumer.dto.response.ArticleWithCommentsResponse;
 import org.swyg.greensumer.dto.response.ArticlesResponse;
 import org.swyg.greensumer.service.ArticleService;
@@ -39,10 +40,11 @@ public class ArticleController {
         return ArticlesResponse.of(articles, barNumbers, SearchType.values());
     }
 
+    // TODO: articleService.getArticleCount() 어떻게 전달할 것인지
     @GetMapping("/{article_id}")
-    public ArticleWithCommentsResponse articles(@PathVariable Long article_id){
-        // TODO: articleService.getArticleCount() 어떻게 전달할 것인지
+    public ArticleResponseDto articles(@PathVariable Long article_id){
+        ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.searchArticleWithComments(article_id));
 
-        return ArticleWithCommentsResponse.from(articleService.searchArticle(article_id));
+        return ArticleResponseDto.of(article, article.articleCommentsResponse(), articleService.getArticleCount());
     }
 }
