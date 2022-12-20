@@ -35,6 +35,8 @@ public class Article extends AuditingFields {
     @Setter private String hashtag;
     @Setter @Column(length = 500) private String article_image;
 
+    private Long views;
+
     @ToString.Exclude
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
@@ -49,6 +51,7 @@ public class Article extends AuditingFields {
         this.content = content;
         this.hashtag = hashtag;
         this.article_image = article_image;
+        this.views = 0L;
     }
 
     public static Article of(UserAccount userAccount, String title, String content, String hashtag, String articleImages) {

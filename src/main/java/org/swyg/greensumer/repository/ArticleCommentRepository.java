@@ -1,7 +1,5 @@
 package org.swyg.greensumer.repository;
 
-import org.swyg.greensumer.domain.ArticleComment;
-import org.swyg.greensumer.domain.QArticleComment;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,12 +7,18 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.swyg.greensumer.domain.ArticleComment;
+import org.swyg.greensumer.domain.QArticleComment;
+
+import java.util.List;
 
 @RepositoryRestResource
 public interface ArticleCommentRepository extends
         JpaRepository<ArticleComment, Long>,
         QuerydslPredicateExecutor<ArticleComment>,
         QuerydslBinderCustomizer<QArticleComment> {
+
+    List<ArticleComment> findByArticle_Id(Long articleId);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticleComment root){
