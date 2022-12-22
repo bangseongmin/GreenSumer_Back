@@ -1,16 +1,14 @@
 package org.swyg.greensumer.domain;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.swyg.greensumer.domain.constant.RoleType;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "username", unique = true),
         @Index(columnList = "email", unique = true),
@@ -29,20 +27,31 @@ public class UserAccount extends AuditingFields{
     @Setter @Column(nullable = false, length = 100) private String email;
     @Setter @Column(nullable = false, length = 50) private String nickname;
 
-    @Setter @Column(nullable = false) private RoleType grade;
+    @Setter @Column(nullable = false) private int grade;
+
+    @Setter private String lat;
+    @Setter private String lng;
 
     protected UserAccount(){}
 
-    private UserAccount(String username, String password, String email, String nickname, RoleType grade) {
+    private UserAccount(String username, String password, String email, String nickname, int grade, String lat, String lng, String createdBy) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
         this.grade = grade;
+        this.lat = lat;
+        this.lng = lng;
+        this.createdBy = createdBy;
+        this.modifiedBy = createdBy;
     }
 
-    public static UserAccount of(String username, String password, String email, String nickname, RoleType grade){
-        return new UserAccount(username, password, email, nickname, grade);
+    public static UserAccount of(String username, String password, String email, String nickname, int grade){
+        return UserAccount.of(username, password, email, nickname, grade, null, null, null);
+    }
+
+    public static UserAccount of(String username, String password, String email, String nickname, int grade, String lat, String lng, String createdBy){
+        return new UserAccount(username, password, email, nickname, grade, lat, lng, createdBy);
     }
 
     @Override
