@@ -28,6 +28,7 @@ public class Article extends AuditingFields {
     private Long id;
 
     @Setter @ManyToOne(optional = false) private UserAccount userAccount;
+    // private int productid;       // 제품 아이디
 
     @Setter @Column(nullable = false) private String title;
     @Setter @Column(nullable = false, length = 10000) private String content;
