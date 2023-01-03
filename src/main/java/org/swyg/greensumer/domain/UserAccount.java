@@ -3,9 +3,13 @@ package org.swyg.greensumer.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.swyg.greensumer.domain.constant.RoleType;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Getter
 @ToString(callSuper = true)
@@ -16,7 +20,9 @@ import java.util.Objects;
         @Index(columnList = "createdBy")
 })
 @Entity
-public class UserAccount extends AuditingFields{
+@SQLDelete(sql = "UPDATE \"user_account\" SET deleted_at = NOW() where id=?")
+@Where(clause = "deleted_at is NULL")
+public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,42 +33,34 @@ public class UserAccount extends AuditingFields{
     @Setter @Column(nullable = false, length = 100) private String email;
     @Setter @Column(nullable = false, length = 50) private String nickname;
 
-    @Setter @Column(nullable = false) private int grade;
+    @Setter @Enumerated(EnumType.STRING) @Column(nullable = false) private RoleType role;
 
     @Setter private String lat;
     @Setter private String lng;
 
-    protected UserAccount(){}
+    @Column(name = "registered_at") private Timestamp registeredAt;
+    @Column(name = "updated_at")    private Timestamp updatedAt;
+    @Column(name = "deleted_at")    private Timestamp deletedAt;
 
-    private UserAccount(String username, String password, String email, String nickname, int grade, String lat, String lng, String createdBy) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.nickname = nickname;
-        this.grade = grade;
-        this.lat = lat;
-        this.lng = lng;
-        this.createdBy = createdBy;
-        this.modifiedBy = createdBy;
+    @PrePersist
+    void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+
+    @PreUpdate
+    void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
+
+    public static UserAccount of(String username, String password, String email, String nickname, RoleType role) {
+        return UserAccount.of(username, password, email, nickname, role, null, null);
     }
 
-    public static UserAccount of(String username, String password, String email, String nickname, int grade){
-        return UserAccount.of(username, password, email, nickname, grade, null, null, null);
-    }
-
-    public static UserAccount of(String username, String password, String email, String nickname, int grade, String lat, String lng, String createdBy){
-        return new UserAccount(username, password, email, nickname, grade, lat, lng, createdBy);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserAccount that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId());
+    public static UserAccount of(String username, String password, String email, String nickname, RoleType role, String lat, String lng) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUsername(username);
+        userAccount.setPassword(password);
+        userAccount.setEmail(email);
+        userAccount.setNickname(nickname);
+        userAccount.setRole(role);
+        userAccount.setLat(lat);
+        userAccount.setLng(lng);
+        return userAccount;
     }
 }
