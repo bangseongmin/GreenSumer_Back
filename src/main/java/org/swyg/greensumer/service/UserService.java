@@ -9,12 +9,10 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.UpdateUserRequest;
 import org.swyg.greensumer.dto.request.UserSignUpRequest;
-import org.swyg.greensumer.dto.response.UsernameResponse;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.UserCacheRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
-import org.swyg.greensumer.repository.VerificationRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
 @RequiredArgsConstructor
@@ -66,24 +64,26 @@ public class UserService {
 
     public User loadUserByUsername(String username) {
         return userCacheRepository.getUser(username).orElseGet(() ->
-                userEntityRepository.findByUsername(username).map(User::fromEntity)
-                        .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username)))
-        );
+                userEntityRepository.findByUsername(username).map(User::fromEntity).orElseThrow(() ->
+                        new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username))));
     }
 
+    @Transactional(readOnly = true)
     public void existUsername(String username) {
         userEntityRepository.findByUsername(username).ifPresent(it -> {
             throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", username));
         });
     }
 
-    public UsernameResponse findUsername(String email) {
-        UserEntity user = userEntityRepository.findByEmail(email)
-                .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
+    @Transactional(readOnly = true)
+    public User findUsername(String email) {
+        UserEntity user = userEntityRepository.findByEmail(email).orElseThrow(() ->
+                new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
 
-        return UsernameResponse.of(user.getUsername());
+        return User.fromEntity(user);
     }
 
+    @Transactional
     public void findPassword(String username, String email, String code, String password) {
         verificationService.checkMail(email, code);
 
@@ -99,8 +99,12 @@ public class UserService {
         userEntityRepository.save(user);
     }
 
-    public void updateUserInfo(UpdateUserRequest request) {
-        String username = request.getUsername();
+    @Transactional
+    public User updateUserInfo(UpdateUserRequest request, String username) {
+        if(!request.getUsername().equals(username)){
+            throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission to %s", username, request.getUsername()));
+        }
+
         UserEntity user = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
@@ -111,10 +115,11 @@ public class UserService {
         user.setEmail(request.getEmail());
 
         String address = request.getAddress();
-        if(!(address.isBlank() || address.isEmpty() || address == "")){
+        if(address != null){
             user.setAddress(address);
         }
 
-        userEntityRepository.saveAndFlush(user);
+        UserEntity updatedUser = userEntityRepository.saveAndFlush(user);
+        return User.fromEntity(updatedUser);
     }
 }

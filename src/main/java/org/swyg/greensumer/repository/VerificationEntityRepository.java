@@ -5,7 +5,7 @@ import org.swyg.greensumer.domain.VerificationEntity;
 
 import java.util.Optional;
 
-public interface VerificationRepository extends JpaRepository<VerificationEntity, Integer> {
+public interface VerificationEntityRepository extends JpaRepository<VerificationEntity, Integer> {
 
     Optional<VerificationEntity> findBySubject(String subject);
 

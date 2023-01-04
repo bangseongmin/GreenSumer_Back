@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class JwtTokenUtils {
 
-    public static String getUsername(String token, String key) {
+    public static String getUsername(String token, String key){
         return extractClaims(token, key).get("username", String.class);
     }
 
@@ -20,9 +20,9 @@ public class JwtTokenUtils {
         return expiredDate.before(new Date());
     }
 
-    private static Claims extractClaims(String token, String key) {
+    private static Claims extractClaims(String token, String key){
         return Jwts.parserBuilder().setSigningKey(getKey(key))
-                .build().parseClaimsJwt(token).getBody();
+                .build().parseClaimsJws(token).getBody();
     }
 
     public static String generateToken(String username, String key, long expiredTimeMs) {

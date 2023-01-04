@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.swyg.greensumer.domain.VerificationEntity;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.VerificationRepository;
+import org.swyg.greensumer.repository.VerificationEntityRepository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -23,7 +23,7 @@ public class VerificationService {
     static final String mailSubject = "[GreenSumer] 인증번호 발송";
 
     private final JavaMailSender mailSender;
-    private final VerificationRepository verificationRepository;
+    private final VerificationEntityRepository verificationEntityRepository;
 
     public void sendMail(String email) {
         try{
@@ -36,7 +36,7 @@ public class VerificationService {
 
             mailSender.send(message);
 
-            VerificationEntity verification = verificationRepository.save(VerificationEntity.of(email, code));
+            VerificationEntity verification = verificationEntityRepository.save(VerificationEntity.of(email, code));
             log.info("send Mail to {}", verification.getSubject());
         }catch (Exception e){
             throw new GreenSumerBackApplicationException(ErrorCode.MAIL_SEND_ERROR, String.format("%s cant sent Mail", email));
@@ -45,14 +45,14 @@ public class VerificationService {
 
     public void checkMail(String subject, String value){
         // TODO: DB에 많은 영향을 줄 것으로 판단되어 캐시로 변경할 것
-        VerificationEntity verification = verificationRepository.findBySubject(subject).orElseThrow(
+        VerificationEntity verification = verificationEntityRepository.findBySubject(subject).orElseThrow(
                 () -> new GreenSumerBackApplicationException(ErrorCode.MAIL_NOT_FOUND, String.format("%s not founded", subject))
         );
 
         Timestamp now = Timestamp.from(Instant.now());
 
         if(!(verification.getCode().equals(value) && now.before(verification.getExpiredAt()) && now.after(verification.getStartedAt()))){
-            verificationRepository.deleteById(verification.getId());
+            verificationEntityRepository.deleteById(verification.getId());
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_VERIFICATION_CODE, String.format("%s is invalid", value));
         }
     }

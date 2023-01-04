@@ -20,6 +20,9 @@ public enum ErrorCode {
     MAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Sending Mail occurs error"),
     MAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "Mail not founded"),
     INVALID_VERIFICATION_CODE(HttpStatus.UNAUTHORIZED, "Code is invalid"),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Product not founded"),
+    DUPLICATED_STORE_NAME(HttpStatus.CONFLICT, "Name of Store is duplicated"),
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "store is invalid")
     ;
 
     private HttpStatus status;
