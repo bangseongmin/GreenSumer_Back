@@ -3,38 +3,31 @@ package org.swyg.greensumer.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.ReviewPostEntity;
+import org.swyg.greensumer.domain.ReviewCommentEntity;
 
 import java.sql.Timestamp;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewPost {
+public class ReviewComment {
     private Integer id;
-    private String title;
     private String content;
-    private String hashtag;
-    private String imagePath;
-    private Product product;
     private User user;
+    private ReviewPost post;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public static ReviewPost fromEntity(ReviewPostEntity entity){
-        return new ReviewPost(
+    public static ReviewComment fromEntity(ReviewCommentEntity entity) {
+        return new ReviewComment(
                 entity.getId(),
-                entity.getTitle(),
                 entity.getContent(),
-                entity.getHashtag(),
-                entity.getImagePath(),
-                Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),
+                ReviewPost.fromEntity(entity.getReviewPost()),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getDeletedAt()
         );
     }
-
 }

@@ -6,11 +6,14 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewPost {
+public class ReviewPostWithComment {
     private Integer id;
     private String title;
     private String content;
@@ -18,12 +21,13 @@ public class ReviewPost {
     private String imagePath;
     private Product product;
     private User user;
+    private Set<ReviewComment> reviewComments;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public static ReviewPost fromEntity(ReviewPostEntity entity){
-        return new ReviewPost(
+    public static ReviewPostWithComment fromEntity(ReviewPostEntity entity) {
+        return new ReviewPostWithComment(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
@@ -31,10 +35,12 @@ public class ReviewPost {
                 entity.getImagePath(),
                 Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),
+                entity.getComments().stream()
+                        .map(ReviewComment::fromEntity)
+                        .collect(Collectors.toCollection(LinkedHashSet::new)),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getDeletedAt()
         );
     }
-
 }

@@ -22,7 +22,8 @@ public enum ErrorCode {
     INVALID_VERIFICATION_CODE(HttpStatus.UNAUTHORIZED, "Code is invalid"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Product not founded"),
     DUPLICATED_STORE_NAME(HttpStatus.CONFLICT, "Name of Store is duplicated"),
-    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "store is invalid")
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "store is invalid"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not founded"),
     ;
 
     private HttpStatus status;

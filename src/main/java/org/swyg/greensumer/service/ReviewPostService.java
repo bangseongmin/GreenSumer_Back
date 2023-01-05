@@ -9,6 +9,7 @@ import org.swyg.greensumer.domain.ProductEntity;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.ReviewPost;
+import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
@@ -57,7 +58,7 @@ public class ReviewPostService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, postId));
         }
 
-        reviewPostEntity.setProductEntity(productEntity);
+        reviewPostEntity.setProduct(productEntity);
         reviewPostEntity.setTitle(request.getTitle());
         reviewPostEntity.setContent(request.getContent());
         reviewPostEntity.setHashtag(request.getHashtag());
@@ -98,14 +99,17 @@ public class ReviewPostService {
     }
 
     @Transactional(readOnly = true)
-    public ReviewPost getPost(Integer postId, String username) {
+    public ReviewPostWithComment getPostAndComments(Integer postId, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username)));
 
-        ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.findById(postId).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));
-        });
+//        ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.findById(postId).orElseThrow(() -> {
+//            throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));
+//        });
+//        return ReviewPostWithComment.fromEntity(reviewPostEntity);
 
-        return ReviewPost.fromEntity(reviewPostEntity);
+        return reviewPostEntityRepository.findById(postId)
+                .map(ReviewPostWithComment::fromEntity)
+                .orElseThrow(() -> { throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));});
     }
 }
