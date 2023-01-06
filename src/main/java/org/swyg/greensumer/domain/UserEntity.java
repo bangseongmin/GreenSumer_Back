@@ -21,7 +21,7 @@ import java.time.Instant;
 @Where(clause = "deleted_at is NULL")
 public class UserEntity {
 
-    @Id
+    @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
