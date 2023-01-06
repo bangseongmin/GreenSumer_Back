@@ -44,27 +44,27 @@ public class ReviewPostService {
         ));
     }
 
+    @Transactional
     public ReviewPost modify(ReviewPostModifyRequest request, Integer postId, Integer productId, String username) {
-        ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.findById(postId)
+        ReviewPostEntity reviewPost = reviewPostEntityRepository.findById(postId)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId)));
 
         UserEntity userEntity = userEntityRepository.findByUsername(username)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username)));
 
-        ProductEntity productEntity = productEntityRepository.findById(productId)
-                .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded", productId)));
+        ProductEntity productEntity = productEntityRepository.getReferenceById(productId);
 
-        if (reviewPostEntity.getUser() != userEntity) {
+        if(!reviewPost.getUser().equals(userEntity)){
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, postId));
         }
 
-        reviewPostEntity.setProduct(productEntity);
-        reviewPostEntity.setTitle(request.getTitle());
-        reviewPostEntity.setContent(request.getContent());
-        reviewPostEntity.setHashtag(request.getHashtag());
-        reviewPostEntity.setImagePath(request.getImagePath());
+        reviewPost.setProduct(productEntity);
+        reviewPost.setTitle(request.getTitle());
+        reviewPost.setContent(request.getContent());
+        reviewPost.setHashtag(request.getHashtag());
+        reviewPost.setImagePath(request.getImagePath());
 
-        ReviewPostEntity updatedReviewPostEntity = reviewPostEntityRepository.saveAndFlush(reviewPostEntity);
+        ReviewPostEntity updatedReviewPostEntity = reviewPostEntityRepository.saveAndFlush(reviewPost);
 
         return ReviewPost.fromEntity(updatedReviewPostEntity);
     }
