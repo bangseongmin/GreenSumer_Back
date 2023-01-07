@@ -14,4 +14,8 @@ public class UpdateUserRequest {
     private String nickname;
     private String address;
 
+    public static UpdateUserRequest of(String username, String password, String email, String nickname, String address) {
+        return new UpdateUserRequest(username, password, email, nickname, address);
+    }
+
 }

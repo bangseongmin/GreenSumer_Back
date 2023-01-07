@@ -24,6 +24,7 @@ public enum ErrorCode {
     DUPLICATED_STORE_NAME(HttpStatus.CONFLICT, "Name of Store is duplicated"),
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "store is invalid"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not founded"),
+    SAME_AS_PREVIOUS_PASSWORD(HttpStatus.CONFLICT, "Same as Previous password"),
     ;
 
     private HttpStatus status;
