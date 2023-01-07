@@ -75,10 +75,14 @@ public class UserService {
         });
     }
 
-    @Transactional(readOnly = true)
-    public User findUsername(String email) {
+    @Transactional
+    public User findUsername(String email, String code) {
+        verificationService.checkMail(email, code);
+
         UserEntity user = userEntityRepository.findByEmail(email).orElseThrow(() ->
                 new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
+
+        verificationService.clear(email);
 
         return User.fromEntity(user);
     }
@@ -91,9 +95,11 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-        if(encoder.matches(password, user.getPassword())){
-            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s same as before", password));
+        if (encoder.matches(password, user.getPassword())) {
+            throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
+
+        verificationService.clear(email);
 
         user.setPassword(encoder.encode(password));
         userEntityRepository.save(user);
@@ -101,7 +107,7 @@ public class UserService {
 
     @Transactional
     public User updateUserInfo(UpdateUserRequest request, String username) {
-        if(!request.getUsername().equals(username)){
+        if (!request.getUsername().equals(username)) {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission to %s", username, request.getUsername()));
         }
 
@@ -115,7 +121,7 @@ public class UserService {
         user.setEmail(request.getEmail());
 
         String address = request.getAddress();
-        if(address != null){
+        if (address != null) {
             user.setAddress(address);
         }
 

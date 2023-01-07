@@ -61,5 +61,7 @@ public class Fixtures {
     public static String getToken() {
         return token;
     }
+    public static String getUsername() { return username; }
+    public static String getEmail() { return email; }
 
 }
