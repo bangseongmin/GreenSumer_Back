@@ -1,6 +1,5 @@
 package org.swyg.greensumer.fixture;
 
-import org.springframework.security.core.parameters.P;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.request.*;
 
@@ -23,7 +22,6 @@ public class RequestFixture {
     private static final String lat = "lat";
     private static final String lng = "lng";
     private static final String logo = "logo";
-    private static final String code = "code";
     private static final int price = 5000;
     private static final int stock = 5;
 
@@ -67,23 +65,4 @@ public class RequestFixture {
         return UserLoginRequest.of(username, password);
     }
 
-    public static VerificationRequest getVerificationRequest() {
-        return VerificationRequest.of(email);
-    }
-
-    public static VerificationCheckRequest getVerificationCheckRequest() {
-        return VerificationCheckRequest.of(email, code);
-    }
-
-    public static UsernameRequest getUsernameRequest() {
-        return UsernameRequest.of(email, code);
-    }
-
-    public static PasswordUpdateRequest getPasswordUpdateRequest() {
-        return PasswordUpdateRequest.of(username, email, code, password);
-    }
-
-    public static UpdateUserRequest getUpdateUserRequest(){
-        return UpdateUserRequest.of(username, password, email, nickname, address);
-    }
 }

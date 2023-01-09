@@ -36,25 +36,23 @@ public class UserController {
         return Response.success();
     }
 
-    @PutMapping("/mail")
+    @DeleteMapping("/mail")
     public Response<Void> checkMail(@RequestBody VerificationCheckRequest request) {
         verificationService.checkMail(request.getEmail(), request.getCode());
 
         return Response.success();
     }
 
-    @GetMapping("/existUsername")
-    public Response<Void> existUsername(@RequestParam String username) {
+    @GetMapping("/{username}")
+    public Response<Void> existUsername(@PathVariable String username) {
         userService.existUsername(username);
 
         return Response.success();
     }
 
-    // TODO: 현재 이메일 인증 관련 정보를 캐시로 저장하고 있지 않고 있다. 그래서 아이디 찾기 시 저장된 인증 정보를 삭제해주어야하기 때문에 PUT으로 일단 처리해두었다.
-    // TODO: 변경될 필요가 있음.
-    @PutMapping("/find/username")
-    public Response<UsernameResponse> findUsername(@RequestBody UsernameRequest request) {
-        User user = userService.findUsername(request.getEmail(), request.getCode());
+    @GetMapping("/find/username")
+    public Response<UsernameResponse> findUsername(@RequestParam String email) {
+        User user = userService.findUsername(email);
         return Response.success(UsernameResponse.of(user));
     }
 
