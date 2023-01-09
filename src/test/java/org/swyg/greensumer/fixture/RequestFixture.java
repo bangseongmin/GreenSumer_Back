@@ -4,65 +4,56 @@ import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.request.*;
 
 public class RequestFixture {
-    private static final Integer productId = 1;
-    private static final String username = "username";
-    private static final String password = "password";
-    private static final String email = "email";
-    private static final String nickname = "nickname";
-    private static final String title = "title";
-    private static final String content = "content";
-    private static final String hashtag = "hashtag";
-    private static final String image = "image";
-    private static final String comment = "comment";
-    private static final String name = "name";
-    private static final String storeType = StoreType.FOOD.toString();
-    private static final String description = "description";
-    private static final String address = "address";
-    private static final String hours = "hours";
-    private static final String lat = "lat";
-    private static final String lng = "lng";
-    private static final String logo = "logo";
-    private static final int price = 5000;
-    private static final int stock = 5;
 
-    public static ReviewPostCreateRequest getReviewPostCreateRequest() {
+    public static ReviewPostCreateRequest getReviewPostCreateRequest(){
+        final Integer productId = 1;
+        final String title = "new title";
+        final String content = "new content";
+        final String hashtag = "new hashtag";
+        final String image = "new image";
         return ReviewPostCreateRequest.of(productId, title, content, hashtag, image);
     }
 
-    public static ReviewPostModifyRequest getReviewPostModifyRequest() {
+    public static ReviewPostModifyRequest getReviewPostModifyRequest(){
+        final Integer productId = 1;
+        final String title = "modified title";
+        final String content = "modified content";
+        final String hashtag = "modified hashtag";
+        final String image = "modified image";
         return ReviewPostModifyRequest.of(productId, title, content, hashtag, image);
     }
 
-    public static ReviewCommentCreateRequest getReviewCommentCreateRequest() {
+    public static ReviewCommentCreateRequest getReviewCommentCreateRequest(){
+        String comment = "new comment";
         return ReviewCommentCreateRequest.of(comment);
     }
 
-    public static ReviewCommentModifyRequest getReviewCommentModifyRequest() {
+    public static ReviewCommentModifyRequest getReviewCommentModifyRequest(){
+        String comment = "modify comment";
         return ReviewCommentModifyRequest.of(comment);
     }
 
-    public static StoreCreateRequest getStoreCreateRequest() {
-        return StoreCreateRequest.of(name, storeType, description, address, hours, lat, lng, logo);
+    public static StoreCreateRequest getStoreCreateRequest(){
+        String name = "name";
+        String type = StoreType.FOOD.toString();
+        String description = "description";
+        String address = "address";
+        String hours = "hours";
+        String lat = "lat";
+        String lng = "lng";
+        String logo = "logo";
+        return StoreCreateRequest.of(name, type, description, address, hours, lat, lng, logo);
     }
 
-    public static StoreModifyRequest getStoreModifyRequest() {
-        return StoreModifyRequest.of(name, storeType, description, address, hours, lat, lng, logo);
+    public static StoreModifyRequest getStoreModifyRequest(){
+        String name = "name";
+        String type = StoreType.FOOD.toString();
+        String description = "description";
+        String address = "address";
+        String hours = "hours";
+        String lat = "lat";
+        String lng = "lng";
+        String logo = "logo";
+        return StoreModifyRequest.of(name, type, description, address, hours, lat, lng, logo);
     }
-
-    public static ProductCreateRequest getProductCreateRequest() {
-        return ProductCreateRequest.of(name, price, stock, description, image);
-    }
-
-    public static ProductModifyRequest getProductModifyRequest() {
-        return ProductModifyRequest.of(name, price, stock, description, image);
-    }
-
-    public static UserSignUpRequest getUserSignUpRequest() {
-        return UserSignUpRequest.of(username, password, email, nickname, address, lat, lng);
-    }
-
-    public static UserLoginRequest getUserLoginRequest() {
-        return UserLoginRequest.of(username, password);
-    }
-
 }
