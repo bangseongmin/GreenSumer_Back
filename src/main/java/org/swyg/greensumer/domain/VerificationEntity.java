@@ -7,7 +7,6 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Objects;
 
 @Getter
 @ToString
@@ -48,17 +47,5 @@ public class VerificationEntity {
 
     public static VerificationEntity of(String subject, String code) {
         return new VerificationEntity(subject, code);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VerificationEntity that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId());
     }
 }

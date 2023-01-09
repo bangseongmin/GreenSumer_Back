@@ -1,5 +1,6 @@
 package org.swyg.greensumer.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.swyg.greensumer.repository.UserCacheRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
@@ -22,34 +24,19 @@ public class UserService {
     private final VerificationService verificationService;
     private final BCryptPasswordEncoder encoder;
 
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+    @Value("${jwt.token.expired-time-ms}")
+    private Long expiredTimeMs;
 
-    private final String secretKey;
-
-    private final Long expiredTimeMs;
-
-    public UserService(
-            UserEntityRepository userEntityRepository,
-            UserCacheRepository userCacheRepository,
-            VerificationService verificationService,
-            BCryptPasswordEncoder encoder,
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.token.expired-time-ms}") Long expiredTimeMs
-    ) {
-        this.userEntityRepository = userEntityRepository;
-        this.userCacheRepository = userCacheRepository;
-        this.verificationService = verificationService;
-        this.encoder = encoder;
-        this.secretKey = secretKey;
-        this.expiredTimeMs = expiredTimeMs;
-    }
-
+    @Transactional
     public User signup(UserSignUpRequest request) {
         String username = request.getUsername();
         userEntityRepository.findByUsername(username).ifPresent(it -> {
             throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", username));
         });
 
-        UserEntity userEntity = UserEntity.of(
+        UserEntity userEntity = userEntityRepository.save(UserEntity.of(
                 request.getUsername(),
                 encoder.encode(request.getPassword()),
                 request.getNickname(),
@@ -57,11 +44,9 @@ public class UserService {
                 request.getAddress(),
                 request.getLat(),
                 request.getLng()
-        );
+        ));
 
-        UserEntity savedUser = userEntityRepository.save(userEntity);
-
-        return User.fromEntity(savedUser);
+        return User.fromEntity(userEntity);
     }
 
     public String login(String username, String password) {
