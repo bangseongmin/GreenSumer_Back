@@ -1,5 +1,9 @@
 package org.swyg.greensumer.fixture;
 
+import org.swyg.greensumer.domain.ProductEntity;
+import org.swyg.greensumer.domain.StoreEntity;
+import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.*;
 
@@ -10,8 +14,10 @@ import java.util.Set;
 public class Fixtures {
     private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjczMDIwMDYwLCJleHAiOjE2NzU2MTIwNjB9.USuRnODheSfeL65rpXqQOMkVLnOqCtSacrJsLNQXSNg";
     private static final Integer id = 1;
-    private static final int price = 10000;
-    private static final int stock = 3;
+    private static final int price = 5000;
+    private static final int stock = 5;
+    private static final int modifiedPrice = price + 1000;
+    private static final int modifiedStock = stock + 1;
     private static final String title = "title";
     private static final String content = "content";
     private static final String hashtag = "hashtag";
@@ -21,6 +27,7 @@ public class Fixtures {
     private static final String email = "email";
     private static final String nickname = "nickname";
     private static final String name = "name";
+    private static final String modifiedName = "modified Name";
     private static final String address = "address";
     private static final String description = "description";
     private static final String lat = "lat";
@@ -62,6 +69,34 @@ public class Fixtures {
         return token;
     }
     public static String getUsername() { return username; }
-    public static String getEmail() { return email; }
+    public static String getPassword() { return password; }
+    public static String getName() { return name; }
+    public static Integer getId() { return id; }
+
+    public static UserEntity createUserEntity() {
+        return UserEntity.of(username, password, nickname, email, address, lat, lng);
+    }
+
+    public static StoreEntity createStoreEntity() {
+        return StoreEntity.of(id, createUserEntity(), name, description, address, hours, lat, lng, logo, StoreType.FOOD);
+    }
+
+    public static ProductEntity createProductEntity() {
+        return ProductEntity.of(id, createStoreEntity(), name, price, stock, description, image);
+    }
+
+    public static ProductEntity ModifyProductEntity(ProductEntity entity) {
+        entity.setName(modifiedName);
+        entity.setStock(modifiedStock);
+        entity.setPrice(modifiedPrice);
+        return entity;
+    }
+
+    public static UserEntity createSignUpUserAccount() {
+        UserEntity userEntity = createUserEntity();
+        userEntity.setId(id);
+        return userEntity;
+    }
+
 
 }
