@@ -23,10 +23,9 @@ public class VerificationEntity {
     @Column(nullable = false, length = 100, unique = true)
     private String subject;
 
-    @Setter @Column(nullable = false, length = 6)
+    @Setter
+    @Column(nullable = false, length = 6)
     private String code;
-
-    @Setter private boolean status;
 
     private Timestamp startedAt;
     private Timestamp expiredAt;
@@ -42,7 +41,6 @@ public class VerificationEntity {
     private VerificationEntity(String subject, String code) {
         this.subject = subject;
         this.code = code;
-        this.status = false;
     }
 
     public static VerificationEntity of(String subject, String code) {

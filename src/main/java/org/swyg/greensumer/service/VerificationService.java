@@ -52,11 +52,9 @@ public class VerificationService {
         Timestamp now = Timestamp.from(Instant.now());
 
         if(!(verification.getCode().equals(value) && now.before(verification.getExpiredAt()) && now.after(verification.getStartedAt()))){
+            verificationEntityRepository.deleteById(verification.getId());
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_VERIFICATION_CODE, String.format("%s is invalid", value));
         }
-
-        verification.setStatus(true);
-        verificationEntityRepository.saveAndFlush(verification);
     }
 
     private String createText(String value) {
@@ -77,9 +75,5 @@ public class VerificationService {
                 .filter((x) -> (x <= 57 || x >= 65) && (x <= 90 || x >= 97))
                 .limit((long)targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-    }
-
-    public void clear(String email) {
-        verificationEntityRepository.deleteBySubject(email);
     }
 }
