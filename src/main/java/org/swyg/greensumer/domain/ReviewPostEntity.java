@@ -1,7 +1,6 @@
 package org.swyg.greensumer.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
@@ -20,7 +19,7 @@ import java.util.Set;
 @SQLDelete(sql = "UPDATE \"review_post\" SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewPostEntity {
-    @Setter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -74,7 +73,7 @@ public class ReviewPostEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public ReviewPostEntity() {
+    protected ReviewPostEntity() {
     }
 
     public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content, String hashtag, String imagePath) {

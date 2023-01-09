@@ -18,7 +18,7 @@ import java.time.Instant;
 @SQLDelete(sql = "UPDATE \"product\" SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ProductEntity {
-    @Setter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -49,7 +49,7 @@ public class ProductEntity {
     @PreUpdate
     void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
-    public ProductEntity(){}
+    protected ProductEntity(){}
 
     public static ProductEntity of(StoreEntity storeEntity, String name, int price, int stock, String description, String image) {
         ProductEntity productEntity = new ProductEntity();
