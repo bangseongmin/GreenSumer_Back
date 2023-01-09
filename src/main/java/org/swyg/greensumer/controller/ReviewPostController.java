@@ -58,7 +58,7 @@ public class ReviewPostController {
         return Response.success(ReviewPostWithCommentResponse.fromReviewPostWithComment(postWithComment));
     }
 
-    @GetMapping("/my")
+    @GetMapping("/mypost")
     public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) {
         return Response.success(reviewPostService.mylist(pageable, authentication.getName()).map(ReviewPostResponse::fromReviewPost));
     }
