@@ -103,6 +103,11 @@ public class ReviewPostService {
         UserEntity userEntity = userEntityRepository.findByUsername(username)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username)));
 
+//        ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.findById(postId).orElseThrow(() -> {
+//            throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));
+//        });
+//        return ReviewPostWithComment.fromEntity(reviewPostEntity);
+
         return reviewPostEntityRepository.findById(postId)
                 .map(ReviewPostWithComment::fromEntity)
                 .orElseThrow(() -> { throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));});

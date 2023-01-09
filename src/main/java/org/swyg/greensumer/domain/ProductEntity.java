@@ -9,7 +9,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -62,30 +61,5 @@ public class ProductEntity {
         productEntity.setImage(image);
 
         return productEntity;
-    }
-
-    public static ProductEntity of(Integer id, StoreEntity storeEntity, String name, int price, int stock, String description, String image) {
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setId(id);
-        productEntity.setStore(storeEntity);
-        productEntity.setName(name);
-        productEntity.setPrice(price);
-        productEntity.setStock(stock);
-        productEntity.setDescription(description);
-        productEntity.setImage(image);
-
-        return productEntity;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProductEntity that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId());
     }
 }

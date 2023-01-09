@@ -12,5 +12,6 @@ public interface StoreEntityRepository extends JpaRepository<StoreEntity, Intege
     boolean existsByName(String name);
 
     Page<StoreEntity> findAllByUser(UserEntity user, Pageable pageable);
-    Optional<StoreEntity> findByName(String name);
+
+    Optional<StoreEntity> findByNameAndId(String name, Integer id);
 }

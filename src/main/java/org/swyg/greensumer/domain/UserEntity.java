@@ -9,7 +9,6 @@ import org.swyg.greensumer.domain.constant.UserRole;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -74,17 +73,5 @@ public class UserEntity {
             user.setRole(UserRole.SELLER);
         }
         return user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserEntity that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId());
     }
 }

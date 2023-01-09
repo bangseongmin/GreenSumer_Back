@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.swyg.greensumer.domain.StoreEntity;
 import org.swyg.greensumer.dto.Product;
 import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.dto.request.ProductCreateRequest;
@@ -25,10 +24,10 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping
-    public Response<StoreResponse> create(@RequestBody StoreCreateRequest request, Authentication authentication) {
-        Store store = storeService.create(request, authentication.getName());
+    public Response<Void> create(@RequestBody StoreCreateRequest request, Authentication authentication) {
+        storeService.create(request, authentication.getName());
 
-        return Response.success(StoreResponse.fromStore(store));
+        return Response.success();
     }
 
     @PutMapping("/{storeId}")
