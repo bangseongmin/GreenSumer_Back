@@ -26,6 +26,8 @@ public class RequestFixture {
     private static final String code = "code";
     private static final int price = 5000;
     private static final int stock = 5;
+    private static final int modifiedPrice = price + 1000;
+    private static final int modifiedStock = stock + 1;
 
     public static ReviewPostCreateRequest getReviewPostCreateRequest() {
         return ReviewPostCreateRequest.of(productId, title, content, hashtag, image);
@@ -56,7 +58,7 @@ public class RequestFixture {
     }
 
     public static ProductModifyRequest getProductModifyRequest() {
-        return ProductModifyRequest.of(name, price, stock, description, image);
+        return ProductModifyRequest.of(name, modifiedPrice, modifiedStock, description, image);
     }
 
     public static UserSignUpRequest getUserSignUpRequest() {

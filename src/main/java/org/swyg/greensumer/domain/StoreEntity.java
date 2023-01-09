@@ -9,6 +9,7 @@ import org.swyg.greensumer.domain.constant.StoreType;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -19,7 +20,7 @@ import java.time.Instant;
 @Where(clause = "deleted_at is NULL")
 public class StoreEntity {
 
-    @Id
+    @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -64,5 +65,33 @@ public class StoreEntity {
        storeEntity.setStoreType(storeType);
 
        return storeEntity;
+    }
+
+    public static StoreEntity of(Integer id, UserEntity user, String name, String description, String address, String hours, String lat, String lng, String logo, StoreType storeType) {
+        StoreEntity storeEntity = new StoreEntity();
+        storeEntity.setId(id);
+        storeEntity.setUser(user);
+        storeEntity.setName(name);
+        storeEntity.setDescription(description);
+        storeEntity.setAddress(address);
+        storeEntity.setHours(hours);
+        storeEntity.setLat(lat);
+        storeEntity.setLng(lng);
+        storeEntity.setLogo(logo);
+        storeEntity.setStoreType(storeType);
+
+        return storeEntity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StoreEntity that)) return false;
+        return this.getId() != null && this.getId().equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getId());
     }
 }
