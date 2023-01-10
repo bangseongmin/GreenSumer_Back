@@ -37,7 +37,7 @@ import static org.swyg.greensumer.fixture.RequestFixture.getUserSignUpRequest;
 class UserServiceTest {
 
     private UserService sut;
-
+    
     @Mock private UserEntityRepository userEntityRepository;
     @Mock private VerificationService verificationService;
     @Mock private UserCacheRepository userCacheRepository;
@@ -303,3 +303,4 @@ class UserServiceTest {
     }
 
 }
+

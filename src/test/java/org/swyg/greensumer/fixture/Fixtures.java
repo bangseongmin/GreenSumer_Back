@@ -63,25 +63,11 @@ public class Fixtures {
         return new ReviewPostWithComment(id, title, content, hashtag, image, getProduct(), getUser(), Set.of(getReviewComment()), getNow(), null, null);
     }
 
-    public static String getToken() {
-        return token;
-    }
-
-    public static String getUsername() {
-        return username;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    public static String getName() {
-        return name;
-    }
-
-    public static Integer getId() {
-        return id;
-    }
+    public static String getToken() { return token; }
+    public static String getUsername() { return username; }
+    public static String getPassword() { return password; }
+    public static String getName() { return name; }
+    public static Integer getId() { return id; }
 
     public static UserEntity createUserEntity() {
         return UserEntity.of(username, password, nickname, email, address, lat, lng);
