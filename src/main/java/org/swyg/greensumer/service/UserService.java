@@ -1,5 +1,6 @@
 package org.swyg.greensumer.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.swyg.greensumer.repository.UserCacheRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
@@ -22,24 +24,14 @@ public class UserService {
     private final VerificationService verificationService;
     private final BCryptPasswordEncoder encoder;
 
+    @Value("${jwt.secret-key}") private String secretKey;
+    @Value("${jwt.token.expired-time-ms}") private Long expiredTimeMs;
 
-    private final String secretKey;
-
-    private final Long expiredTimeMs;
-
-    public UserService(
-            UserEntityRepository userEntityRepository,
-            UserCacheRepository userCacheRepository,
-            VerificationService verificationService,
-            BCryptPasswordEncoder encoder,
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.token.expired-time-ms}") Long expiredTimeMs
-    ) {
-        this.userEntityRepository = userEntityRepository;
-        this.userCacheRepository = userCacheRepository;
-        this.verificationService = verificationService;
-        this.encoder = encoder;
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public void setExpiredTimeMs(Long expiredTimeMs) {
         this.expiredTimeMs = expiredTimeMs;
     }
 
@@ -66,12 +58,13 @@ public class UserService {
 
     public String login(String username, String password) {
         User user = loadUserByUsername(username);
-        userCacheRepository.setUser(user);
 
         // 비밀번호 체크
         if (!encoder.matches(password, user.getPassword())) {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PASSWORD);
         }
+
+        userCacheRepository.setUser(user);
 
         // 토큰 생성
         return JwtTokenUtils.generateToken(username, secretKey, expiredTimeMs);
@@ -110,7 +103,7 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-        if (encoder.matches(password, user.getPassword())) {
+        if (!encoder.matches(password, user.getPassword())) {
             throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
 

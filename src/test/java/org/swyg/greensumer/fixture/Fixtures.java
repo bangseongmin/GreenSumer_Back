@@ -1,8 +1,6 @@
 package org.swyg.greensumer.fixture;
 
-import org.swyg.greensumer.domain.ProductEntity;
-import org.swyg.greensumer.domain.StoreEntity;
-import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.*;
@@ -68,10 +66,22 @@ public class Fixtures {
     public static String getToken() {
         return token;
     }
-    public static String getUsername() { return username; }
-    public static String getPassword() { return password; }
-    public static String getName() { return name; }
-    public static Integer getId() { return id; }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static Integer getId() {
+        return id;
+    }
 
     public static UserEntity createUserEntity() {
         return UserEntity.of(username, password, nickname, email, address, lat, lng);
@@ -98,5 +108,67 @@ public class Fixtures {
         return userEntity;
     }
 
+    public static UserEntity getUserEntity() {
+        UserEntity user = new UserEntity();
+        user.setId(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setNickname(nickname);
+        user.setEmail(email);
+        user.setAddress(address);
+        user.setLat(lat);
+        user.setLng(lng);
+        user.setRole(userRole);
+        return user;
+    }
+
+    public static ProductEntity getProductEntity() {
+        return ProductEntity.of(id, createStoreEntity(), name, price, stock, description, image);
+
+    }
+
+    public static StoreEntity getStoreEntity() {
+        StoreEntity storeEntity = new StoreEntity();
+        storeEntity.setId(id);
+        storeEntity.setUser(getUserEntity());
+        storeEntity.setName(name);
+        storeEntity.setDescription(description);
+        storeEntity.setAddress(address);
+        storeEntity.setHours(hours);
+        storeEntity.setLat(lat);
+        storeEntity.setLng(lng);
+        storeEntity.setLogo(logo);
+        return storeEntity;
+    }
+
+    public static ReviewPostEntity getReviewPostEntity() {
+        ReviewPostEntity reviewPost = new ReviewPostEntity();
+        reviewPost.setId(id);
+        reviewPost.setUser(getUserEntity());
+        reviewPost.setProduct(getProductEntity());
+        reviewPost.setTitle(title);
+        reviewPost.setContent(content);
+        reviewPost.setHashtag(hashtag);
+        reviewPost.setImagePath(image);
+        return reviewPost;
+    }
+
+    public static VerificationEntity getVerificationEntity() {
+        String code = "abcdef";
+        VerificationEntity verification = VerificationEntity.of(email, code);
+        verification.setId(1);
+        verification.setStartedAt(Timestamp.from(Instant.now()));
+        verification.setExpiredAt(new Timestamp(System.currentTimeMillis() + 180_000));
+        return verification;
+    }
+
+    public static ReviewCommentEntity getReviewCommentEntity() {
+        ReviewCommentEntity reviewComment = new ReviewCommentEntity();
+        reviewComment.setId(id);
+        reviewComment.setReviewPost(getReviewPostEntity());
+        reviewComment.setUser(getUserEntity());
+        reviewComment.setContent(content);
+        return reviewComment;
+    }
 
 }

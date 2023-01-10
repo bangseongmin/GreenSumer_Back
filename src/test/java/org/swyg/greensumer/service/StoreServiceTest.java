@@ -1,5 +1,6 @@
 package org.swyg.greensumer.service;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,23 +33,31 @@ class StoreServiceTest {
     @InjectMocks
     private StoreService sut;
 
-    @Mock
-    private StoreEntityRepository storeEntityRepository;
-    @Mock
-    private UserEntityRepository userEntityRepository;
-    @Mock
-    private ProductEntityRepository productEntityRepository;
+    @Mock private StoreEntityRepository storeEntityRepository;
+    @Mock private UserEntityRepository userEntityRepository;
+    @Mock private ProductEntityRepository productEntityRepository;
+
+    private static UserEntity userEntity;
+    private static StoreEntity storeEntity;
+    private static ProductEntity productEntity;
+
+    @BeforeAll
+    static void setUp() {
+        userEntity = getUserEntity();
+        storeEntity = getStoreEntity();
+        productEntity = getProductEntity();
+    }
 
     @DisplayName("가게 정보를 입력하면, 가게를 생성한다.")
     @Test
     void givenStoreInfo_whenRequestingSaveStore_thenReturnNothing() {
         // Given
-        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(createUserEntity()));
+        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(userEntity));
         given(storeEntityRepository.findByName(any())).willReturn(Optional.empty());
-        given(storeEntityRepository.save(any())).willReturn(createStoreEntity());
+        given(storeEntityRepository.save(any())).willReturn(storeEntity);
 
         // When
-        Store store = sut.create(getStoreCreateRequest(), getUsername());
+        Store store = sut.create(getStoreCreateRequest(), userEntity.getUsername());
 
         //Then
         assertThat(store)
@@ -69,9 +78,7 @@ class StoreServiceTest {
     @Test
     void givenUpdatedStoreInfo_whenRequestingModifyStore_thenReturnStore() {
         // Given
-        StoreEntity storeEntity = createStoreEntity();
-        UserEntity user = storeEntity.getUser();
-        given(userEntityRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
+        given(userEntityRepository.findByUsername(userEntity.getUsername())).willReturn(Optional.of(userEntity));
         given(storeEntityRepository.findById(storeEntity.getId())).willReturn(Optional.of(storeEntity));
         given(storeEntityRepository.saveAndFlush(storeEntity)).willReturn(storeEntity);
 
@@ -97,18 +104,16 @@ class StoreServiceTest {
     @Test
     void givenStoreId_whenRequestingDeleteStore_thenReturnNothing() {
         // Given
-        StoreEntity storeEntity = createStoreEntity();
-        UserEntity user = storeEntity.getUser();
-        given(userEntityRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
+        given(userEntityRepository.findByUsername(userEntity.getUsername())).willReturn(Optional.of(userEntity));
         given(storeEntityRepository.findById(storeEntity.getId())).willReturn(Optional.of(storeEntity));
         doNothing().when(productEntityRepository).deleteAllByStore(storeEntity);
         doNothing().when(storeEntityRepository).deleteById(storeEntity.getId());
 
         // When
-        sut.delete(storeEntity.getId(), user.getUsername());
+        sut.delete(storeEntity.getId(), userEntity.getUsername());
 
         //Then
-        then(userEntityRepository).should().findByUsername(user.getUsername());
+        then(userEntityRepository).should().findByUsername(userEntity.getUsername());
         then(storeEntityRepository).should().findById(storeEntity.getId());
         then(productEntityRepository).should().deleteAllByStore(storeEntity);
         then(storeEntityRepository).should().deleteById(storeEntity.getId());
@@ -119,16 +124,15 @@ class StoreServiceTest {
     void givenNothing_whenRequestingStoreList_thenReturnPageStore() {
         // Given
         Pageable pageable = Pageable.ofSize(10);
-        UserEntity user = createUserEntity();
-        given(userEntityRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
+        given(userEntityRepository.findByUsername(userEntity.getUsername())).willReturn(Optional.of(userEntity));
         given(storeEntityRepository.findAll(pageable)).willReturn(Page.empty());
 
         // When
-        Page<Store> stores = sut.list(pageable, user.getUsername());
+        Page<Store> stores = sut.list(pageable, userEntity.getUsername());
 
         //Then
         assertThat(stores).isEmpty();
-        then(userEntityRepository).should().findByUsername(user.getUsername());
+        then(userEntityRepository).should().findByUsername(userEntity.getUsername());
         then(storeEntityRepository).should().findAll(pageable);
     }
 
@@ -137,32 +141,28 @@ class StoreServiceTest {
     void givenUser_whenRequestingStoreList_thenReturnPageStore() {
         // Given
         Pageable pageable = Pageable.ofSize(10);
-        UserEntity user = createUserEntity();
-        given(userEntityRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
-        given(storeEntityRepository.findAllByUser(user, pageable)).willReturn(Page.empty());
+        given(userEntityRepository.findByUsername(userEntity.getUsername())).willReturn(Optional.of(userEntity));
+        given(storeEntityRepository.findAllByUser(userEntity, pageable)).willReturn(Page.empty());
 
         // When
-        Page<Store> stores = sut.mylist(pageable, user.getUsername());
+        Page<Store> stores = sut.mylist(pageable, userEntity.getUsername());
 
         //Then
         assertThat(stores).isEmpty();
-        then(userEntityRepository).should().findByUsername(user.getUsername());
-        then(storeEntityRepository).should().findAllByUser(user, pageable);
+        then(userEntityRepository).should().findByUsername(userEntity.getUsername());
+        then(storeEntityRepository).should().findAllByUser(userEntity, pageable);
     }
 
     @DisplayName("가게에 제품 등록 요청하면 제품이 등록된다.")
     @Test
     void givenProduct_whenRequestingRegisterProduct_thenReturnProduct() {
         // Given
-        ProductEntity productEntity = createProductEntity();
-        StoreEntity store = productEntity.getStore();
-        UserEntity user = productEntity.getStore().getUser();
-        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(user));
-        given(storeEntityRepository.findById(any())).willReturn(Optional.of(store));
+        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(userEntity));
+        given(storeEntityRepository.findById(any())).willReturn(Optional.of(storeEntity));
         given(productEntityRepository.save(any())).willReturn(productEntity);
 
         // When
-        Product product = sut.registerProduct(store.getId(), getProductCreateRequest(), user.getUsername());
+        Product product = sut.registerProduct(storeEntity.getId(), getProductCreateRequest(), userEntity.getUsername());
 
         //Then
         assertThat(product)
@@ -181,18 +181,15 @@ class StoreServiceTest {
     @Test
     void givenUpdatedProduct_whenRequestingModifyProduct_thenReturnProduct() {
         // Given
-        ProductEntity productEntity = createProductEntity();
-        StoreEntity store = productEntity.getStore();
-        UserEntity user = productEntity.getStore().getUser();
         ProductEntity modifiedProductEntity = ModifyProductEntity(productEntity);
 
-        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(user));
-        given(storeEntityRepository.findById(any())).willReturn(Optional.of(store));
+        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(userEntity));
+        given(storeEntityRepository.findById(any())).willReturn(Optional.of(storeEntity));
         given(productEntityRepository.findById(any())).willReturn(Optional.of(productEntity));
         given(productEntityRepository.saveAndFlush(any())).willReturn(modifiedProductEntity);
 
         // When
-        Product product = sut.modifyProduct(store.getId(), productEntity.getId(), getProductModifyRequest(), user.getUsername());
+        Product product = sut.modifyProduct(storeEntity.getId(), productEntity.getId(), getProductModifyRequest(), userEntity.getUsername());
 
         //Then
         assertThat(product)
@@ -212,16 +209,12 @@ class StoreServiceTest {
     @Test
     void givenProductId_whenRequestingDeleteProduct_thenReturnNothing() {
         // Given
-        ProductEntity productEntity = createProductEntity();
-        StoreEntity store = productEntity.getStore();
-        UserEntity user = productEntity.getStore().getUser();
-
-        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(user));
-        given(storeEntityRepository.findById(any())).willReturn(Optional.of(store));
+        given(userEntityRepository.findByUsername(any())).willReturn(Optional.of(userEntity));
+        given(storeEntityRepository.findById(any())).willReturn(Optional.of(storeEntity));
         doNothing().when(productEntityRepository).deleteById(any());
 
         // When
-        sut.deleteProduct(store.getId(), productEntity.getId(), user.getUsername());
+        sut.deleteProduct(storeEntity.getId(), productEntity.getId(), userEntity.getUsername());
 
         //Then
         verify(userEntityRepository, times(1)).findByUsername(any());
@@ -233,36 +226,33 @@ class StoreServiceTest {
     @Test
     void givenStoreId_whenRequestingProductList_thenReturnProductList() {
         // Given
-        StoreEntity store = mock(StoreEntity.class);
         Pageable pageable = Pageable.ofSize(10);
-        given(storeEntityRepository.findById(any())).willReturn(Optional.of(store));
-        given(productEntityRepository.findAllByStore(store, pageable)).willReturn(Page.empty());
+        given(storeEntityRepository.findById(any())).willReturn(Optional.of(storeEntity));
+        given(productEntityRepository.findAllByStore(storeEntity, pageable)).willReturn(Page.empty());
 
         // When
-        Page<Product> products = sut.getProductList(store.getId(), pageable);
+        Page<Product> products = sut.getProductList(storeEntity.getId(), pageable);
 
         //Then
         assertThat(products).isEmpty();
         verify(storeEntityRepository, times(1)).findById(any());
-        verify(productEntityRepository, times(1)).findAllByStore(store, pageable);
+        verify(productEntityRepository, times(1)).findAllByStore(storeEntity, pageable);
     }
 
     @DisplayName("가게 아이디와 제품 아이디를 주면 해당 가게에 등록된 제품를 반환한다.")
     @Test
     void givenStoreIdAndProductId_whenRequestingProductOnStore_thenReturnProduct() {
         // Given
-        StoreEntity store = mock(StoreEntity.class);
-        Integer productId = 1;
         Pageable pageable = Pageable.ofSize(10);
-        given(storeEntityRepository.findById(any())).willReturn(Optional.of(store));
-        given(productEntityRepository.findByStoreAndId(store, productId)).willReturn(Optional.of(createProductEntity()));
+        given(storeEntityRepository.findById(any())).willReturn(Optional.of(storeEntity));
+        given(productEntityRepository.findByStoreAndId(storeEntity, productEntity.getId())).willReturn(Optional.of(createProductEntity()));
 
         // When
-        Product product = sut.getProduct(store.getId(), productId);
+        Product product = sut.getProduct(storeEntity.getId(), productEntity.getId());
 
         //Then
         verify(storeEntityRepository, times(1)).findById(any());
-        verify(productEntityRepository, times(1)).findByStoreAndId(store, productId);
+        verify(productEntityRepository, times(1)).findByStoreAndId(storeEntity, productEntity.getId());
     }
 
 }

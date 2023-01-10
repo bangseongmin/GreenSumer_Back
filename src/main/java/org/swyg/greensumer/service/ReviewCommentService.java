@@ -54,7 +54,7 @@ public class ReviewCommentService {
         }
 
         reviewCommentEntity.setContent(content);
-        ReviewCommentEntity updatedComment = reviewCommentRepository.save(reviewCommentEntity);
+        ReviewCommentEntity updatedComment = reviewCommentRepository.saveAndFlush(reviewCommentEntity);
 
         return ReviewComment.fromEntity(updatedComment);
     }
