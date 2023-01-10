@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.ProductEntity;
 import org.swyg.greensumer.domain.StoreEntity;
 import org.swyg.greensumer.domain.UserEntity;
@@ -28,16 +29,15 @@ public class StoreService {
     private final ProductEntityRepository productEntityRepository;
     private final UserEntityRepository userEntityRepository;
 
-    public void create(StoreCreateRequest request, String username) {
+    public Store create(StoreCreateRequest request, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
         String storeName = request.getName();
-
-        if (isDuplicateStoreName(storeName)) {
+        storeEntityRepository.findByName(storeName).ifPresent(it -> {
             throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", storeName));
-        }
+        });
 
         StoreEntity storeEntity = StoreEntity.of(
                 userEntity,
@@ -51,7 +51,8 @@ public class StoreService {
                 StoreType.valueOf(request.getType())
         );
 
-        storeEntityRepository.save(storeEntity);
+        StoreEntity savedStore = storeEntityRepository.save(storeEntity);
+        return Store.fromEntity(savedStore);
     }
 
     public Store modify(Integer storeId, StoreModifyRequest request, String username) {
@@ -59,11 +60,10 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-        StoreEntity storeEntity = storeEntityRepository.findByNameAndId(request.getName(), storeId).orElseThrow(() -> {
+        StoreEntity storeEntity = storeEntityRepository.findById(storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        storeEntity.setName(request.getName());
         storeEntity.setStoreType(StoreType.valueOf(request.getType()));
         storeEntity.setDescription(request.getDescription());
         storeEntity.setHours(request.getHours());
@@ -74,10 +74,6 @@ public class StoreService {
 
         StoreEntity updateStoreEntity = storeEntityRepository.saveAndFlush(storeEntity);
         return Store.fromEntity(updateStoreEntity);
-    }
-
-    public boolean isDuplicateStoreName(String storeName) {
-        return storeEntityRepository.existsByName(storeName);
     }
 
     public void delete(Integer storeId, String username) {

@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.ReviewComment;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
-import org.swyg.greensumer.dto.request.ReviewCommentRequest;
+import org.swyg.greensumer.dto.request.ReviewCommentCreateRequest;
+import org.swyg.greensumer.dto.request.ReviewCommentModifyRequest;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.dto.response.Response;
@@ -35,7 +36,11 @@ public class ReviewPostController {
 
     @PutMapping("/{postId}")
     public Response<ReviewPostResponse> modify(@PathVariable Integer postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) {
+        System.out.println("TEST ***********");
+        System.out.println("REQUEST : " + request.toString());
+
         ReviewPost reviewPost = reviewPostService.modify(request, postId, request.getProductId(), authentication.getName());
+
 
         return Response.success(ReviewPostResponse.fromReviewPost(reviewPost));
     }
@@ -58,13 +63,13 @@ public class ReviewPostController {
         return Response.success(ReviewPostWithCommentResponse.fromReviewPostWithComment(postWithComment));
     }
 
-    @GetMapping("/mypost")
+    @GetMapping("/my")
     public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) {
-        return Response.success(reviewPostService.mylist(pageable, authentication.getName()).map(ReviewPostResponse::fromReviewPost));
+        return Response.success(reviewPostService.mylist(authentication.getName(), pageable).map(ReviewPostResponse::fromReviewPost));
     }
 
     @PostMapping("/{postId}/comments")
-    public Response<Void> createComment(@PathVariable Integer postId, @RequestBody ReviewCommentRequest request, Authentication authentication) {
+    public Response<Void> createComment(@PathVariable Integer postId, @RequestBody ReviewCommentCreateRequest request, Authentication authentication) {
         reviewCommentService.createComment(postId, request.getContent(), authentication.getName());
 
         return Response.success();
@@ -74,7 +79,7 @@ public class ReviewPostController {
     public Response<ReviewCommentResponse> modifyComment(
             @PathVariable Integer postId,
             @PathVariable Integer commentId,
-            @RequestBody ReviewCommentRequest request,
+            @RequestBody ReviewCommentModifyRequest request,
             Authentication authentication
     ) {
         ReviewComment reviewComment = reviewCommentService.modifyComment(postId, commentId, request.getContent(), authentication.getName());
