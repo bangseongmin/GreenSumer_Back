@@ -30,7 +30,8 @@ import static org.swyg.greensumer.fixture.RequestFixture.*;
 @ExtendWith(MockitoExtension.class)
 class StoreServiceTest {
 
-    @InjectMocks private StoreService sut;
+    @InjectMocks
+    private StoreService sut;
 
     @Mock private StoreEntityRepository storeEntityRepository;
     @Mock private UserEntityRepository userEntityRepository;

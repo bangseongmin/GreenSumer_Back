@@ -1,6 +1,5 @@
 package org.swyg.greensumer.fixture;
 
-import org.springframework.security.core.parameters.P;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.request.*;
 

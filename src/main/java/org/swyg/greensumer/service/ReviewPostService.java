@@ -55,6 +55,7 @@ public class ReviewPostService {
         UserEntity userEntity = userEntityRepository.findByUsername(username)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username)));
 
+
         ProductEntity productEntity = productEntityRepository.findById(productId)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded", productId)));
 

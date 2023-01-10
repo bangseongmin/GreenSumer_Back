@@ -17,7 +17,6 @@ public class ReviewPostModifyRequest {
     private String imagePath;
 
     public static ReviewPostModifyRequest of(Integer productId, String title, String content, String hashtag, String imagePath) {
-        System.out.println("kKKKKKKKKK");
         return new ReviewPostModifyRequest(productId, title, content, hashtag, imagePath);
     }
 }

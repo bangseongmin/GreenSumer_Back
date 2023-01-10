@@ -305,3 +305,5 @@ class ReviewPostServiceTest {
         verify(userEntityRepository, times(1)).findByUsername(any());
         verify(reviewPostEntityRepository, times(1)).findById(any());
     }
+
+}

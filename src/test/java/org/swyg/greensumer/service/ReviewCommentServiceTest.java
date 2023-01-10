@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.swyg.greensumer.domain.ReviewCommentEntity;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 import org.swyg.greensumer.domain.UserEntity;

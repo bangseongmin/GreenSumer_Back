@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 import static org.swyg.greensumer.fixture.Fixtures.*;
 import static org.swyg.greensumer.fixture.RequestFixture.getUpdateUserRequest;
 import static org.swyg.greensumer.fixture.RequestFixture.getUserSignUpRequest;
@@ -37,7 +36,7 @@ import static org.swyg.greensumer.fixture.RequestFixture.getUserSignUpRequest;
 class UserServiceTest {
 
     private UserService sut;
-    
+
     @Mock private UserEntityRepository userEntityRepository;
     @Mock private VerificationService verificationService;
     @Mock private UserCacheRepository userCacheRepository;
@@ -303,4 +302,3 @@ class UserServiceTest {
     }
 
 }
-

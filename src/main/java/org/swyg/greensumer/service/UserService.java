@@ -1,5 +1,6 @@
 package org.swyg.greensumer.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.swyg.greensumer.repository.UserCacheRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
@@ -48,7 +50,9 @@ public class UserService {
                 request.getLat(),
                 request.getLng()
         );
+
         UserEntity savedUser = userEntityRepository.save(userEntity);
+
         return User.fromEntity(savedUser);
     }
 

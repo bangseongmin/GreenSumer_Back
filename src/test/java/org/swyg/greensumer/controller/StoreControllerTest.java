@@ -54,7 +54,7 @@ class StoreControllerTest {
     @Test
     void givenStoreInfo_whenRequestingCreateStore_thenNothing() throws Exception {
         when(storeService.create(any(), any())).thenReturn(getStore());
-        
+
         mvc.perform(post("/api/v1/stores")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(getStoreCreateRequest()))
