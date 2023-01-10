@@ -50,7 +50,7 @@ public class StoreEntity {
     @PreUpdate
     void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
-    protected StoreEntity(){}
+    public StoreEntity(){}
 
     public static StoreEntity of(UserEntity user, String name, String description, String address, String hours, String lat, String lng, String logo, StoreType storeType) {
        StoreEntity storeEntity = new StoreEntity();

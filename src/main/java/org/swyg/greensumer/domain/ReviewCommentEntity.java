@@ -20,7 +20,7 @@ import java.util.Set;
 @SQLDelete(sql = "UPDATE \"review_comment\" SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewCommentEntity {
-    @Id
+    @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -42,7 +42,7 @@ public class ReviewCommentEntity {
     @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
     @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now()); }
 
-    protected ReviewCommentEntity() {}
+    public ReviewCommentEntity() {}
 
     private ReviewCommentEntity(ReviewPostEntity reviewPost, UserEntity user, String content) {
         this.reviewPost = reviewPost;

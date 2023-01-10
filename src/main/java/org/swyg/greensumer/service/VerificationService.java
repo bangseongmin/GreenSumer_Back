@@ -1,10 +1,12 @@
 package org.swyg.greensumer.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.VerificationEntity;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
@@ -25,6 +27,7 @@ public class VerificationService {
     private final JavaMailSender mailSender;
     private final VerificationEntityRepository verificationEntityRepository;
 
+    @Transactional
     public void sendMail(String email) {
         try{
             SimpleMailMessage message = new SimpleMailMessage();

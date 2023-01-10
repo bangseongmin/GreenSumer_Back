@@ -17,7 +17,7 @@ import java.util.Objects;
 @Entity
 public class VerificationEntity {
 
-    @Id
+    @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -29,8 +29,8 @@ public class VerificationEntity {
 
     @Setter private boolean status;
 
-    private Timestamp startedAt;
-    private Timestamp expiredAt;
+    @Setter private Timestamp startedAt;
+    @Setter private Timestamp expiredAt;
 
     @PrePersist
     void startedAt() {
