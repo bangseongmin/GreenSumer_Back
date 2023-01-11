@@ -8,6 +8,7 @@ import org.swyg.greensumer.dto.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Fixtures {
     private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjczMDIwMDYwLCJleHAiOjE2NzU2MTIwNjB9.USuRnODheSfeL65rpXqQOMkVLnOqCtSacrJsLNQXSNg";
@@ -28,10 +29,11 @@ public class Fixtures {
     private static final String modifiedName = "modified Name";
     private static final String address = "address";
     private static final String description = "description";
-    private static final String lat = "lat";
-    private static final String lng = "lng";
+    private static final Double lat = 123.123123123123;
+    private static final Double lng = 123.123123123123;
     private static final String hours = "hours";
     private static final String logo = "logo";
+    private static final String roadname = "roadname";
     private static final UserRole userRole = UserRole.USER;
     private static final UserRole sellerRole = UserRole.SELLER;
 
@@ -44,11 +46,29 @@ public class Fixtures {
     }
 
     public static User getUser() {
-        return new User(id, username, password, email, nickname, address, lat, lng, userRole, getNow(), null, null);
+        return new User(id, username, password, email, nickname, getAddress(), userRole, getNow(), null, null);
     }
 
     public static Store getStore() {
-        return new Store(id, getUser(), name, description, address, hours, lat, lng, logo, getNow(), null, null);
+        return new Store(id, getSetSellerStores(), name, description, getAddress(), hours, logo, getNow(), null, null);
+    }
+
+    public static AddressEntity getAddressEntity(){
+        return AddressEntity.of(address, roadname, lat, lng);
+    }
+
+    public static Address getAddress() {
+        return Address.fromEntity(getAddressEntity());
+    }
+
+    public static SellerStoreEntity getSellerStoreEntity() {
+        return SellerStoreEntity.of(getStoreEntity(), getSellerEntity());
+    }
+
+    public static Set<SellerStore> getSetSellerStores() {
+        return getStoreEntity().getSellerStores().stream()
+                .map(SellerStore::fromEntity)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     private static Timestamp getNow() {
@@ -84,11 +104,11 @@ public class Fixtures {
     }
 
     public static UserEntity createUserEntity() {
-        return UserEntity.of(username, password, nickname, email, address, lat, lng);
+        return UserEntity.of(username, password, nickname, email, getAddressEntity());
     }
 
     public static StoreEntity createStoreEntity() {
-        return StoreEntity.of(id, createUserEntity(), name, description, address, hours, lat, lng, logo, StoreType.FOOD);
+        return StoreEntity.of(id, name, description, getAddressEntity(), hours, logo, StoreType.FOOD);
     }
 
     public static ProductEntity createProductEntity() {
@@ -115,10 +135,18 @@ public class Fixtures {
         user.setPassword(password);
         user.setNickname(nickname);
         user.setEmail(email);
-        user.setAddress(address);
-        user.setLat(lat);
-        user.setLng(lng);
-        user.setRole(userRole);
+        return user;
+    }
+
+    public static UserEntity getSellerEntity() {
+        UserEntity user = new UserEntity();
+        user.setId(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setNickname(nickname);
+        user.setEmail(email);
+        user.setAddressEntity(getAddressEntity());
+        user.setRole(sellerRole);
         return user;
     }
 
@@ -130,13 +158,10 @@ public class Fixtures {
     public static StoreEntity getStoreEntity() {
         StoreEntity storeEntity = new StoreEntity();
         storeEntity.setId(id);
-        storeEntity.setUser(getUserEntity());
         storeEntity.setName(name);
         storeEntity.setDescription(description);
-        storeEntity.setAddress(address);
+        storeEntity.setAddress(getAddressEntity());
         storeEntity.setHours(hours);
-        storeEntity.setLat(lat);
-        storeEntity.setLng(lng);
         storeEntity.setLogo(logo);
         return storeEntity;
     }

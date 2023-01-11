@@ -2,7 +2,6 @@ package org.swyg.greensumer.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.ReviewCommentEntity;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 import org.swyg.greensumer.domain.UserEntity;
@@ -12,9 +11,6 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewCommentRepository;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
