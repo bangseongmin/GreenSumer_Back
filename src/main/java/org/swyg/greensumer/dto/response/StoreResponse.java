@@ -17,8 +17,8 @@ public class StoreResponse {
     private String description;
     private String address;
     private String hours;
-    private Double lat;
-    private Double lng;
+    private String lat;
+    private String lng;
     private String logo;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -27,17 +27,13 @@ public class StoreResponse {
     public static StoreResponse fromStore(Store store) {
         return new StoreResponse(
                 store.getId(),
-                UserResponse.fromUser(store.getSellerStores().stream()
-                        .findFirst()
-                        .get()
-                        .getSeller()
-                ),
+                UserResponse.fromUser(store.getUser()),
                 store.getName(),
                 store.getDescription(),
-                store.getAddress().getAddress(),
+                store.getAddress(),
                 store.getHours(),
-                store.getAddress().getLat(),
-                store.getAddress().getLng(),
+                store.getLat(),
+                store.getLng(),
                 store.getLogo(),
                 store.getRegisteredAt(),
                 store.getUpdatedAt(),

@@ -16,7 +16,6 @@ import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.UpdateUserRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.SellerStoreEntityRepository;
 import org.swyg.greensumer.repository.UserCacheRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
 
@@ -42,16 +41,13 @@ class UserServiceTest {
     @Mock private VerificationService verificationService;
     @Mock private UserCacheRepository userCacheRepository;
     @Mock private BCryptPasswordEncoder encoder;
-    @Mock private StoreService storeService;
-    @Mock private AddressService addressService;
-    @Mock private SellerStoreEntityRepository sellerStoreEntityRepository;
 
     @Value("${jwt.secret-key}") String secretKey;
     @Value("${jwt.token.expired-time-ms}") Long expiredTimeMs;
 
     @BeforeEach
     void setUp() {
-        sut = new UserService(userEntityRepository, storeService, addressService, sellerStoreEntityRepository, userCacheRepository, verificationService, encoder);
+        sut = new UserService(userEntityRepository, userCacheRepository, verificationService, encoder);
         sut.setSecretKey(secretKey);
         sut.setExpiredTimeMs(expiredTimeMs);
     }

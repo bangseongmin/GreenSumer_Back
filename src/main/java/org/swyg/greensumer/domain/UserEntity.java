@@ -27,40 +27,52 @@ public class UserEntity {
     private Integer id;
 
     @Setter @Column(name = "username", length = 50) private String username;
-    @Setter @Column(nullable = false, length = 50) private String nickname;
-    @Setter @Column(nullable = false, length = 100) private String email;
-
     @Setter @Column(name = "password") private String password;
+    @Setter @Column(nullable = false, length = 100) private String email;
+    @Setter @Column(nullable = false, length = 50) private String nickname;
 
-    @Setter @OneToOne AddressEntity addressEntity;
+    @Setter private String address;
+    @Setter private String lat;
+    @Setter private String lng;
 
-    @Setter @Column(name = "role") @Enumerated(EnumType.STRING) private UserRole role;
+    @Setter @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at")    private Timestamp updatedAt;
-    @Column(name = "deleted_at")    private Timestamp deletedAt;
+    @Column(name = "registered_at")
+    private Timestamp registeredAt;
 
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
+
+    @PrePersist
+    void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+
+    @PreUpdate
+    void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public static UserEntity of(String username, String password, String nickname, String email){
-        return UserEntity.of(username, password, nickname, email, null);
+        return UserEntity.of(username, password, nickname, email,null, null, null);
     }
 
-    public static UserEntity of(String username, String password, String nickname, String email, AddressEntity address){
+    public static UserEntity of(String username, String password, String nickname, String email, String address, String lat, String lng){
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(password);
         user.setNickname(nickname);
         user.setEmail(email);
 
-        if(address == null){
+        if(address == null || address.isEmpty() || address.isBlank()){
             user.setRole(UserRole.USER);
         }else{
-            user.setAddressEntity(address);
+            user.setAddress(address);
+            user.setLat(lat);
+            user.setLng(lng);
             user.setRole(UserRole.SELLER);
         }
-
         return user;
     }
 
