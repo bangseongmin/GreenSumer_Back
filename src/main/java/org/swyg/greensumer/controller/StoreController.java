@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.swyg.greensumer.domain.StoreEntity;
 import org.swyg.greensumer.dto.Product;
 import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.dto.request.ProductCreateRequest;
