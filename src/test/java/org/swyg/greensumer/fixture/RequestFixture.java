@@ -5,7 +5,6 @@ import org.swyg.greensumer.dto.request.*;
 
 public class RequestFixture {
     private static final Integer productId = 1;
-    private static final Integer storeId = 1;
     private static final String username = "username";
     private static final String password = "password";
     private static final String email = "email";
@@ -20,11 +19,10 @@ public class RequestFixture {
     private static final String description = "description";
     private static final String address = "address";
     private static final String hours = "hours";
-    private static final Double lat = 123.123123123;
-    private static final Double lng = 123.123123123;
+    private static final String lat = "lat";
+    private static final String lng = "lng";
     private static final String logo = "logo";
     private static final String code = "code";
-    private static final String roadname = "roadname";
     private static final int price = 5000;
     private static final int stock = 5;
     private static final int modifiedPrice = price + 1000;
@@ -47,11 +45,11 @@ public class RequestFixture {
     }
 
     public static StoreCreateRequest getStoreCreateRequest() {
-        return StoreCreateRequest.of(name, storeType, description, address, roadname, hours, lat, lng, logo);
+        return StoreCreateRequest.of(name, storeType, description, address, hours, lat, lng, logo);
     }
 
     public static StoreModifyRequest getStoreModifyRequest() {
-        return StoreModifyRequest.of(name, storeType, description, address, hours, roadname, lat, lng, logo);
+        return StoreModifyRequest.of(name, storeType, description, address, hours, lat, lng, logo);
     }
 
     public static ProductCreateRequest getProductCreateRequest() {
@@ -63,7 +61,7 @@ public class RequestFixture {
     }
 
     public static UserSignUpRequest getUserSignUpRequest() {
-        return UserSignUpRequest.of(username, password, email, nickname, storeId, address, lat, lng);
+        return UserSignUpRequest.of(username, password, email, nickname, address, lat, lng);
     }
 
     public static UserLoginRequest getUserLoginRequest() {
@@ -87,6 +85,6 @@ public class RequestFixture {
     }
 
     public static UpdateUserRequest getUpdateUserRequest(){
-        return UpdateUserRequest.of(username, password, email, nickname, address, lat, lng);
+        return UpdateUserRequest.of(username, password, email, nickname, address);
     }
 }

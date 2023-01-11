@@ -25,7 +25,9 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private String nickname;
-    private Address address;
+    private String address;
+    private String lat;
+    private String lng;
     private UserRole role;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -38,7 +40,9 @@ public class User implements UserDetails {
           entity.getPassword(),
           entity.getEmail(),
           entity.getNickname(),
-          Address.fromEntity(entity.getAddressEntity()),
+          entity.getAddress(),
+          entity.getLat(),
+          entity.getLng(),
           entity.getRole(),
           entity.getRegisteredAt(),
           entity.getUpdatedAt(),

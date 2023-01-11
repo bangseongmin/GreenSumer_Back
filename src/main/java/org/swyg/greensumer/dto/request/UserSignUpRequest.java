@@ -12,17 +12,16 @@ public class UserSignUpRequest {
     private String password;
     private String email;
     private String nickname;
-    private Integer storeId;
     private String address;
-    private Double lat;
-    private Double lng;
+    private String lat;
+    private String lng;
 
     public static UserSignUpRequest of(String username, String password, String email, String nickname) {
-        return new UserSignUpRequest(username, password, email, nickname, null, null, null, null);
+        return new UserSignUpRequest(username, password, email, nickname, null, null, null);
     }
 
-    public static UserSignUpRequest of(String username, String password, String email, String nickname, Integer storeId, String address, Double lat, Double lng) {
-        return new UserSignUpRequest(username, password, email, nickname, storeId, address, lat, lng);
+    public static UserSignUpRequest of(String username, String password, String email, String nickname, String address, String lat, String lng) {
+        return new UserSignUpRequest(username, password, email, nickname, address, lat, lng);
     }
 
 }

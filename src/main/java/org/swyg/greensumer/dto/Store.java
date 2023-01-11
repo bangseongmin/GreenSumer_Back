@@ -6,19 +6,19 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.StoreEntity;
 
 import java.sql.Timestamp;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
     private Integer id;
-    private Set<SellerStore> sellerStores;
+    private User user;
     private String name;
     private String description;
-    private Address address;
+    private String address;
     private String hours;
+    private String lat;
+    private String lng;
     private String logo;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -27,13 +27,13 @@ public class Store {
     public static Store fromEntity(StoreEntity entity){
         return new Store(
                 entity.getId(),
-                entity.getSellerStores().stream()
-                        .map(SellerStore::fromEntity)
-                        .collect(Collectors.toUnmodifiableSet()),
+                User.fromEntity(entity.getUser()),
                 entity.getName(),
                 entity.getDescription(),
-                Address.fromEntity(entity.getAddress()),
+                entity.getAddress(),
                 entity.getHours(),
+                entity.getLat(),
+                entity.getLng(),
                 entity.getLogo(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),

@@ -13,8 +13,8 @@ public class UserSignUpResponse {
     private String nickname;
     private String email;
     private String address;
-    private Double lat;
-    private Double lng;
+    private String lat;
+    private String lng;
     private UserRole role;
 
     public static UserSignUpResponse fromUser(User user){
@@ -23,9 +23,9 @@ public class UserSignUpResponse {
                 user.getUsername(),
                 user.getNickname(),
                 user.getEmail(),
-                user.getAddress().getAddress(),
-                user.getAddress().getLat(),
-                user.getAddress().getLng(),
+                user.getAddress(),
+                user.getLat(),
+                user.getLng(),
                 user.getRole()
         );
     }
