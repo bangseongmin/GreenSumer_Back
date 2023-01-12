@@ -12,12 +12,13 @@ public class StoreCreateRequest {
     private String type;
     private String description;
     private String address;
+    private String roadname;
     private String hours;
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
     private String logo;
 
-    public static StoreCreateRequest of(String name, String type, String description, String address, String hours, String lat, String lng, String logo) {
-        return new StoreCreateRequest(name, type, description, address, hours, lat, lng, logo);
+    public static StoreCreateRequest of(String name, String type, String description, String address, String roadname, String hours, Double lat, Double lng, String logo) {
+        return new StoreCreateRequest(name, type, description, address, roadname, hours, lat, lng, logo);
     }
 }

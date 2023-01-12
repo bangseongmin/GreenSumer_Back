@@ -258,9 +258,9 @@ class UserControllerTest {
         when(userService.updateUserInfo(any(), any())).thenReturn(getUser());
 
         mvc.perform(put("/api/v1/users/user")
-                .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+                        .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
                 .andExpect(status().isOk());
     }
 
