@@ -38,7 +38,6 @@ public class ReviewPostService {
                 userEntity,
                 request.getTitle(),
                 request.getContent(),
-                request.getHashtag(),
                 request.getImagePath()
         ));
     }
@@ -62,7 +61,6 @@ public class ReviewPostService {
         reviewPost.setProduct(productEntity);
         reviewPost.setTitle(request.getTitle());
         reviewPost.setContent(request.getContent());
-        reviewPost.setHashtag(request.getHashtag());
         reviewPost.setImagePath(request.getImagePath());
 
         ReviewPostEntity updatedReviewPostEntity = reviewPostEntityRepository.saveAndFlush(reviewPost);

@@ -13,10 +13,9 @@ public class ReviewPostModifyRequest {
     private Integer productId;
     private String title;
     private String content;
-    private String hashtag;
     private String imagePath;
 
-    public static ReviewPostModifyRequest of(Integer productId, String title, String content, String hashtag, String imagePath) {
-        return new ReviewPostModifyRequest(productId, title, content, hashtag, imagePath);
+    public static ReviewPostModifyRequest of(Integer productId, String title, String content, String imagePath) {
+        return new ReviewPostModifyRequest(productId, title, content, imagePath);
     }
 }

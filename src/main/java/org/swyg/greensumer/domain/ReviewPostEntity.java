@@ -48,12 +48,7 @@ public class ReviewPostEntity {
     private String content;
 
     // TODO : 이미지 또한 엔티티를 분리하여 관리할 필요가 있음. 이미지 제목, 이미지 경로, 작성자 정보가 필요하기 때문
-    @Setter
-    @Column(name = "hashtag", length = 50)
-    private String hashtag;
-    @Setter
-    @Column(name = "imagePath", length = 500)
-    private String imagePath;
+    @Setter @Column(name = "imagePath", length = 500) private String imagePath;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -74,16 +69,14 @@ public class ReviewPostEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public ReviewPostEntity() {
-    }
+    public ReviewPostEntity() {}
 
-    public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content, String hashtag, String imagePath) {
+    public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content, String imagePath) {
         ReviewPostEntity reviewPostEntity = new ReviewPostEntity();
         reviewPostEntity.setUser(user);
         reviewPostEntity.setProduct(product);
         reviewPostEntity.setTitle(title);
         reviewPostEntity.setContent(content);
-        reviewPostEntity.setHashtag(hashtag);
         reviewPostEntity.setImagePath(imagePath);
 
         return reviewPostEntity;

@@ -11,12 +11,12 @@ import java.time.Instant;
 import java.util.Set;
 
 public class ResponseFixture {
+
     private ReviewPostWithCommentResponse createReviewPostWithCommentsResponse() {
         return new ReviewPostWithCommentResponse(
                 1,
                 "title",
                 "content",
-                "hashtag",
                 "imagePath",
                 createProductResponse(),
                 createUserResponse(),

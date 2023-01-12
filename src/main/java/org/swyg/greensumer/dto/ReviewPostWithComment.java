@@ -17,7 +17,6 @@ public class ReviewPostWithComment {
     private Integer id;
     private String title;
     private String content;
-    private String hashtag;
     private String imagePath;
     private Product product;
     private User user;
@@ -31,7 +30,6 @@ public class ReviewPostWithComment {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getHashtag(),
                 entity.getImagePath(),
                 Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),

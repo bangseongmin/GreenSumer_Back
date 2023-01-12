@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Fixtures {
     private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjczMDIwMDYwLCJleHAiOjE2NzU2MTIwNjB9.USuRnODheSfeL65rpXqQOMkVLnOqCtSacrJsLNQXSNg";
@@ -20,7 +19,6 @@ public class Fixtures {
     private static final int modifiedStock = stock + 1;
     private static final String title = "title";
     private static final String content = "content";
-    private static final String hashtag = "hashtag";
     private static final String image = "image";
     private static final String username = "username";
     private static final String password = "password";
@@ -39,7 +37,7 @@ public class Fixtures {
     private static final UserRole sellerRole = UserRole.SELLER;
 
     public static ReviewPost getReviewPost() {
-        return new ReviewPost(id, title, content, hashtag, image, getProduct(), getUser(), getNow(), null, null);
+        return new ReviewPost(id, title, content, image, getProduct(), getUser(), getNow(), null, null);
     }
 
     public static Product getProduct() {
@@ -87,7 +85,7 @@ public class Fixtures {
     }
 
     public static ReviewPostWithComment getReviewPostWithComment() {
-        return new ReviewPostWithComment(id, title, content, hashtag, image, getProduct(), getUser(), Set.of(getReviewComment()), getNow(), null, null);
+        return new ReviewPostWithComment(id, title, content, image, getProduct(), getUser(), Set.of(getReviewComment()), getNow(), null, null);
     }
 
     public static String getToken() {
@@ -173,7 +171,6 @@ public class Fixtures {
         reviewPost.setProduct(getProductEntity());
         reviewPost.setTitle(title);
         reviewPost.setContent(content);
-        reviewPost.setHashtag(hashtag);
         reviewPost.setImagePath(image);
         return reviewPost;
     }

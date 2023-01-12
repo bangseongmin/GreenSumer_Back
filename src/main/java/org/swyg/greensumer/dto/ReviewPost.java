@@ -14,7 +14,6 @@ public class ReviewPost {
     private Integer id;
     private String title;
     private String content;
-    private String hashtag;
     private String imagePath;
     private Product product;
     private User user;
@@ -27,7 +26,6 @@ public class ReviewPost {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getHashtag(),
                 entity.getImagePath(),
                 Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),
