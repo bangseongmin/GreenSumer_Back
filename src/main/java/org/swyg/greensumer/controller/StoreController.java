@@ -14,6 +14,7 @@ import org.swyg.greensumer.dto.request.StoreCreateRequest;
 import org.swyg.greensumer.dto.request.StoreModifyRequest;
 import org.swyg.greensumer.dto.response.ProductResponse;
 import org.swyg.greensumer.dto.response.Response;
+import org.swyg.greensumer.dto.response.SellerStoreResponse;
 import org.swyg.greensumer.dto.response.StoreResponse;
 import org.swyg.greensumer.service.StoreService;
 
@@ -25,8 +26,8 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping
-    public Response<StoreResponse> create(@RequestBody StoreCreateRequest request, Authentication authentication) {
-        Store store = storeService.create(request, authentication.getName());
+    public Response<StoreResponse> create(@RequestBody StoreCreateRequest request) {
+        Store store = storeService.create(request);
 
         return Response.success(StoreResponse.fromStore(store));
     }
@@ -51,8 +52,9 @@ public class StoreController {
     }
 
     @GetMapping("/my")
-    public Response<Page<StoreResponse>> mylist(Pageable pageable, Authentication authentication) {
-        return Response.success(storeService.mylist(pageable, authentication.getName()).map(StoreResponse::fromStore));
+    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+
+        return Response.success(storeService.mylist(pageable, authentication.getName()).map(SellerStoreResponse::fromSellerStore));
     }
 
     @PostMapping("/{storeId}/products")
