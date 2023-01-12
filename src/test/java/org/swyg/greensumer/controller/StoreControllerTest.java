@@ -247,9 +247,9 @@ class StoreControllerTest {
         given(storeService.registerProduct(any(), any(), any())).willReturn(getProduct());
 
         mvc.perform(post("/api/v1/stores/1/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(getProductCreateRequest()))
-        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(getProductCreateRequest()))
+                )
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

@@ -57,7 +57,7 @@ public class StoreEntity {
     public StoreEntity(){}
 
     public static StoreEntity of(String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {
-       return StoreEntity.of(null, name, description, address, hours, logo, storeType);
+        return StoreEntity.of(null, name, description, address, hours, logo, storeType);
     }
 
     public static StoreEntity of(Integer id, String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {

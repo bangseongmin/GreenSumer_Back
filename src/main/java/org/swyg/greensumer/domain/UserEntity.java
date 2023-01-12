@@ -27,21 +27,30 @@ public class UserEntity {
     private Integer id;
 
     @Setter @Column(name = "username", length = 50) private String username;
-    @Setter @Column(nullable = false, length = 50) private String nickname;
-    @Setter @Column(nullable = false, length = 100) private String email;
-
     @Setter @Column(name = "password") private String password;
+    @Setter @Column(nullable = false, length = 100) private String email;
+    @Setter @Column(nullable = false, length = 50) private String nickname;
 
     @Setter @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
 
-    @Setter @Column(name = "role") @Enumerated(EnumType.STRING) private UserRole role;
+    @Setter @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at")    private Timestamp updatedAt;
-    @Column(name = "deleted_at")    private Timestamp deletedAt;
+    @Column(name = "registered_at")
+    private Timestamp registeredAt;
 
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
+
+    @PrePersist
+    void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+
+    @PreUpdate
+    void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public static UserEntity of(String username, String password, String nickname, String email){
         return UserEntity.of(username, password, nickname, email, null);

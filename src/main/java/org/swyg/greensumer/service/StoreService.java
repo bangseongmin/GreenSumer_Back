@@ -207,11 +207,11 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-         ProductEntity productEntity = productEntityRepository.findByStoreAndId(storeEntity, productId).orElseThrow(() -> {
-             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded on %s", productId, storeEntity.getName()));
-         });
+        ProductEntity productEntity = productEntityRepository.findByStoreAndId(storeEntity, productId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded on %s", productId, storeEntity.getName()));
+        });
 
-         return Product.fromEntity(productEntity);
+        return Product.fromEntity(productEntity);
     }
 
     public StoreEntity getStoreEntity(AddressEntity addressEntity) {
