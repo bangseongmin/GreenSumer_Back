@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.Product;
+import org.swyg.greensumer.dto.SellerStore;
 import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.dto.request.ProductCreateRequest;
 import org.swyg.greensumer.dto.request.ProductModifyRequest;
@@ -29,21 +31,17 @@ public class StoreService {
     private final UserEntityRepository userEntityRepository;
     private final AddressService addressService;
 
-    public Store create(StoreCreateRequest request, String username) {
-        // 1. 회원가입한 유저인지 확인
-        UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
-        });
-
-        // 2. 주소 확인(없는 경우 주소 정보를 등록하여 반환)
+    @Transactional
+    public Store create(StoreCreateRequest request) {
+        // 1. 주소 확인(없는 경우 주소 정보를 등록하여 반환)
         AddressEntity addressEntity = addressService.findAddressEntity(request.getAddress(), request.getRoadname(), request.getLat(), request.getLat());
 
-        // 3. 가게명과 주소가 동일한 가게가 존재할 경우 중복 에러 발생
+        // 2. 가게명과 주소가 동일한 가게가 존재할 경우 중복 에러 발생
         storeEntityRepository.findByNameAndAddress(request.getName(), addressEntity).ifPresent(it -> {
             throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", request.getName()));
         });
 
-        // 4. 가게 객체 생성
+        // 3. 가게 객체 생성
         StoreEntity storeEntity = StoreEntity.of(
                 request.getName(),
                 request.getDescription(),
@@ -53,16 +51,12 @@ public class StoreService {
                 StoreType.valueOf(request.getType())
         );
 
-        // 5. 가게 주인과 가게 정보 매핑
-        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.save(SellerStoreEntity.of(storeEntity, userEntity));
-        storeEntity.addSellerStore(sellerStoreEntity);
-
-        // 6. 가게 정보 반환
+        // 4. 가게 정보 반환
         return Store.fromEntity(storeEntityRepository.save(storeEntity));
     }
 
     public Store modify(Integer storeId, StoreModifyRequest request, String username) {
-        // 1. 로그인한 유저정보 확인
+        // 1. 회원가입된 유저정보 확인
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
@@ -108,9 +102,8 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
-//
-//        // 4. 가게에 연관된 관리자 정보 삭제
-//        sellerStoreEntityRepository.deleteAllByStore_Id(storeId);
+        // 4. 가게에 연관된 관리자 정보 삭제
+        sellerStoreEntityRepository.deleteAllByStore_Id(storeId);
 
         // 5. 가게 삭제
         storeEntityRepository.deleteById(storeId);
@@ -124,13 +117,12 @@ public class StoreService {
         return storeEntityRepository.findAll(pageable).map(Store::fromEntity);
     }
 
-    public Page<Store> mylist(Pageable pageable, String username) {
+    public Page<SellerStore> mylist(Pageable pageable, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-
-        return storeEntityRepository.findAllByUser(userEntity, pageable).map(Store::fromEntity);
+        return sellerStoreEntityRepository.findAllBySeller_Id(userEntity.getId(), pageable).map(SellerStore::fromEntity);
     }
 
     public Product registerProduct(Integer storeId, ProductCreateRequest request, String username) {
@@ -222,9 +214,7 @@ public class StoreService {
          return Product.fromEntity(productEntity);
     }
 
-    public StoreEntity getStoreEntity(String address, Double lat, Double lng) {
-        AddressEntity addressEntity = addressService.findAddressEntity(address, address, lat, lng);
-
+    public StoreEntity getStoreEntity(AddressEntity addressEntity) {
         return storeEntityRepository.findByAddress_Id(addressEntity.getId()).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded by address", addressEntity.getId()));
         });

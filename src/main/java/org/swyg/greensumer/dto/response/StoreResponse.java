@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.Store;
 
 import java.sql.Timestamp;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -27,11 +29,7 @@ public class StoreResponse {
     public static StoreResponse fromStore(Store store) {
         return new StoreResponse(
                 store.getId(),
-                UserResponse.fromUser(store.getSellerStores().stream()
-                        .findFirst()
-                        .get()
-                        .getSeller()
-                ),
+                store.getSellerStores().size() == 0 ? new UserResponse() : UserResponse.fromUser(store.getSellerStores().stream().iterator().next().getSeller()),
                 store.getName(),
                 store.getDescription(),
                 store.getAddress().getAddress(),

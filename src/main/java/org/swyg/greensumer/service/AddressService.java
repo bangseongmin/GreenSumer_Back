@@ -14,9 +14,13 @@ public class AddressService {
     private final AddressEntityRepository addressEntityRepository;
 
     public AddressEntity findAddressEntity(String address, String roadname, Double latitude, Double longitude) {
-        return addressEntityRepository.findByLatitudeAndLongitude(latitude, longitude).orElse(
-                addressEntityRepository.save(AddressEntity.of(address, roadname, latitude, longitude))
-        );
+        AddressEntity addressEntity = addressEntityRepository.findByLatitudeAndLongitude(latitude, longitude).get();
+
+        if(addressEntity == null) {
+            addressEntity = addressEntityRepository.save(AddressEntity.of(address, roadname, latitude, longitude));
+        }
+
+        return addressEntity;
     }
 
     public AddressEntity searchAddress(Long id) {
@@ -25,6 +29,9 @@ public class AddressService {
     }
 
     public AddressEntity updateAddress(AddressEntity addressEntity, AddressEntity updatedAddress) {
+        // 유효성 검사
+        searchAddress(addressEntity.getId());
+
         if(!(addressEntity.getAddress().equals(updatedAddress.getAddress()) ||
                 addressEntity.getRoadname().equals(updatedAddress.getRoadname()) ||
                 addressEntity.getLatitude().equals(updatedAddress.getLatitude()) ||

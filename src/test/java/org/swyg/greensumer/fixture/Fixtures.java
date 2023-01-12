@@ -7,6 +7,7 @@ import org.swyg.greensumer.dto.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,21 +55,27 @@ public class Fixtures {
     }
 
     public static AddressEntity getAddressEntity(){
-        return AddressEntity.of(address, roadname, lat, lng);
+        return createAddressEntity();
+    }
+
+    public static AddressEntity createAddressEntity() {
+        return AddressEntity.of(1L, address, roadname, lat, lng, getNow(), null, null);
     }
 
     public static Address getAddress() {
-        return Address.fromEntity(getAddressEntity());
+        return Address.fromEntity(createAddressEntity());
     }
 
     public static SellerStoreEntity getSellerStoreEntity() {
-        return SellerStoreEntity.of(getStoreEntity(), getSellerEntity());
+        SellerStoreEntity sellerStoreEntity = new SellerStoreEntity();
+        sellerStoreEntity.setSeller(createUserEntity());
+        sellerStoreEntity.setStore(createStoreEntity());
+        return sellerStoreEntity;
     }
 
     public static Set<SellerStore> getSetSellerStores() {
-        return getStoreEntity().getSellerStores().stream()
-                .map(SellerStore::fromEntity)
-                .collect(Collectors.toUnmodifiableSet());
+        Set<SellerStore> sellerStores = new LinkedHashSet<>();
+        return sellerStores;
     }
 
     private static Timestamp getNow() {
@@ -108,7 +115,7 @@ public class Fixtures {
     }
 
     public static StoreEntity createStoreEntity() {
-        return StoreEntity.of(id, name, description, getAddressEntity(), hours, logo, StoreType.FOOD);
+        return StoreEntity.of(id, name, description, createAddressEntity(), hours, logo, StoreType.FOOD);
     }
 
     public static ProductEntity createProductEntity() {
@@ -156,14 +163,7 @@ public class Fixtures {
     }
 
     public static StoreEntity getStoreEntity() {
-        StoreEntity storeEntity = new StoreEntity();
-        storeEntity.setId(id);
-        storeEntity.setName(name);
-        storeEntity.setDescription(description);
-        storeEntity.setAddress(getAddressEntity());
-        storeEntity.setHours(hours);
-        storeEntity.setLogo(logo);
-        return storeEntity;
+        return createStoreEntity();
     }
 
     public static ReviewPostEntity getReviewPostEntity() {

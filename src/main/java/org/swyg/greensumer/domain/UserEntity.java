@@ -32,7 +32,7 @@ public class UserEntity {
 
     @Setter @Column(name = "password") private String password;
 
-    @Setter @OneToOne AddressEntity addressEntity;
+    @Setter @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
 
     @Setter @Column(name = "role") @Enumerated(EnumType.STRING) private UserRole role;
 
@@ -53,14 +53,8 @@ public class UserEntity {
         user.setPassword(password);
         user.setNickname(nickname);
         user.setEmail(email);
-
-        if(address == null){
-            user.setRole(UserRole.USER);
-        }else{
-            user.setAddressEntity(address);
-            user.setRole(UserRole.SELLER);
-        }
-
+        user.setAddressEntity(address);
+        user.setRole(address == null ? UserRole.USER : UserRole.SELLER);
         return user;
     }
 

@@ -33,16 +33,16 @@ public class User implements UserDetails {
 
     public static User fromEntity(UserEntity entity){
         return new User(
-          entity.getId(),
-          entity.getUsername(),
-          entity.getPassword(),
-          entity.getEmail(),
-          entity.getNickname(),
-          Address.fromEntity(entity.getAddressEntity()),
-          entity.getRole(),
-          entity.getRegisteredAt(),
-          entity.getUpdatedAt(),
-          entity.getDeletedAt()
+                entity.getId(),
+                entity.getUsername(),
+                entity.getPassword(),
+                entity.getEmail(),
+                entity.getNickname(),
+                entity.getRole() == UserRole.SELLER ? Address.fromEntity(entity.getAddressEntity()) : null,
+                entity.getRole(),
+                entity.getRegisteredAt(),
+                entity.getUpdatedAt(),
+                entity.getDeletedAt()
         );
     }
 

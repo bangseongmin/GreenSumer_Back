@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class UserSignUpRequest {
     private String username;
     private String password;
-    private String email;
     private String nickname;
+    private String email;
     private Integer storeId;
     private String address;
     private Double lat;
