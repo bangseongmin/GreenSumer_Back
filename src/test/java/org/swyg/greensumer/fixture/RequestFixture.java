@@ -12,7 +12,6 @@ public class RequestFixture {
     private static final String nickname = "nickname";
     private static final String title = "title";
     private static final String content = "content";
-    private static final String hashtag = "hashtag";
     private static final String image = "image";
     private static final String comment = "comment";
     private static final String name = "name";
@@ -31,11 +30,11 @@ public class RequestFixture {
     private static final int modifiedStock = stock + 1;
 
     public static ReviewPostCreateRequest getReviewPostCreateRequest() {
-        return ReviewPostCreateRequest.of(productId, title, content, hashtag, image);
+        return ReviewPostCreateRequest.of(productId, title, content, image);
     }
 
     public static ReviewPostModifyRequest getReviewPostModifyRequest() {
-        return ReviewPostModifyRequest.of(productId, title, content, hashtag, image);
+        return ReviewPostModifyRequest.of(productId, title, content, image);
     }
 
     public static ReviewCommentCreateRequest getReviewCommentCreateRequest() {
