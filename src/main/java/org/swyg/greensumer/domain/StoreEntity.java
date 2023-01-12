@@ -2,6 +2,7 @@ package org.swyg.greensumer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.StoreType;
@@ -9,13 +10,13 @@ import org.swyg.greensumer.domain.constant.StoreType;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Entity
-@Table(name = "\"store\"", indexes = {
-        @Index(name = "store_name_idx", columnList = "name", unique = true)
-})
+@Table(name = "\"store\"")
 @SQLDelete(sql = "UPDATE \"store\" SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class StoreEntity {
@@ -24,59 +25,48 @@ public class StoreEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private UserEntity user;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "store", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<SellerStoreEntity> sellerStores = new LinkedHashSet<>();
 
     @Setter @Column(name = "name", length = 30) private String name;
 
     @Setter @Column(name = "description", columnDefinition = "TEXT") private String description;
 
-    @Setter private String address;
-    @Setter private String hours;
-    @Setter private String lat;
-    @Setter private String lng;
-    @Setter private String logo;
-
     @Setter @Column(name = "type") @Enumerated(EnumType.STRING) private StoreType storeType;
+
+    @Setter @ToString.Exclude
+    @OneToOne @JoinColumn(name = "address_id")
+    private AddressEntity address;
+
+    @Setter private String hours;
+    @Setter private String logo;
 
     @Column(name = "registered_at") private Timestamp registeredAt;
     @Column(name = "updated_at") private Timestamp updatedAt;
     @Column(name = "deleted_at") private Timestamp deletedAt;
 
-    @PrePersist
-    void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+    @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
-    @PreUpdate
-    void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
+    public void addSellerStore(SellerStoreEntity sellerStoreEntity){
+        sellerStoreEntity.setStore(this);
+        this.sellerStores.add(sellerStoreEntity);
+    }
 
     public StoreEntity(){}
 
-    public static StoreEntity of(UserEntity user, String name, String description, String address, String hours, String lat, String lng, String logo, StoreType storeType) {
-       StoreEntity storeEntity = new StoreEntity();
-       storeEntity.setUser(user);
-       storeEntity.setName(name);
-       storeEntity.setDescription(description);
-       storeEntity.setAddress(address);
-       storeEntity.setHours(hours);
-       storeEntity.setLat(lat);
-       storeEntity.setLng(lng);
-       storeEntity.setLogo(logo);
-       storeEntity.setStoreType(storeType);
-
-       return storeEntity;
+    public static StoreEntity of(String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {
+        return StoreEntity.of(null, name, description, address, hours, logo, storeType);
     }
 
-    public static StoreEntity of(Integer id, UserEntity user, String name, String description, String address, String hours, String lat, String lng, String logo, StoreType storeType) {
+    public static StoreEntity of(Integer id, String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {
         StoreEntity storeEntity = new StoreEntity();
         storeEntity.setId(id);
-        storeEntity.setUser(user);
         storeEntity.setName(name);
         storeEntity.setDescription(description);
         storeEntity.setAddress(address);
         storeEntity.setHours(hours);
-        storeEntity.setLat(lat);
-        storeEntity.setLng(lng);
         storeEntity.setLogo(logo);
         storeEntity.setStoreType(storeType);
 

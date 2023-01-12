@@ -13,8 +13,12 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
+import org.swyg.greensumer.repository.ProductEntityRepository;
+import org.swyg.greensumer.repository.SellerStoreEntityRepository;
+import org.swyg.greensumer.service.AddressService;
 import org.swyg.greensumer.service.StoreService;
 import org.swyg.greensumer.service.UserService;
 
@@ -50,34 +54,36 @@ class StoreControllerTest {
     }
 
     @DisplayName("[view][POST] 가게 생성 - 정상호출")
-    @WithMockUser
     @Test
     void givenStoreInfo_whenRequestingCreateStore_thenNothing() throws Exception {
-        when(storeService.create(any(), any())).thenReturn(getStore());
+        when(storeService.create(any())).thenReturn(getStore());
 
         mvc.perform(post("/api/v1/stores")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(getStoreCreateRequest()))
+                        .with(csrf())
                 ).andDo(print())
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("[view][POST] 가게 생성 - 로그인하지 않은경우")
-    @WithAnonymousUser
+    @DisplayName("[view][POST] 가게 생성 - 회원가입하지 않은 유저인 경우")
+    @WithMockUser
     @Test
-    void givenStoreInfo_whenRequestingCreateStoreNotLogin_thenThrowUnauthroizedException() throws Exception {
+    void givenStoreInfo_whenRequestingCreateStore_thenThrowUserNotFoundException() throws Exception {
+        doThrow(new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND)).when(storeService).create(any());
+
         mvc.perform(post("/api/v1/stores")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(getStoreCreateRequest()))
                 ).andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
 
     @DisplayName("[view][POST] 가게 생성 - 이미 존재하는 가게명인 경우")
     @WithMockUser
     @Test
     void givenDuplicateStoreInfo_whenRequestingCreateStore_thenThrowConflictError() throws Exception {
-        doThrow(new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_STORE_NAME)).when(storeService).create(any(), any());
+        doThrow(new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_STORE_NAME)).when(storeService).create(any());
 
         mvc.perform(post("/api/v1/stores")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -241,9 +247,9 @@ class StoreControllerTest {
         given(storeService.registerProduct(any(), any(), any())).willReturn(getProduct());
 
         mvc.perform(post("/api/v1/stores/1/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(getProductCreateRequest()))
-        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(getProductCreateRequest()))
+                )
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
