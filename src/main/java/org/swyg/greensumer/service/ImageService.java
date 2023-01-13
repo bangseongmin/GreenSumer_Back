@@ -34,9 +34,9 @@ public class ImageService {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
-        ImageEntity imageEntity = imageEntityRepository.save(ImageEntity.of(
-                ImageType.valueOf(type), userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes())
-        ));
+        ImageEntity imageEntity = imageEntityRepository.save(
+                ImageEntity.of(ImageType.valueOf(type), userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes()))
+        );
 
         if(imageEntity == null){
             throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_SAVE_FAIL, String.format("%s cant save", image.getOriginalFilename()));
@@ -55,24 +55,27 @@ public class ImageService {
         return Image.fromEntity(imageEntity);
     }
 
-    public List<Image> saveImages(ImagesCreateRequest request, String username) {
+    @Transactional
+    public List<Image> saveImages(ImagesCreateRequest request, String username) throws IOException {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
         List<ImageEntity> imageEntities = new LinkedList<>();
+        ImageType type = ImageType.valueOf(request.getType());
 
-        request.getImages().forEach(e -> {
-            try {
-                ImageEntity saved = imageEntityRepository.save(ImageEntity.of(
-                        ImageType.valueOf(request.getType()), userEntity, e.getOriginalFilename(), ImageUtils.compressImage(e.getBytes())
-                ));
 
-                imageEntities.a(saved);
-            } catch (IOException ex) {
-                throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_SAVE_FAIL, String.format("%s cant save", e.getOriginalFilename()));
-            }
-        });
+        for(MultipartFile image : request.getImages()){
+            System.out.println(image.getOriginalFilename());
+            System.out.println(image.getSize());
+            System.out.println(image.getSize());
+
+            ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes()));
+
+            ImageEntity save = imageEntityRepository.save(entity);
+
+            imageEntities.add(save);
+        }
 
         return imageEntities.stream().map(Image::fromEntity).collect(Collectors.toList());
     }
