@@ -29,7 +29,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .regexMatchers("^(?!/api/).*")
                 .antMatchers(HttpMethod.POST, "/api/*/users/sign-up", "/api/*/users/login", "/api/*/users/mail", "/api/*/stores")
-                .antMatchers(HttpMethod.GET, "/api/*/users/existUsername", "/api/v1/posts")
+                .antMatchers(HttpMethod.GET, "/api/*/users/existUsername", "/api/v1/posts", "/api/v1/image/*")
                 .antMatchers(HttpMethod.PUT, "/api/*/users/find/password", "/api/*/users/mail", "/api/*/users/find/username")
         ;
     }
