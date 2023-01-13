@@ -10,9 +10,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Entity
@@ -40,15 +38,14 @@ public class ReviewPostEntity {
     @OneToMany(mappedBy = "reviewPost", cascade = CascadeType.ALL)
     private final Set<ReviewCommentEntity> comments = new LinkedHashSet<>();
 
-    @Setter
-    @Column(name = "title", length = 50)
-    private String title;
-    @Setter
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
+    @Setter @Column(name = "title", length = 50) private String title;
+    @Setter @Column(name = "content", columnDefinition = "TEXT")  private String content;
 
     // TODO : 이미지 또한 엔티티를 분리하여 관리할 필요가 있음. 이미지 제목, 이미지 경로, 작성자 정보가 필요하기 때문
     @Setter @Column(name = "imagePath", length = 500) private String imagePath;
+
+    @ToString.Exclude @OrderBy("registeredAt ASC") @OneToMany(cascade = {CascadeType.ALL})
+    private final Set<ImageEntity> images = new LinkedHashSet<>();
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -59,28 +56,27 @@ public class ReviewPostEntity {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    @PrePersist
-    void registeredAt() {
-        this.registeredAt = Timestamp.from(Instant.now());
-    }
-
-    @PreUpdate
-    void updatedAt() {
-        this.updatedAt = Timestamp.from(Instant.now());
-    }
+    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
+    @PreUpdate void updatedAt() { this.updatedAt = Timestamp.from(Instant.now()); }
 
     public ReviewPostEntity() {}
 
-    public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content, String imagePath) {
-        ReviewPostEntity reviewPostEntity = new ReviewPostEntity();
-        reviewPostEntity.setUser(user);
-        reviewPostEntity.setProduct(product);
-        reviewPostEntity.setTitle(title);
-        reviewPostEntity.setContent(content);
-        reviewPostEntity.setImagePath(imagePath);
-
-        return reviewPostEntity;
+    private ReviewPostEntity (ProductEntity product, UserEntity user, String title, String content) {
+       this.product = product;
+       this.user = user;
+       this.title = title;
+       this.content = content;
     }
+
+    public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content) {
+        return new ReviewPostEntity(product, user, title, content);
+    }
+
+    public void addImage(ImageEntity image){ this.images.add(image); }
+    public void addImages(Collection<ImageEntity> images){ this.images.addAll(images); }
+    public void deleteImage(ImageEntity image) { this.images.remove(image); }
+    public void deleteImages(Collection<ImageEntity> images) { this.images.retainAll(images); }
+    public void clearImages() { this.images.clear(); }
 
     @Override
     public boolean equals(Object o) {

@@ -37,8 +37,7 @@ public class ReviewPostService {
                 productEntity,
                 userEntity,
                 request.getTitle(),
-                request.getContent(),
-                request.getImagePath()
+                request.getContent()
         ));
     }
 
