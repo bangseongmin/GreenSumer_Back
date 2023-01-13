@@ -27,8 +27,12 @@ public class ImageEntity {
     @OneToOne @JoinColumn(name = "user_id")
     private UserEntity userEntity;  // 업로드 한 유저
 
-    private @Column(columnDefinition = "TEXT") String filename;
-    private @Column(name = "imagedata", length = 1000) byte[] imageData;
+    @Column(columnDefinition = "TEXT")
+    private String filename;
+
+    @Lob @Basic(fetch = FetchType.LAZY)
+    @Column(name = "imagedata", length = 16_000_000)
+    private byte[] imageData;
 
     @Column(name = "registered_at") private Timestamp registeredAt;
     @Column(name = "updated_at") private Timestamp updatedAt;
