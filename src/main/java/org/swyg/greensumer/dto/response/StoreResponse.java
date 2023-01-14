@@ -3,6 +3,8 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.swyg.greensumer.domain.ImageEntity;
+import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.Store;
 
 import java.sql.Timestamp;
@@ -21,7 +23,7 @@ public class StoreResponse {
     private String hours;
     private Double lat;
     private Double lng;
-    private String logo;
+    private Set<Image> images;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
@@ -36,7 +38,7 @@ public class StoreResponse {
                 store.getHours(),
                 store.getAddress().getLat(),
                 store.getAddress().getLng(),
-                store.getLogo(),
+                store.getLogos(),
                 store.getRegisteredAt(),
                 store.getUpdatedAt(),
                 store.getDeletedAt()

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class Image {
     private Integer id;
     private ImageType imageType;
-    private User user;
+    private String username;
     private String filename;
     private byte[] imageData;
     private Timestamp registeredAt;
@@ -25,7 +25,7 @@ public class Image {
         return new Image(
                 entity.getId(),
                 entity.getImageType(),
-                User.fromEntity(entity.getUserEntity()),
+                entity.getUserEntity().getUsername(),
                 entity.getFilename(),
                 entity.getImageData(),
                 entity.getRegisteredAt(),

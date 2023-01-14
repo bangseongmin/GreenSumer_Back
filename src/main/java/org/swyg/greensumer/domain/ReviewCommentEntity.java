@@ -13,26 +13,26 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Setter
 @Getter
-@ToString(callSuper = true)
 @Entity
 @Table(name = "\"review_comment\"")
 @SQLDelete(sql = "UPDATE \"review_comment\" SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewCommentEntity {
-    @Setter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter @ManyToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "post_id")
     private ReviewPostEntity reviewPost;
 
-    @Setter @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @Setter @Column(name = "content", columnDefinition = "TEXT")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "registered_at") private Timestamp registeredAt;

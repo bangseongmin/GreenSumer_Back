@@ -2,8 +2,8 @@ package org.swyg.greensumer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
-import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.ImageType;
 
 import javax.persistence.*;
@@ -24,8 +24,17 @@ public class ImageEntity {
 
     private ImageType imageType;
 
-    @OneToOne @JoinColumn(name = "user_id")
+    @ToString.Exclude @OneToOne @JoinColumn(name = "user_id")
     private UserEntity userEntity;  // 업로드 한 유저
+
+    @ManyToOne @JoinColumn(name = "product_id")
+    private ProductEntity product;
+
+    @ManyToOne @JoinColumn(name = "review_post_id")
+    private ReviewPostEntity review;
+
+    @ManyToOne @JoinColumn(name = "store_id")
+    private StoreEntity store;
 
     @Column(columnDefinition = "TEXT")
     private String filename;

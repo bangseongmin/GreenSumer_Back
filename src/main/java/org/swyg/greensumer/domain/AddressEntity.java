@@ -9,26 +9,25 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
 
+@Setter
 @Getter
 @Table(name = "\"address\"")
 @SQLDelete(sql = "UPDATE \"address\" SET deleted_at = NOW() where id=?")
 @Entity
 public class AddressEntity {
 
-    @Setter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(columnDefinition = "TEXT", unique = true) private String address;
-    @Setter @Column(columnDefinition = "TEXT", unique = true) private String roadname;
+    @Column(columnDefinition = "TEXT", unique = true) private String address;
+    @Column(columnDefinition = "TEXT", unique = true) private String roadname;
 
-    @Setter @Column(name = "lat", unique = true) private Double latitude;
-    @Setter @Column(name = "lng", unique = true) private Double longitude;
+    @Column(name = "lat", unique = true) private Double latitude;
+    @Column(name = "lng", unique = true) private Double longitude;
 
-    @Setter @Column(name = "registered_at") private Timestamp registeredAt;
-    @Setter @Column(name = "updated_at") private Timestamp updatedAt;
-    @Setter @Column(name = "deleted_at") private Timestamp deletedAt;
-
+    @Column(name = "registered_at") private Timestamp registeredAt;
+    @Column(name = "updated_at") private Timestamp updatedAt;
+    @Column(name = "deleted_at") private Timestamp deletedAt;
 
     @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
     @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
@@ -56,7 +55,7 @@ public class AddressEntity {
     }
 
     public static AddressEntity of(Long id, String address, String roadname, Double latitude, Double longitude, Timestamp registeredAt, Timestamp updatedAt, Timestamp deletedAt) {
-        return new AddressEntity(id, address, roadname, latitude, latitude, registeredAt, updatedAt, deletedAt);
+        return new AddressEntity(id, address, roadname, latitude, longitude, registeredAt, updatedAt, deletedAt);
     }
 
     @Override
