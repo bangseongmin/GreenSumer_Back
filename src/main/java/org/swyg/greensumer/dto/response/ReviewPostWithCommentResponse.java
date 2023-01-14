@@ -17,8 +17,6 @@ public class ReviewPostWithCommentResponse {
     private Integer id;
     private String title;
     private String content;
-    private String hashtag;
-    private String imagePath;
     private ProductResponse product;
     private UserResponse user;
     private Set<ReviewCommentResponse> reviewComments;
@@ -31,8 +29,6 @@ public class ReviewPostWithCommentResponse {
                 postWithComment.getId(),
                 postWithComment.getTitle(),
                 postWithComment.getContent(),
-                postWithComment.getHashtag(),
-                postWithComment.getImagePath(),
                 ProductResponse.fromProduct(postWithComment.getProduct()),
                 UserResponse.fromUser(postWithComment.getUser()),
                 postWithComment.getReviewComments().stream()

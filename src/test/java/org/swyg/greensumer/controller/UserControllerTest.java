@@ -66,6 +66,18 @@ class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
+    @DisplayName("[view][POST] 판매자로 회원가입 요청 - 존재하지 않은 주소 정보인 경우")
+    @Test
+    void givenUserInfo_whenRequestingSignUp_thenThrowStoreNotFoundException() throws Exception {
+        when(userService.signup(any())).thenThrow(new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        mvc.perform(post("/api/v1/users/sign-up")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(getUserSignUpRequest()))
+                )
+                .andExpect(status().isNotFound());
+    }
+
     @DisplayName("[view][POST] 로그인 요청 - 정상 호출")
     @Test
     void givenUserInfo_whenRequestingLogin_thenReturnToken() throws Exception {
@@ -246,9 +258,9 @@ class UserControllerTest {
         when(userService.updateUserInfo(any(), any())).thenReturn(getUser());
 
         mvc.perform(put("/api/v1/users/user")
-                .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+                        .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
                 .andExpect(status().isOk());
     }
 
@@ -270,6 +282,19 @@ class UserControllerTest {
     @Test
     void givenUpdatedUserInfo_whenRequestingUpdateUser_thenThrowUserNotFoundException() throws Exception {
         doThrow(new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND)).when(userService).updateUserInfo(any(), any());
+
+        mvc.perform(put("/api/v1/users/user")
+                        .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @DisplayName("[view][PUT] 판매자인 사용자가 정보 변경 요청 - 주소가 존재하지 않은 경우")
+    @WithMockUser
+    @Test
+    void givenUpdatedUserInfo_whenRequestingUpdateUser_thenThrowAddressNotFoundException() throws Exception {
+        doThrow(new GreenSumerBackApplicationException(ErrorCode.ADDRESS_NOT_FOUND)).when(userService).updateUserInfo(any(), any());
 
         mvc.perform(put("/api/v1/users/user")
                         .content(objectMapper.writeValueAsBytes(getUpdateUserRequest()))

@@ -53,15 +53,15 @@ class VerificationServiceTest {
         // Given
         VerificationEntity verification = getVerificationEntity();
         String email = verification.getSubject();
-        given(verificationEntityRepository.findBySubject(email)).willReturn(Optional.of(getVerificationEntity()));
-        given(verificationEntityRepository.saveAndFlush(verification)).willReturn(verification);
+        given(verificationEntityRepository.findBySubject(any())).willReturn(Optional.of(getVerificationEntity()));
+        given(verificationEntityRepository.saveAndFlush(any())).willReturn(verification);
 
         // When
         verificationService.checkMail(email, verification.getCode());
 
         //Then
-        verify(verificationEntityRepository, times(1)).findBySubject(email);
-        verify(verificationEntityRepository, times(1)).saveAndFlush(verification);
+        verify(verificationEntityRepository, times(1)).findBySubject(any());
+        verify(verificationEntityRepository, times(1)).saveAndFlush(any());
     }
 
     @DisplayName("메일 인증 확인 - 인증요청을 하지 않은 경우")

@@ -25,6 +25,9 @@ public enum ErrorCode {
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "store is invalid"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not founded"),
     SAME_AS_PREVIOUS_PASSWORD(HttpStatus.CONFLICT, "Same as Previous password"),
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "Address not founded"),
+    IMAGE_SAVE_FAIL(HttpStatus.CONFLICT, "Image save failed"),
+    IMAGE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "Image not founded")
     ;
 
     private HttpStatus status;

@@ -7,6 +7,7 @@ import org.swyg.greensumer.dto.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Fixtures {
@@ -18,7 +19,6 @@ public class Fixtures {
     private static final int modifiedStock = stock + 1;
     private static final String title = "title";
     private static final String content = "content";
-    private static final String hashtag = "hashtag";
     private static final String image = "image";
     private static final String username = "username";
     private static final String password = "password";
@@ -28,15 +28,16 @@ public class Fixtures {
     private static final String modifiedName = "modified Name";
     private static final String address = "address";
     private static final String description = "description";
-    private static final String lat = "lat";
-    private static final String lng = "lng";
+    private static final Double lat = 123.123123123123;
+    private static final Double lng = 123.123123123123;
     private static final String hours = "hours";
     private static final String logo = "logo";
+    private static final String roadname = "roadname";
     private static final UserRole userRole = UserRole.USER;
     private static final UserRole sellerRole = UserRole.SELLER;
 
     public static ReviewPost getReviewPost() {
-        return new ReviewPost(id, title, content, hashtag, image, getProduct(), getUser(), getNow(), null, null);
+        return new ReviewPost(id, title, content, image, getProduct(), getUser(), getNow(), null, null);
     }
 
     public static Product getProduct() {
@@ -44,11 +45,35 @@ public class Fixtures {
     }
 
     public static User getUser() {
-        return new User(id, username, password, email, nickname, address, lat, lng, userRole, getNow(), null, null);
+        return new User(id, username, password, email, nickname, getAddress(), userRole, getNow(), null, null);
     }
 
     public static Store getStore() {
-        return new Store(id, getUser(), name, description, address, hours, lat, lng, logo, getNow(), null, null);
+        return new Store(id, getSetSellerStores(), name, description, getAddress(), hours, logo, getNow(), null, null);
+    }
+
+    public static AddressEntity getAddressEntity(){
+        return createAddressEntity();
+    }
+
+    public static AddressEntity createAddressEntity() {
+        return AddressEntity.of(1L, address, roadname, lat, lng, getNow(), null, null);
+    }
+
+    public static Address getAddress() {
+        return Address.fromEntity(createAddressEntity());
+    }
+
+    public static SellerStoreEntity getSellerStoreEntity() {
+        SellerStoreEntity sellerStoreEntity = new SellerStoreEntity();
+        sellerStoreEntity.setSeller(createUserEntity());
+        sellerStoreEntity.setStore(createStoreEntity());
+        return sellerStoreEntity;
+    }
+
+    public static Set<SellerStore> getSetSellerStores() {
+        Set<SellerStore> sellerStores = new LinkedHashSet<>();
+        return sellerStores;
     }
 
     private static Timestamp getNow() {
@@ -60,7 +85,7 @@ public class Fixtures {
     }
 
     public static ReviewPostWithComment getReviewPostWithComment() {
-        return new ReviewPostWithComment(id, title, content, hashtag, image, getProduct(), getUser(), Set.of(getReviewComment()), getNow(), null, null);
+        return new ReviewPostWithComment(id, title, content, image, getProduct(), getUser(), Set.of(getReviewComment()), getNow(), null, null);
     }
 
     public static String getToken() {
@@ -84,11 +109,11 @@ public class Fixtures {
     }
 
     public static UserEntity createUserEntity() {
-        return UserEntity.of(username, password, nickname, email, address, lat, lng);
+        return UserEntity.of(username, password, nickname, email, getAddressEntity());
     }
 
     public static StoreEntity createStoreEntity() {
-        return StoreEntity.of(id, createUserEntity(), name, description, address, hours, lat, lng, logo, StoreType.FOOD);
+        return StoreEntity.of(id, name, description, createAddressEntity(), hours, logo, StoreType.FOOD);
     }
 
     public static ProductEntity createProductEntity() {
@@ -115,10 +140,18 @@ public class Fixtures {
         user.setPassword(password);
         user.setNickname(nickname);
         user.setEmail(email);
-        user.setAddress(address);
-        user.setLat(lat);
-        user.setLng(lng);
-        user.setRole(userRole);
+        return user;
+    }
+
+    public static UserEntity getSellerEntity() {
+        UserEntity user = new UserEntity();
+        user.setId(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setNickname(nickname);
+        user.setEmail(email);
+        user.setAddressEntity(getAddressEntity());
+        user.setRole(sellerRole);
         return user;
     }
 
@@ -128,17 +161,7 @@ public class Fixtures {
     }
 
     public static StoreEntity getStoreEntity() {
-        StoreEntity storeEntity = new StoreEntity();
-        storeEntity.setId(id);
-        storeEntity.setUser(getUserEntity());
-        storeEntity.setName(name);
-        storeEntity.setDescription(description);
-        storeEntity.setAddress(address);
-        storeEntity.setHours(hours);
-        storeEntity.setLat(lat);
-        storeEntity.setLng(lng);
-        storeEntity.setLogo(logo);
-        return storeEntity;
+        return createStoreEntity();
     }
 
     public static ReviewPostEntity getReviewPostEntity() {
@@ -148,7 +171,6 @@ public class Fixtures {
         reviewPost.setProduct(getProductEntity());
         reviewPost.setTitle(title);
         reviewPost.setContent(content);
-        reviewPost.setHashtag(hashtag);
         reviewPost.setImagePath(image);
         return reviewPost;
     }
