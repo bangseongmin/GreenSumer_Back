@@ -3,6 +3,7 @@ package org.swyg.greensumer.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.domain.StoreEntity;
 
 import java.sql.Timestamp;
@@ -19,7 +20,7 @@ public class Store {
     private String description;
     private Address address;
     private String hours;
-    private String logo;
+    private Set<Image> logos;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
@@ -34,7 +35,9 @@ public class Store {
                 entity.getDescription(),
                 Address.fromEntity(entity.getAddress()),
                 entity.getHours(),
-                entity.getLogo(),
+                entity.getLogos().stream()
+                        .map(Image::fromEntity)
+                        .collect(Collectors.toUnmodifiableSet()),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getDeletedAt()

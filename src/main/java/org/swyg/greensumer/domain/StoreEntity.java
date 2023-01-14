@@ -10,6 +10,7 @@ import org.swyg.greensumer.domain.constant.StoreType;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,6 +30,10 @@ public class StoreEntity {
     @OneToMany(mappedBy = "store", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<SellerStoreEntity> sellerStores = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "store", cascade = {CascadeType.ALL})
+    private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
+
     @Setter @Column(name = "name", length = 30) private String name;
 
     @Setter @Column(name = "description", columnDefinition = "TEXT") private String description;
@@ -40,7 +45,9 @@ public class StoreEntity {
     private AddressEntity address;
 
     @Setter private String hours;
-    @Setter private String logo;
+
+    @OneToMany(mappedBy = "store", orphanRemoval = true, cascade = {CascadeType.ALL} )
+    private Set<ImageEntity> logos = new LinkedHashSet<>();
 
     @Column(name = "registered_at") private Timestamp registeredAt;
     @Column(name = "updated_at") private Timestamp updatedAt;
@@ -54,23 +61,47 @@ public class StoreEntity {
         this.sellerStores.add(sellerStoreEntity);
     }
 
-    public StoreEntity(){}
-
-    public static StoreEntity of(String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {
-        return StoreEntity.of(null, name, description, address, hours, logo, storeType);
+    public void addStoreProduct(StoreProductEntity storeProductEntity){
+        storeProductEntity.setStore(this);
+        this.storeProducts.add(storeProductEntity);
     }
 
-    public static StoreEntity of(Integer id, String name, String description, AddressEntity address, String hours, String logo, StoreType storeType) {
-        StoreEntity storeEntity = new StoreEntity();
-        storeEntity.setId(id);
-        storeEntity.setName(name);
-        storeEntity.setDescription(description);
-        storeEntity.setAddress(address);
-        storeEntity.setHours(hours);
-        storeEntity.setLogo(logo);
-        storeEntity.setStoreType(storeType);
+    public StoreEntity(){}
 
-        return storeEntity;
+    private StoreEntity(String name, String description, StoreType storeType, AddressEntity address, String hours) {
+        this.name = name;
+        this.description = description;
+        this.storeType = storeType;
+        this.address = address;
+        this.hours = hours;
+    }
+
+    public static StoreEntity of(String name, String description, StoreType storeType, AddressEntity address, String hours) {
+        return new StoreEntity(name, description, storeType, address, hours);
+    }
+
+    public void addImage(ImageEntity image) {
+        image.setStore(this);
+        this.logos.add(image);
+    }
+
+    public void addImages(Collection<ImageEntity> images) {
+        images.forEach(e -> e.setStore(this));
+        this.logos.addAll(images);
+    }
+
+    public void deleteImage(ImageEntity image) {
+        image.setStore(this);
+        this.logos.remove(image);
+    }
+
+    public void deleteImages(Collection<ImageEntity> images) {
+        images.forEach(e -> e.setStore(this));
+        this.logos.retainAll(images);
+    }
+
+    public void clearImages() {
+        this.logos.clear();
     }
 
     @Override

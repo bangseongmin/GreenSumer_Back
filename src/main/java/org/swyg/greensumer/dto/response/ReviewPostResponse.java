@@ -16,7 +16,6 @@ public class ReviewPostResponse {
     private ProductResponse product;
     private String title;
     private String content;
-    private String imagePath;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
@@ -28,7 +27,6 @@ public class ReviewPostResponse {
                 ProductResponse.fromProduct(reviewPost.getProduct()),
                 reviewPost.getTitle(),
                 reviewPost.getContent(),
-                reviewPost.getImagePath(),
                 reviewPost.getRegisteredAt(),
                 reviewPost.getUpdatedAt(),
                 reviewPost.getDeletedAt()

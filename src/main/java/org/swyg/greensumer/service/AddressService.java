@@ -14,13 +14,9 @@ public class AddressService {
     private final AddressEntityRepository addressEntityRepository;
 
     public AddressEntity findAddressEntity(String address, String roadname, Double latitude, Double longitude) {
-        AddressEntity addressEntity = addressEntityRepository.findByLatitudeAndLongitude(latitude, longitude).get();
-
-        if(addressEntity == null) {
-            addressEntity = addressEntityRepository.save(AddressEntity.of(address, roadname, latitude, longitude));
-        }
-
-        return addressEntity;
+        return addressEntityRepository.findByLatitudeAndLongitude(latitude, longitude).orElseGet(
+                () -> addressEntityRepository.save(AddressEntity.of(address, roadname, latitude, longitude))
+        );
     }
 
     public AddressEntity searchAddress(Long id) {

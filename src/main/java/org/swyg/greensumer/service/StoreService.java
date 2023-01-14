@@ -10,16 +10,17 @@ import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.Product;
 import org.swyg.greensumer.dto.SellerStore;
 import org.swyg.greensumer.dto.Store;
+import org.swyg.greensumer.dto.StoreProduct;
 import org.swyg.greensumer.dto.request.ProductCreateRequest;
 import org.swyg.greensumer.dto.request.ProductModifyRequest;
 import org.swyg.greensumer.dto.request.StoreCreateRequest;
 import org.swyg.greensumer.dto.request.StoreModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.ProductEntityRepository;
-import org.swyg.greensumer.repository.SellerStoreEntityRepository;
-import org.swyg.greensumer.repository.StoreEntityRepository;
-import org.swyg.greensumer.repository.UserEntityRepository;
+import org.swyg.greensumer.repository.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +31,8 @@ public class StoreService {
     private final SellerStoreEntityRepository sellerStoreEntityRepository;
     private final UserEntityRepository userEntityRepository;
     private final AddressService addressService;
+    private final ImageEntityRepository imageEntityRepository;
+    private final StoreProductEntityRepository storeProductEntityRepository;
 
     @Transactional
     public Store create(StoreCreateRequest request) {
@@ -38,18 +41,24 @@ public class StoreService {
 
         // 2. 가게명과 주소가 동일한 가게가 존재할 경우 중복 에러 발생
         storeEntityRepository.findByNameAndAddress(request.getName(), addressEntity).ifPresent(it -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", request.getName()));
+            throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_STORE_NAME, String.format("%s is duplicated", request.getName()));
         });
 
         // 3. 가게 객체 생성
         StoreEntity storeEntity = StoreEntity.of(
                 request.getName(),
                 request.getDescription(),
+                StoreType.valueOf(request.getType()),
                 addressEntity,
-                request.getHours(),
-                request.getLogo(),
-                StoreType.valueOf(request.getType())
+                request.getHours()
         );
+
+        if(request.getImages().size() != 0){
+            List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
+
+            storeEntity.clearImages();
+            storeEntity.addImages(imageEntities);
+        }
 
         // 4. 가게 정보 반환
         return Store.fromEntity(storeEntityRepository.save(storeEntity));
@@ -79,8 +88,15 @@ public class StoreService {
         storeEntity.setStoreType(StoreType.valueOf(request.getType()));
         storeEntity.setDescription(request.getDescription());
         storeEntity.setHours(request.getHours());
-        storeEntity.setLogo(request.getLogo());
         storeEntity.setAddress(updatedAddress);
+
+        if(request.getImages().size() != 0){
+            List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
+
+            storeEntity.clearImages();
+            storeEntity.addImages(imageEntities);
+        }
+
         StoreEntity updateStoreEntity = storeEntityRepository.saveAndFlush(storeEntity);
 
         return Store.fromEntity(updateStoreEntity);
@@ -125,6 +141,7 @@ public class StoreService {
         return sellerStoreEntityRepository.findAllBySeller_Id(userEntity.getId(), pageable).map(SellerStore::fromEntity);
     }
 
+    @Transactional
     public Product registerProduct(Integer storeId, ProductCreateRequest request, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
@@ -139,18 +156,27 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
-        ProductEntity productEntity = productEntityRepository.save(ProductEntity.of(
-                storeEntity,
-                request.getName(),
-                request.getPrice(),
-                request.getStock(),
-                request.getDescription(),
-                request.getImage()
-        ));
+        ProductEntity productEntity = ProductEntity.of(request.getName(), request.getPrice(), request.getStock(), request.getDescription());
 
-        return Product.fromEntity(productEntity);
+        if(request.getImages().size() != 0){
+            List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
+
+            productEntity.addImages(imageEntities);
+            storeEntity.addImages(imageEntities);
+        }
+
+        ProductEntity savedEntity = productEntityRepository.save(productEntity);
+
+        StoreProductEntity storeProductEntity = StoreProductEntity.of(storeEntity, savedEntity);
+
+        storeProductEntityRepository.save(storeProductEntity);
+        storeEntity.addStoreProduct(storeProductEntity);
+        savedEntity.addStoreProduct(storeProductEntity);
+
+        return Product.fromEntity(savedEntity);
     }
 
+    @Transactional
     public Product modifyProduct(Integer storeId, Integer productId, ProductModifyRequest request, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
@@ -160,7 +186,7 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
+        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
@@ -168,13 +194,24 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded", productId));
         });
 
+        StoreProductEntity storeProductEntity = storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded on Store #%s", productId, storeEntity));
+        });
+
         productEntity.setName(request.getName());
         productEntity.setDescription(request.getDescription());
         productEntity.setPrice(request.getPrice());
         productEntity.setStock(request.getStock());
-        productEntity.setImage(request.getImage());
+
+        if(request.getImages().size() != 0){
+            List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
+
+            productEntity.clearImages();
+            productEntity.addImages(imageEntities);
+        }
 
         ProductEntity modifiedProduct = productEntityRepository.saveAndFlush(productEntity);
+
         return Product.fromEntity(modifiedProduct);
     }
 
@@ -187,31 +224,41 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
+        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
-        productEntityRepository.deleteById(productId);
+        ProductEntity productEntity = productEntityRepository.findById(productId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND,  String.format("%s not founded", productId));
+        });
+
+        productEntityRepository.deleteById(productEntity.getId());
+
+        storeProductEntityRepository.deleteByProduct_Id(productId);
     }
 
-    public Page<Product> getProductList(Integer storeId, Pageable pageable) {
+    public Page<StoreProduct> getProductList(Integer storeId, Pageable pageable) {
         StoreEntity storeEntity = storeEntityRepository.findById(storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        return productEntityRepository.findAllByStore(storeEntity, pageable).map(Product::fromEntity);
+        return storeProductEntityRepository.findAllByStore(storeEntity, pageable).map(StoreProduct::fromEntity);
     }
 
-    public Product getProduct(Integer storeId, Integer productId) {
+    public StoreProduct getProduct(Integer storeId, Integer productId) {
         StoreEntity storeEntity = storeEntityRepository.findById(storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        ProductEntity productEntity = productEntityRepository.findByStoreAndId(storeEntity, productId).orElseThrow(() -> {
+        ProductEntity productEntity = productEntityRepository.findById(productId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded on %s", productId, storeEntity.getName()));
         });
 
-        return Product.fromEntity(productEntity);
+        StoreProductEntity storeProductEntity = storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded at %s", productId, storeEntity.getName()));
+        });
+
+        return StoreProduct.fromEntity(storeProductEntity);
     }
 
     public StoreEntity getStoreEntity(AddressEntity addressEntity) {

@@ -66,12 +66,9 @@ public class ImageService {
 
 
         for(MultipartFile image : request.getImages()){
-            System.out.println(image.getOriginalFilename());
-            System.out.println(image.getSize());
-            System.out.println(image.getSize());
-
             ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes()));
-
+            entity.setProduct(null);
+            entity.setStore(null);
             ImageEntity save = imageEntityRepository.save(entity);
 
             imageEntities.add(save);

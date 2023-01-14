@@ -22,7 +22,6 @@ public class ReviewPostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // TODO: 후기 게시글은 여러 개에 아이템을 선택할 수 있어야한다.
     @Setter
     @OneToOne
     @JoinColumn(name = "product_id")
@@ -41,9 +40,7 @@ public class ReviewPostEntity {
     @Setter @Column(name = "title", length = 50) private String title;
     @Setter @Column(name = "content", columnDefinition = "TEXT")  private String content;
 
-    @Setter @Column(name = "imagePath", length = 500) private String imagePath;
-
-    @ToString.Exclude @OrderBy("registeredAt ASC") @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "review", orphanRemoval = true, cascade = {CascadeType.ALL})
     private final Set<ImageEntity> images = new LinkedHashSet<>();
 
     @Column(name = "registered_at")
@@ -71,11 +68,29 @@ public class ReviewPostEntity {
         return new ReviewPostEntity(product, user, title, content);
     }
 
-    public void addImage(ImageEntity image){ this.images.add(image); }
-    public void addImages(Collection<ImageEntity> images){ this.images.addAll(images); }
-    public void deleteImage(ImageEntity image) { this.images.remove(image); }
-    public void deleteImages(Collection<ImageEntity> images) { this.images.retainAll(images); }
-    public void clearImages() { this.images.clear(); }
+    public void addImage(ImageEntity image) {
+        image.setReview(this);
+        this.images.add(image);
+    }
+
+    public void addImages(Collection<ImageEntity> images) {
+        images.forEach(e -> e.setReview(this));
+        this.images.addAll(images);
+    }
+
+    public void deleteImage(ImageEntity image) {
+        image.setReview(this);
+        this.images.remove(image);
+    }
+
+    public void deleteImages(Collection<ImageEntity> images) {
+        images.forEach(e -> e.setReview(this));
+        this.images.retainAll(images);
+    }
+
+    public void clearImages() {
+        this.images.clear();
+    }
 
     @Override
     public boolean equals(Object o) {
