@@ -2,24 +2,20 @@ package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.request.ImageCreateRequest;
+import org.swyg.greensumer.dto.request.ImageModifyRequest;
 import org.swyg.greensumer.dto.request.ImagesCreateRequest;
 import org.swyg.greensumer.dto.response.ImageCreateResponse;
-import org.swyg.greensumer.dto.response.ImageSearchResponse;
 import org.swyg.greensumer.dto.response.Response;
 import org.swyg.greensumer.service.ImageService;
 
-import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -3,13 +3,11 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.Store;
 
 import java.sql.Timestamp;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor

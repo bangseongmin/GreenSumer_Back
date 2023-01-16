@@ -20,9 +20,7 @@ import org.swyg.greensumer.repository.ProductEntityRepository;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
 import org.swyg.greensumer.repository.UserEntityRepository;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service

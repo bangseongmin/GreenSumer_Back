@@ -3,7 +3,7 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.dto.*;
+import org.swyg.greensumer.dto.ReviewPostWithComment;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
