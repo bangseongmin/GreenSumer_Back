@@ -11,8 +11,8 @@ import java.util.Objects;
 
 @Setter
 @Getter
-@Table(name = "\"address\"")
-@SQLDelete(sql = "UPDATE \"address\" SET deleted_at = NOW() where id=?")
+@Table(name = "address")
+@SQLDelete(sql = "UPDATE address SET deleted_at = NOW() where id=?")
 @Entity
 public class AddressEntity {
 

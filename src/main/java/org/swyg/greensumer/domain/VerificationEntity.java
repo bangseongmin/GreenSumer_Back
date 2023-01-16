@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @ToString
-@Table(name = "\"verification\"", indexes = {
+@Table(name = "verification", indexes = {
         @Index(name = "subject_idx", columnList = "subject", unique = true)
 })
 @Entity

@@ -16,8 +16,8 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-@Table(name = "\"review_comment\"")
-@SQLDelete(sql = "UPDATE \"review_comment\" SET deleted_at = NOW() where id=?")
+@Table(name = "review_comment")
+@SQLDelete(sql = "UPDATE review_comment SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewCommentEntity {
     @Id
