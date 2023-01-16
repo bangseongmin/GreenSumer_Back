@@ -17,8 +17,8 @@ import java.util.Set;
 
 @Getter
 @Entity
-@Table(name = "\"store\"")
-@SQLDelete(sql = "UPDATE \"store\" SET deleted_at = NOW() where id=?")
+@Table(name = "store")
+@SQLDelete(sql = "UPDATE store SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class StoreEntity {
 
@@ -26,27 +26,24 @@ public class StoreEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "store", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<SellerStoreEntity> sellerStores = new LinkedHashSet<>();
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "store", cascade = {CascadeType.ALL})
-    private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
-
     @Setter @Column(name = "name", length = 30) private String name;
 
     @Setter @Column(name = "description", columnDefinition = "TEXT") private String description;
 
     @Setter @Column(name = "type") @Enumerated(EnumType.STRING) private StoreType storeType;
 
-    @Setter @ToString.Exclude
-    @OneToOne @JoinColumn(name = "address_id")
+    @Setter @ToString.Exclude @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true) @JoinColumn(name = "address_id")
     private AddressEntity address;
 
     @Setter private String hours;
 
-    @OneToMany(mappedBy = "store", orphanRemoval = true, cascade = {CascadeType.ALL} )
+    @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<SellerStoreEntity> sellerStores = new LinkedHashSet<>();
+
+    @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
+
+    @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = {CascadeType.ALL} )
     private Set<ImageEntity> logos = new LinkedHashSet<>();
 
     @Column(name = "registered_at") private Timestamp registeredAt;
@@ -55,16 +52,6 @@ public class StoreEntity {
 
     @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
     @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
-
-    public void addSellerStore(SellerStoreEntity sellerStoreEntity){
-        sellerStoreEntity.setStore(this);
-        this.sellerStores.add(sellerStoreEntity);
-    }
-
-    public void addStoreProduct(StoreProductEntity storeProductEntity){
-        storeProductEntity.setStore(this);
-        this.storeProducts.add(storeProductEntity);
-    }
 
     public StoreEntity(){}
 
@@ -80,6 +67,45 @@ public class StoreEntity {
         return new StoreEntity(name, description, storeType, address, hours);
     }
 
+    // SellerStore
+    public void addSellerStore(SellerStoreEntity sellerStoreEntity){
+        sellerStoreEntity.setStore(this);
+        this.sellerStores.add(sellerStoreEntity);
+    }
+
+    public void addSellerStores(Collection<SellerStoreEntity> sellerStoreEntities){
+        sellerStoreEntities.forEach(e -> e.setStore(this));
+        this.sellerStores.addAll(sellerStoreEntities);
+    }
+
+    public void removeSellerStore(SellerStoreEntity sellerStoreEntity){
+        this.sellerStores.remove(sellerStoreEntity);
+    }
+
+    public void clearSellerStores(){
+        this.sellerStores.clear();
+    }
+
+    // StoreProduct
+    public void addStoreProduct(StoreProductEntity storeProductEntity){
+        storeProductEntity.setStore(this);
+        this.storeProducts.add(storeProductEntity);
+    }
+
+    public void addStoreProducts(Collection<StoreProductEntity> storeProductEntities){
+        storeProductEntities.forEach(e -> e.setStore(this));
+        this.storeProducts.addAll(storeProductEntities);
+    }
+
+    public void removeStoreProduct(StoreProductEntity storeProductEntity){
+        this.storeProducts.remove(storeProductEntity);
+    }
+
+    public void clearStoreProducts(){
+        this.storeProducts.clear();
+    }
+
+    // image
     public void addImage(ImageEntity image) {
         image.setStore(this);
         this.logos.add(image);
@@ -91,12 +117,10 @@ public class StoreEntity {
     }
 
     public void deleteImage(ImageEntity image) {
-        image.setStore(this);
         this.logos.remove(image);
     }
 
     public void deleteImages(Collection<ImageEntity> images) {
-        images.forEach(e -> e.setStore(this));
         this.logos.retainAll(images);
     }
 

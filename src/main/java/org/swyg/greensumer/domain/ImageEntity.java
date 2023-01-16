@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.ImageType;
 
 import javax.persistence.*;
@@ -11,10 +12,12 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
 
+@ToString
 @Setter
 @Getter
-@Table(name = "\"image\"")
-@SQLDelete(sql = "UPDATE \"image\" SET deleted_at = NOW() where id=?")
+@Table(name = "image")
+@SQLDelete(sql = "UPDATE image SET deleted_at = NOW() where id=?")
+@Where(clause = "deleted_at is NULL")
 @Entity
 public class ImageEntity {
 
@@ -24,7 +27,7 @@ public class ImageEntity {
 
     private ImageType imageType;
 
-    @ToString.Exclude @OneToOne @JoinColumn(name = "user_id")
+    @OneToOne @JoinColumn(name = "user_id")
     private UserEntity userEntity;  // 업로드 한 유저
 
     @ManyToOne @JoinColumn(name = "product_id")
@@ -37,7 +40,10 @@ public class ImageEntity {
     private StoreEntity store;
 
     @Column(columnDefinition = "TEXT")
-    private String filename;
+    private String originFilename;
+
+    @Column(columnDefinition = "TEXT")
+    private String savedFilename;
 
     @Lob @Basic(fetch = FetchType.LAZY)
     @Column(name = "imagedata", length = 16_000_000)
@@ -52,15 +58,16 @@ public class ImageEntity {
 
     public ImageEntity() {}
 
-    private ImageEntity(ImageType imageType, UserEntity userEntity, String filename, byte[] imageData) {
+    private ImageEntity(ImageType imageType, UserEntity userEntity, String originFilename, String savedFilename, byte[] imageData) {
         this.imageType = imageType;
         this.userEntity = userEntity;
-        this.filename = filename;
+        this.originFilename = originFilename;
+        this.savedFilename = savedFilename;
         this.imageData = imageData;
     }
 
-    public static ImageEntity of(ImageType imageType, UserEntity userEntity, String filename, byte[] imageData) {
-        return new ImageEntity(imageType, userEntity, filename, imageData);
+    public static ImageEntity of(ImageType imageType, UserEntity userEntity, String originFilename, String savedFilename, byte[] imageData) {
+        return new ImageEntity(imageType, userEntity, originFilename, savedFilename, imageData);
     }
 
     @Override

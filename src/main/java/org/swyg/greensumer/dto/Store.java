@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class Store {
     private Integer id;
-    private Set<SellerStore> sellerStores;
     private String name;
     private String description;
     private Address address;
@@ -28,9 +27,6 @@ public class Store {
     public static Store fromEntity(StoreEntity entity){
         return new Store(
                 entity.getId(),
-                entity.getSellerStores().stream()
-                        .map(SellerStore::fromEntity)
-                        .collect(Collectors.toUnmodifiableSet()),
                 entity.getName(),
                 entity.getDescription(),
                 Address.fromEntity(entity.getAddress()),

@@ -23,10 +23,10 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping
-    public Response<StoreResponse> create(@RequestBody StoreCreateRequest request) {
+    public Response<StoreCreateResponse> create(@RequestBody StoreCreateRequest request) {
         Store store = storeService.create(request);
 
-        return Response.success(StoreResponse.fromStore(store));
+        return Response.success(StoreCreateResponse.fromStore(store));
     }
 
     @PutMapping("/{storeId}")

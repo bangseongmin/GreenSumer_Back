@@ -162,14 +162,11 @@ public class StoreService {
             List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
 
             productEntity.addImages(imageEntities);
-            storeEntity.addImages(imageEntities);
         }
 
         ProductEntity savedEntity = productEntityRepository.save(productEntity);
 
-        StoreProductEntity storeProductEntity = StoreProductEntity.of(storeEntity, savedEntity);
-
-        storeProductEntityRepository.save(storeProductEntity);
+        StoreProductEntity storeProductEntity = storeProductEntityRepository.save(StoreProductEntity.of(storeEntity, savedEntity));
         storeEntity.addStoreProduct(storeProductEntity);
         savedEntity.addStoreProduct(storeProductEntity);
 
@@ -186,7 +183,7 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
+        sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
@@ -195,7 +192,7 @@ public class StoreService {
         });
 
         StoreProductEntity storeProductEntity = storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded on Store #%s", productId, storeEntity));
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND_ON_STORE, String.format("%s not founded on Store #%s", productId, storeId));
         });
 
         productEntity.setName(request.getName());
@@ -215,6 +212,7 @@ public class StoreService {
         return Product.fromEntity(modifiedProduct);
     }
 
+    @Transactional
     public void deleteProduct(Integer storeId, Integer productId, String username) {
         UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
@@ -224,7 +222,7 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
 
-        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
+        sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userEntity.getId(), storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, storeId));
         });
 
@@ -232,9 +230,13 @@ public class StoreService {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND,  String.format("%s not founded", productId));
         });
 
-        productEntityRepository.deleteById(productEntity.getId());
+        StoreProductEntity storeProductEntity = storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND_ON_STORE, String.format("%s not founded on Store #%s", productId, storeId));
+        });
 
-        storeProductEntityRepository.deleteByProduct_Id(productId);
+        productEntity.clearImages();
+        storeEntity.removeStoreProduct(storeProductEntity);
+        productEntityRepository.delete(productEntity);
     }
 
     public Page<StoreProduct> getProductList(Integer storeId, Pageable pageable) {
