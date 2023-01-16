@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class ImageCreateRequest {
+public class ImageModifyRequest {
     private MultipartFile image;
     private String type;
 }

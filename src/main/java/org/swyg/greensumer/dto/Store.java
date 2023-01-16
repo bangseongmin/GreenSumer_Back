@@ -3,7 +3,6 @@ package org.swyg.greensumer.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.domain.StoreEntity;
 
 import java.sql.Timestamp;
