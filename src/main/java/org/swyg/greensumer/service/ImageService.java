@@ -8,7 +8,7 @@ import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.ImageType;
 import org.swyg.greensumer.dto.Image;
-import org.swyg.greensumer.dto.request.ImageCreateRequest;
+import org.swyg.greensumer.dto.request.ImageModifyRequest;
 import org.swyg.greensumer.dto.request.ImagesCreateRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
@@ -48,7 +48,11 @@ public class ImageService {
         return Image.fromEntity(imageEntity);
     }
 
-    public Image searchImage(Integer imageId) {
+    public Image searchImage(Integer imageId, String username) {
+        UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
+        });
+
         ImageEntity imageEntity = imageEntityRepository.findById(imageId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_NOT_FOUND, String.format("%s not founded", imageId));
         });
@@ -80,5 +84,28 @@ public class ImageService {
         }
 
         return imageEntities.stream().map(Image::fromEntity).collect(Collectors.toList());
+    }
+
+    public Image modifyImage(Integer imageId, ImageModifyRequest request, String username) throws IOException {
+        UserEntity userEntity = userEntityRepository.findByUsername(username).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
+        });
+
+        ImageEntity imageEntity = imageEntityRepository.findById(imageId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_NOT_FOUND, String.format("%s not founded", imageId));
+        });
+
+        imageEntity.setImageData(ImageUtils.compressImage(request.getImage().getBytes()));
+        imageEntity.setImageType(ImageType.valueOf(request.getType()));
+
+        return Image.fromEntity(imageEntity);
+    }
+
+    public void removeImage(Integer imageId, String username) {
+        userEntityRepository.findByUsername(username).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
+        });
+
+        imageEntityRepository.deleteById(imageId);
     }
 }

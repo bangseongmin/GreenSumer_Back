@@ -43,12 +43,25 @@ public class ImageController {
     }
 
     @GetMapping(value = "/image/{imageId}")
-    public ResponseEntity<?> searchImage(@PathVariable Integer imageId) throws IOException {
-        Image image = imageService.searchImage(imageId);
+    public ResponseEntity<?> searchImage(@PathVariable Integer imageId, Authentication authentication) throws IOException {
+        Image image = imageService.searchImage(imageId, authentication.getName());
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(image.getImageData());
     }
 
+    @PutMapping(value = "/image/{imageId}")
+    public ResponseEntity<?> modifyImage(@PathVariable Integer imageId, @ModelAttribute ImageModifyRequest request, Authentication authentication) throws IOException {
+        Image image = imageService.modifyImage(imageId, request, authentication.getName());
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(image.getImageData());
+    }
+
+    @DeleteMapping(value = "/image/{imageId}")
+    public Response<Void> removeImage(@PathVariable Integer imageId, Authentication authentication) throws IOException {
+        imageService.removeImage(imageId, authentication.getName());
+        return Response.success();
+    }
 
 }
