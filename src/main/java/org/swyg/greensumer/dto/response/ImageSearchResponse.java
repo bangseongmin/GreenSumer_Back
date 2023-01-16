@@ -16,7 +16,7 @@ public class ImageSearchResponse {
     public static ImageSearchResponse fromImage(Image image) {
         return new ImageSearchResponse(
                 image.getId(),
-                image.getFilename(),
+                image.getOriginFilename(),
                 image.getImageData()
         );
     }

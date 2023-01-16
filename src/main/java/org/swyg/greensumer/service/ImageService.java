@@ -19,6 +19,7 @@ import org.swyg.greensumer.utils.ImageUtils;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -34,8 +35,10 @@ public class ImageService {
             throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
         });
 
+        String savedFilename = UUID.randomUUID() + "_" + image.getOriginalFilename();
+
         ImageEntity imageEntity = imageEntityRepository.save(
-                ImageEntity.of(ImageType.valueOf(type), userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes()))
+                ImageEntity.of(ImageType.valueOf(type), userEntity, image.getOriginalFilename(), savedFilename, ImageUtils.compressImage(image.getBytes()))
         );
 
         if(imageEntity == null){
@@ -64,9 +67,11 @@ public class ImageService {
         List<ImageEntity> imageEntities = new LinkedList<>();
         ImageType type = ImageType.valueOf(request.getType());
 
-
         for(MultipartFile image : request.getImages()){
-            ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), ImageUtils.compressImage(image.getBytes()));
+
+            String savedFilename = UUID.randomUUID() + "_" + image.getOriginalFilename();
+
+            ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), savedFilename, ImageUtils.compressImage(image.getBytes()));
             entity.setProduct(null);
             entity.setStore(null);
             ImageEntity save = imageEntityRepository.save(entity);
