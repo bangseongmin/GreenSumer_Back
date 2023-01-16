@@ -13,12 +13,12 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@Table(name = "\"user\"", indexes = {
+@Table(name = "user", indexes = {
         @Index(name = "username_idx", columnList = "username", unique = true),
         @Index(name = "email_idx", columnList = "email", unique = true),
         @Index(name = "nickname_idx", columnList = "nickname", unique = true)
 })
-@SQLDelete(sql = "UPDATE \"user\" SET deleted_at = NOW() where id=?")
+@SQLDelete(sql = "UPDATE user SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class UserEntity {
 

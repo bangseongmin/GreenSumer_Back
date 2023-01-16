@@ -15,7 +15,8 @@ public class ImageCreateResponse {
 
     private Integer id;
     private ImageType imageType;
-    private String filename;
+    private String originFilename;
+    private String savedFilename;
     private byte[] imageData;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -25,7 +26,8 @@ public class ImageCreateResponse {
         return new ImageCreateResponse(
                 image.getId(),
                 image.getImageType(),
-                image.getFilename(),
+                image.getOriginFilename(),
+                image.getSavedFilename(),
                 image.getImageData(),
                 image.getRegisteredAt(),
                 image.getUpdatedAt(),

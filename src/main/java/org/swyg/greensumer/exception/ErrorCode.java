@@ -27,7 +27,8 @@ public enum ErrorCode {
     SAME_AS_PREVIOUS_PASSWORD(HttpStatus.CONFLICT, "Same as Previous password"),
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "Address not founded"),
     IMAGE_SAVE_FAIL(HttpStatus.CONFLICT, "Image save failed"),
-    IMAGE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "Image not founded")
+    IMAGE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "Image not founded"),
+    PRODUCT_NOT_FOUND_ON_STORE(HttpStatus.NOT_FOUND, "Product not registered in the store")
     ;
 
     private HttpStatus status;

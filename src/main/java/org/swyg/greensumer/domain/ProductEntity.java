@@ -20,15 +20,14 @@ import java.util.Set;
 @Table(name = "product", indexes = {
         @Index(name = "product_name_idx", columnList = "name")
 })
-@SQLDelete(sql = "UPDATE \"product\" SET deleted_at = NOW() where id=?")
+@SQLDelete(sql = "UPDATE product SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
 
     @Column(name = "name", length = 50) private String name;
@@ -38,8 +37,8 @@ public class ProductEntity {
 
     @Column(name = "description", columnDefinition = "TEXT") private String description;
 
-    @OrderBy("registeredAt ASC")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OrderBy("id asc")  // 아이디 순으로 정렬
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<ImageEntity> images = new LinkedHashSet<>();
 
     @Column(name = "registered_at")

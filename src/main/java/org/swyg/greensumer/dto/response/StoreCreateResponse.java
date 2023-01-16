@@ -3,18 +3,16 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.Store;
 
 import java.sql.Timestamp;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreResponse {
+public class StoreCreateResponse {
     private Integer id;
     private String name;
     private String description;
@@ -27,8 +25,8 @@ public class StoreResponse {
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public static StoreResponse fromStore(Store store) {
-        return new StoreResponse(
+    public static StoreCreateResponse fromStore(Store store) {
+        return new StoreCreateResponse(
                 store.getId(),
                 store.getName(),
                 store.getDescription(),

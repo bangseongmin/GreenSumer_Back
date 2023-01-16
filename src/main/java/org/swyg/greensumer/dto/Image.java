@@ -15,7 +15,8 @@ public class Image {
     private Integer id;
     private ImageType imageType;
     private String username;
-    private String filename;
+    private String originFilename;
+    private String savedFilename;
     private byte[] imageData;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -26,7 +27,8 @@ public class Image {
                 entity.getId(),
                 entity.getImageType(),
                 entity.getUserEntity().getUsername(),
-                entity.getFilename(),
+                entity.getOriginFilename(),
+                entity.getSavedFilename(),
                 entity.getImageData(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
