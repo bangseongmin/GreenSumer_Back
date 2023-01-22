@@ -1,0 +1,14 @@
+package org.swyg.greensumer.dto.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class PasswordUpdateRequest {
+
+    private String username;
+    private String email;
+    private String code;
+    private String password;
+}
