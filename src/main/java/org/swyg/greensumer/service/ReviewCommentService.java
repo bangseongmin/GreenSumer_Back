@@ -17,12 +17,12 @@ public class ReviewCommentService {
 
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewPostService reviewPostService;
-    private final UserService userService;
+    private final UserEntityRepositoryService userEntityRepositoryService;
 
     public void createComment(Integer postId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
 
-        UserEntity userEntity = userService.findByUsernameOrException(username);
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         reviewCommentRepository.save(ReviewCommentEntity.of(
                 reviewPostEntity,
@@ -35,7 +35,7 @@ public class ReviewCommentService {
     public ReviewComment modifyComment(Integer postId, Integer commentId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
 
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         ReviewCommentEntity reviewCommentEntity = getReviewCommentEntityOrException(commentId);
 
@@ -51,7 +51,7 @@ public class ReviewCommentService {
     public void deleteComment(Integer postId, Integer commentId, String username) {
         ReviewPostEntity reviewPost = reviewPostService.getReviewPostEntityOrException(postId);
 
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         ReviewCommentEntity reviewCommentEntity = getReviewCommentEntityOrException(commentId);
 

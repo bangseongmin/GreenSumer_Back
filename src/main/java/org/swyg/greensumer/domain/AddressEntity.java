@@ -19,8 +19,8 @@ public class AddressEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", unique = true) private String address;
-    @Column(columnDefinition = "TEXT", unique = true) private String roadname;
+    @Column(unique = true) private String address;
+    @Column(unique = true) private String roadname;
 
     @Column(name = "lat", unique = true) private Double latitude;
     @Column(name = "lng", unique = true) private Double longitude;

@@ -16,7 +16,7 @@ import org.swyg.greensumer.repository.ImageEntityRepository;
 import org.swyg.greensumer.utils.ImageUtils;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 public class ImageService {
 
     private final ImageEntityRepository imageEntityRepository;
-    private final UserService userService;
+    private final UserEntityRepositoryService userEntityRepositoryService;
 
     @Transactional
     public Image saveImage(MultipartFile image, String type, String username) throws IOException {
-        UserEntity userEntity = userService.findByUsernameOrException(username);
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         String originFilename = image.getOriginalFilename();
         String savedFilename = getSavedFilename(originFilename);
 
@@ -47,7 +47,7 @@ public class ImageService {
     }
 
     public Image searchImage(Integer imageId, String username) {
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         ImageEntity imageEntity = getImageEntityOrException(imageId);
         imageEntity.setImageData(ImageUtils.decompressImage(imageEntity.getImageData()));
@@ -57,9 +57,9 @@ public class ImageService {
 
     @Transactional
     public List<Image> saveImages(ImagesCreateRequest request, String username) throws IOException {
-        UserEntity userEntity = userService.findByUsernameOrException(username);
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
-        List<ImageEntity> imageEntities = new LinkedList<>();
+        List<ImageEntity> imageEntities = new ArrayList<>();
         ImageType type = ImageType.valueOf(request.getType());
 
         for (MultipartFile image : request.getImages()) {
@@ -68,16 +68,15 @@ public class ImageService {
             ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), savedFilename, ImageUtils.compressImage(image.getBytes()));
             entity.setProduct(null);
             entity.setStore(null);
-            ImageEntity save = imageEntityRepository.save(entity);
 
-            imageEntities.add(save);
+            imageEntities.add(entity);
         }
 
-        return imageEntities.stream().map(Image::fromEntity).collect(Collectors.toList());
+        return imageEntityRepository.saveAll(imageEntities).stream().map(Image::fromEntity).collect(Collectors.toList());
     }
 
     public Image modifyImage(Integer imageId, ImageModifyRequest request, String username) throws IOException {
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         ImageEntity imageEntity = getImageEntityOrException(imageId);
 
@@ -88,7 +87,7 @@ public class ImageService {
     }
 
     public void removeImage(Integer imageId, String username) {
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         imageEntityRepository.deleteById(imageId);
     }

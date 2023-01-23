@@ -17,6 +17,7 @@ public class ReviewPostWithComment {
     private Integer id;
     private String title;
     private String content;
+    private Integer views;
     private Product product;
     private User user;
     private Set<ReviewComment> reviewComments;
@@ -29,6 +30,7 @@ public class ReviewPostWithComment {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
+                entity.getViews(),
                 Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),
                 entity.getComments().stream()

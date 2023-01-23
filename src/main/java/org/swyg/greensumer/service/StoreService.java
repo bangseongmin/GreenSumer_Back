@@ -29,7 +29,7 @@ public class StoreService {
     private final ImageEntityRepository imageEntityRepository;
     private final StoreProductEntityRepository storeProductEntityRepository;
     private final ImageService imageService;
-    private final UserService userService;
+    private final UserEntityRepositoryService userEntityRepositoryService;
 
     @Transactional
     public Store create(StoreCreateRequest request) {
@@ -60,7 +60,7 @@ public class StoreService {
 
     @Transactional
     public Store modify(Integer storeId, StoreModifyRequest request, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
 
@@ -80,7 +80,7 @@ public class StoreService {
     }
 
     public void delete(Integer storeId, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
 
@@ -89,20 +89,20 @@ public class StoreService {
     }
 
     public Page<Store> list(Pageable pageable, String username) {
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         return storeEntityRepository.findAll(pageable).map(Store::fromEntity);
     }
 
     public Page<SellerStore> mylist(Pageable pageable, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
 
         return sellerStoreEntityRepository.findAllBySeller_Id(user.getId(), pageable).map(SellerStore::fromEntity);
     }
 
     @Transactional
     public Product registerProduct(Integer storeId, ProductCreateRequest request, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = ProductEntity.of(request.getName(), request.getPrice(), request.getStock(), request.getDescription());
@@ -124,7 +124,7 @@ public class StoreService {
 
     @Transactional
     public Product modifyProduct(Integer storeId, Integer productId, ProductModifyRequest request, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = getProductEntityOrException(productId);
@@ -144,7 +144,7 @@ public class StoreService {
 
     @Transactional
     public void deleteProduct(Integer storeId, Integer productId, String username) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = getProductEntityOrException(productId);

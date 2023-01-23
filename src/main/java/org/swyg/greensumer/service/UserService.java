@@ -25,6 +25,7 @@ import org.swyg.greensumer.utils.JwtTokenUtils;
 public class UserService {
 
     private final UserEntityRepository userEntityRepository;
+    private final UserEntityRepositoryService userEntityRepositoryService;
     private final StoreService storeService;
     private final AddressService addressService;
     private final SellerStoreEntityRepository sellerStoreEntityRepository;
@@ -45,12 +46,7 @@ public class UserService {
 
     @Transactional
     public User signup(UserSignUpRequest request) {
-        // 1. 회원가입된 유저인지 확인한다.
-        String username = request.getUsername();
-
-        userEntityRepository.findByUsername(username).ifPresent(it -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", username));
-        });
+        userEntityRepositoryService.existUsername(request.getUsername());
 
         AddressEntity addressEntity = null;
 
@@ -66,10 +62,8 @@ public class UserService {
                 addressEntity
         );
 
-        // 3. 회원을 저장한다.
         UserEntity savedUser = userEntityRepository.save(userEntity);
 
-        // 4. 유저가 Seller 인 경우
         if(savedUser.getRole() == UserRole.SELLER){
             mappingSellerAndStore(savedUser, addressEntity);
         }
@@ -86,7 +80,7 @@ public class UserService {
     }
 
     public String login(String username, String password) {
-        User user = loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
 
         // 비밀번호 체크
         if (!encoder.matches(password, user.getPassword())) {
@@ -99,47 +93,34 @@ public class UserService {
         return JwtTokenUtils.generateToken(username, secretKey, expiredTimeMs);
     }
 
-    public User loadUserByUsername(String username) {
-        return userCacheRepository.getUser(username).orElseGet(() ->
-                userEntityRepository.findByUsername(username).map(User::fromEntity).orElseThrow(() ->
-                        new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username))));
-    }
-
     @Transactional(readOnly = true)
     public void existUsername(String username) {
-        userEntityRepository.findByUsername(username).ifPresent(it -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", username));
-        });
+        userEntityRepositoryService.existUsername(username);
     }
 
     @Transactional
     public User findUsername(String email, String code) {
         verificationService.checkMail(email, code);
 
-        UserEntity user = userEntityRepository.findByEmail(email).orElseThrow(() ->
-                new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
+        UserEntity userEntity = userEntityRepositoryService.findByEmail(email);
 
         verificationService.clear(email);
 
-        return User.fromEntity(user);
+        return User.fromEntity(userEntity);
     }
 
     @Transactional
     public void findPassword(String username, String email, String code, String password) {
         verificationService.checkMail(email, code);
 
-        UserEntity user = userEntityRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
-        });
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
-        if (!encoder.matches(password, user.getPassword())) {
+        if (!encoder.matches(password, userEntity.getPassword())) {
             throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
 
         verificationService.clear(email);
-
-        user.setPassword(encoder.encode(password));
-        userEntityRepository.save(user);
+        userEntity.setPassword(encoder.encode(password));
     }
 
     @Transactional
@@ -148,7 +129,7 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission to %s", username, request.getUsername()));
         }
 
-        UserEntity userEntity = findByUsernameOrException(username);
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         userEntity.setPassword(encoder.encode(request.getPassword()));
         userEntity.setNickname(request.getNickname());
@@ -160,12 +141,6 @@ public class UserService {
         }
 
         return User.fromEntity(userEntity);
-    }
-
-    public UserEntity findByUsernameOrException(String username) {
-        return userEntityRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", username));
-        });
     }
 
 }

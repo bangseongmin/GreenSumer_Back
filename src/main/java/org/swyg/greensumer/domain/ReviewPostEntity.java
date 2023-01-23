@@ -20,12 +20,12 @@ import java.util.Set;
 @SQLDelete(sql = "UPDATE review_post SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewPostEntity {
+
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
-    @OneToOne
+    @Setter @OneToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
@@ -37,13 +37,19 @@ public class ReviewPostEntity {
     @ToString.Exclude
     @OrderBy("registeredAt DESC")
     @OneToMany(mappedBy = "reviewPost", cascade = CascadeType.ALL)
-    private final Set<ReviewCommentEntity> comments = new LinkedHashSet<>();
+    private Set<ReviewCommentEntity> comments = new LinkedHashSet<>();
 
     @Setter @Column(name = "title", length = 50) private String title;
     @Setter @Column(name = "content", columnDefinition = "TEXT")  private String content;
 
     @OneToMany(mappedBy = "review", orphanRemoval = true, cascade = {CascadeType.ALL})
-    private final Set<ImageEntity> images = new LinkedHashSet<>();
+    private Set<ImageEntity> images = new LinkedHashSet<>();
+
+    @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "review", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<ReviewPostViewerEntity> viewer = new LinkedHashSet<>();
+
+    @Column(columnDefinition = "Integer default 0", nullable = false)
+    private Integer views;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -64,6 +70,7 @@ public class ReviewPostEntity {
        this.user = user;
        this.title = title;
        this.content = content;
+       this.views = 0;
     }
 
     public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content) {
@@ -93,6 +100,15 @@ public class ReviewPostEntity {
 
     public void clearImages() {
         this.images.clear();
+    }
+
+    public void addViewer(ReviewPostViewerEntity reviewPostViewerEntity) {
+        if(this.viewer.contains(reviewPostViewerEntity)){
+            return;
+        }
+        reviewPostViewerEntity.setReview(this);
+        this.viewer.add(reviewPostViewerEntity);
+        this.views++;
     }
 
     @Override

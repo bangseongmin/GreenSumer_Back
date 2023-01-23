@@ -14,6 +14,7 @@ public class ReviewPost {
     private Integer id;
     private String title;
     private String content;
+    private Integer views;
     private Product product;
     private User user;
     private Timestamp registeredAt;
@@ -25,6 +26,7 @@ public class ReviewPost {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
+                entity.getViews(),
                 Product.fromEntity(entity.getProduct()),
                 User.fromEntity(entity.getUser()),
                 entity.getRegisteredAt(),
