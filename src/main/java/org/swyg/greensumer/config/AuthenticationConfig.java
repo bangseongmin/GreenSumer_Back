@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.swyg.greensumer.config.filter.JwtTokenFilter;
 import org.swyg.greensumer.exception.CustomAuthenticationEntryPoint;
+import org.swyg.greensumer.service.UserEntityRepositoryService;
 import org.swyg.greensumer.service.UserService;
 
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.secret-key}")
     private String key;
 
-    private final UserService userService;
+    private final UserEntityRepositoryService userEntityRepositoryService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -43,7 +44,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(key, userEntityRepositoryService), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
     }

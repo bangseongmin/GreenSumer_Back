@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.swyg.greensumer.domain.ProductEntity;
-import org.swyg.greensumer.domain.ReviewPostEntity;
-import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.User;
@@ -16,6 +14,7 @@ import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
+import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
 import java.util.Objects;
 
@@ -24,13 +23,15 @@ import java.util.Objects;
 public class ReviewPostService {
 
     private final ReviewPostEntityRepository reviewPostEntityRepository;
-    private final UserService userService;
+    private final ReviewPostViewerEntityRepository reviewPostViewerEntityRepository;
+    private final UserEntityRepositoryService userEntityRepositoryService;
     private final StoreService storeService;
     private final ImageService imageService;
 
-    public void create(ReviewPostCreateRequest request, Integer productId, String username) {
-        UserEntity userEntity = userService.findByUsernameOrException(username);
+    public void create(ReviewPostCreateRequest request, Integer storeId, Integer productId, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
+        StoreEntity storeEntity = storeService.getStoreEntityOrException(storeId);
         ProductEntity productEntity = storeService.getProductEntityOrException(productId);
 
         ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.save(ReviewPostEntity.of(
@@ -51,7 +52,7 @@ public class ReviewPostService {
 
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
 
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
 
         ProductEntity productEntity = storeService.getProductEntityOrException(productId);
 
@@ -70,7 +71,7 @@ public class ReviewPostService {
     public void delete(Integer postId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
 
-        userService.loadUserByUsername(username);
+        userEntityRepositoryService.loadUserByUsername(username);
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
 
         reviewPostEntityRepository.delete(reviewPostEntity);
@@ -83,28 +84,30 @@ public class ReviewPostService {
 
     @Transactional(readOnly = true)
     public Page<ReviewPost> myList(String username, Pageable pageable) {
-        User user = userService.loadUserByUsername(username);
+        User user = userEntityRepositoryService.loadUserByUsername(username);
 
         return reviewPostEntityRepository.findAllByUser_Id(user.getId(), pageable).map(ReviewPost::fromEntity);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ReviewPostWithComment getPostAndComments(Integer postId, String username) {
-        userService.loadUserByUsername(username);
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
-        return reviewPostEntityRepository.findById(postId)
-                .map(ReviewPostWithComment::fromEntity)
-                .orElseThrow(() -> { throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));});
+        ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
+
+        ReviewPostViewerEntity reviewPostViewerEntity = reviewPostViewerEntityRepository.findByReview_IdAndUser_Id(postId, userEntity.getId()).orElseGet(
+                () -> reviewPostViewerEntityRepository.save(ReviewPostViewerEntity.of(reviewPostEntity, userEntity))
+        );
+
+        reviewPostEntity.addViewer(reviewPostViewerEntity);
+
+        return ReviewPostWithComment.fromEntity(reviewPostEntity);
     }
 
     public ReviewPostEntity getReviewPostEntityOrException(Integer postId) {
-        ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.getReferenceById(postId);
-
-        if(Objects.isNull(reviewPostEntity)){
-            throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));
-        }
-
-        return reviewPostEntity;
+        return reviewPostEntityRepository.findById(postId).orElseThrow(
+                () -> {throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));}
+        );
     }
 
     private void isPostMine(String writer, String username, Integer postId){
