@@ -13,12 +13,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.ProductEntityRepository;
-import org.swyg.greensumer.repository.SellerStoreEntityRepository;
-import org.swyg.greensumer.service.AddressService;
 import org.swyg.greensumer.service.StoreService;
 import org.swyg.greensumer.service.UserService;
 

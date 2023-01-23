@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.swyg.greensumer.config.filter.JwtTokenFilter;
 import org.swyg.greensumer.exception.CustomAuthenticationEntryPoint;
 import org.swyg.greensumer.service.UserEntityRepositoryService;
-import org.swyg.greensumer.service.UserService;
 
 @RequiredArgsConstructor
 @EnableWebSecurity

@@ -16,8 +16,6 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
 import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
-import java.util.Objects;
-
 @RequiredArgsConstructor
 @Service
 public class ReviewPostService {
