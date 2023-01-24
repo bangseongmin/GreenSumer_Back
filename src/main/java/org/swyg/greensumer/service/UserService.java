@@ -98,13 +98,10 @@ public class UserService {
         userEntityRepositoryService.existUsername(username);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findUsername(String email, String code) {
         verificationService.checkMail(email, code);
-
-        UserEntity userEntity = userEntityRepositoryService.findByEmail(email);
-
-        return User.fromEntity(userEntity);
+        return User.fromEntity(userEntityRepositoryService.findByEmail(email));
     }
 
     @Transactional
