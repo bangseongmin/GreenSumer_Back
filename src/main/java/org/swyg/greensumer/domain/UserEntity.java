@@ -7,8 +7,6 @@ import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Objects;
 
 @Getter
