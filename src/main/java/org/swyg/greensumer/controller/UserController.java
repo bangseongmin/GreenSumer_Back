@@ -3,9 +3,13 @@ package org.swyg.greensumer.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.*;
-import org.swyg.greensumer.dto.response.*;
+import org.swyg.greensumer.dto.response.Response;
+import org.swyg.greensumer.dto.response.UpdateUserResponse;
+import org.swyg.greensumer.dto.response.UserSignUpResponse;
+import org.swyg.greensumer.dto.response.UsernameResponse;
 import org.swyg.greensumer.service.UserService;
 import org.swyg.greensumer.service.VerificationService;
 
@@ -24,15 +28,26 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
-        String token = userService.login(request.getUsername(), request.getPassword());
-        return Response.success(UserLoginResponse.of(token));
+    public Response<TokenInfo> login(@RequestBody UserLoginRequest request) {
+        TokenInfo tokens = userService.login(request);
+        return Response.success(tokens);
+    }
+
+    @PostMapping("/logout")
+    public Response<Void> logout(@RequestBody UserLogoutRequest logout) {
+        userService.logout(logout);
+        return Response.success();
+    }
+
+    @PostMapping("/reissue")
+    public Response<TokenInfo> reissue(@RequestBody UserReissueRequest reissue) {
+        TokenInfo tokens = userService.reissue(reissue.getAccessToken(), reissue.getRefreshToken());
+        return Response.success(tokens);
     }
 
     @PostMapping("/mail")
     public Response<Void> sendMail(@RequestBody VerificationRequest request) {
         verificationService.sendMail(request.getEmail());
-
         return Response.success();
     }
 

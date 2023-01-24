@@ -3,7 +3,6 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.User;
 
 @Getter
@@ -15,7 +14,7 @@ public class UserResponse {
     private String username;
     private String nickname;
     private String email;
-    private UserRole role;
+    private String roles;
 
     public static UserResponse fromUser(User user) {
         return new UserResponse(
@@ -23,7 +22,7 @@ public class UserResponse {
                 user.getUsername(),
                 user.getNickname(),
                 user.getEmail(),
-                user.getRole()
+                user.getRoles()
         );
     }
 

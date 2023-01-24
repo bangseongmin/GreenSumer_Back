@@ -38,4 +38,21 @@ public class UserEntityRepositoryService {
         return userEntityRepository.findByEmail(email).orElseThrow(() ->
                 new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
     }
+
+    public UserEntity save(UserEntity userEntity) {
+        return userEntityRepository.save(userEntity);
+    }
+
+    public void setRefreshToken(User user, String refreshToken) {
+        userCacheRepository.setUser(user);
+        userCacheRepository.setRefreshToken(user.getUsername(), refreshToken);
+    }
+
+    public String getRefreshToken(String username) {
+        return userCacheRepository.getRefreshToken(username);
+    }
+
+    public void deleteRefreshToken(String username){
+        userCacheRepository.deleteRefreshToken(username);
+    }
 }

@@ -28,7 +28,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .regexMatchers("^(?!/api/).*")
-                .antMatchers(HttpMethod.POST, "/api/*/users/sign-up", "/api/*/users/login", "/api/*/users/mail", "/api/*/stores")
+                .antMatchers(HttpMethod.POST, "/api/*/users/sign-up", "/api/*/users/login", "/api/*/users/mail", "/api/*/stores", "/api/*/users/logout", "/api/*/users/reissue")
                 .antMatchers(HttpMethod.GET, "/api/*/users/existUsername", "/api/v1/posts", "/api/v1/image/*", "/api/*/users/mail", "/api/*/users/find/username")
                 .antMatchers(HttpMethod.PUT, "/api/*/users/find/password")
         ;

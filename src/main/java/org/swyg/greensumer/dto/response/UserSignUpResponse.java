@@ -2,7 +2,6 @@ package org.swyg.greensumer.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.Address;
 import org.swyg.greensumer.dto.User;
 
@@ -16,7 +15,7 @@ public class UserSignUpResponse {
     private String address;
     private Double lat;
     private Double lng;
-    private UserRole role;
+    private String roles;
 
     public static UserSignUpResponse fromUser(User user){
         Address address = user.getAddress();
@@ -28,7 +27,7 @@ public class UserSignUpResponse {
                 address == null ? null : address.getAddress(),
                 address == null ? null : address.getLat(),
                 address == null ? null : address.getLng(),
-                user.getRole()
+                user.getRoles()
         );
     }
 
