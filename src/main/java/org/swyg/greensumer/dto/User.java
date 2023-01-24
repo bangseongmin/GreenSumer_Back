@@ -12,8 +12,11 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -26,20 +29,21 @@ public class User implements UserDetails {
     private String email;
     private String nickname;
     private Address address;
-    private UserRole role;
+    private String roles;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
     public static User fromEntity(UserEntity entity){
+        System.out.println(entity.getRoles());
         return new User(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getPassword(),
                 entity.getEmail(),
                 entity.getNickname(),
-                entity.getRole() == UserRole.SELLER ? Address.fromEntity(entity.getAddressEntity()) : null,
-                entity.getRole(),
+                Address.fromEntity(entity.getAddressEntity()),
+                entity.getRoles().toString(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getDeletedAt()
@@ -49,7 +53,7 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRole().toString()));
+        return List.of(new SimpleGrantedAuthority(this.getRoles().toString()));
     }
 
     @Override @JsonIgnore public boolean isAccountNonExpired() { return this.deletedAt == null; }

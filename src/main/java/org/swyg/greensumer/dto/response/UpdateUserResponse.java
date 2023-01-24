@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.User;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class UpdateUserResponse {
     private String address;
     private Double lat;
     private Double lng;
-    private UserRole role;
+    private String roles;
 
     public static UpdateUserResponse fromUser(User user) {
         return new UpdateUserResponse(
@@ -28,7 +30,7 @@ public class UpdateUserResponse {
                 user.getAddress().getAddress(),
                 user.getAddress().getLat(),
                 user.getAddress().getLng(),
-                user.getRole()
+                user.getRoles()
         );
     }
 }

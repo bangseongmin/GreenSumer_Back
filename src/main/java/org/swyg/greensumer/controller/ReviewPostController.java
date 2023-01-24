@@ -1,5 +1,6 @@
 package org.swyg.greensumer.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class ReviewPostController {
     }
 
     @PutMapping("/{postId}")
-    public Response<ReviewPostResponse> modify(@PathVariable Integer postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) {
+    public Response<ReviewPostResponse> modify(@PathVariable Integer postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) throws JsonProcessingException {
         ReviewPost reviewPost = reviewPostService.modify(request, postId, request.getProductId(), authentication.getName());
 
 
@@ -43,7 +44,7 @@ public class ReviewPostController {
     }
 
     @DeleteMapping("/{postId}")
-    public Response<Void> delete(@PathVariable Integer postId, Authentication authentication) {
+    public Response<Void> delete(@PathVariable Integer postId, Authentication authentication) throws JsonProcessingException {
         reviewPostService.delete(postId, authentication.getName());
 
         return Response.success();
@@ -61,7 +62,7 @@ public class ReviewPostController {
     }
 
     @GetMapping("/my")
-    public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) {
+    public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) throws JsonProcessingException {
         return Response.success(reviewPostService.myList(authentication.getName(), pageable).map(ReviewPostResponse::fromReviewPost));
     }
 
@@ -78,7 +79,7 @@ public class ReviewPostController {
             @PathVariable Integer commentId,
             @RequestBody ReviewCommentModifyRequest request,
             Authentication authentication
-    ) {
+    ) throws JsonProcessingException {
         ReviewComment reviewComment = reviewCommentService.modifyComment(postId, commentId, request.getContent(), authentication.getName());
         return Response.success(ReviewCommentResponse.fromReviewComment(reviewComment));
     }

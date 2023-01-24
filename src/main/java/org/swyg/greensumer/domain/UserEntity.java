@@ -1,15 +1,20 @@
 package org.swyg.greensumer.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Builder
+@Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user", indexes = {
         @Index(name = "username_idx", columnList = "username", unique = true),
@@ -20,35 +25,21 @@ import java.util.Objects;
 @Where(clause = "deleted_at is NULL")
 public class UserEntity extends DateTimeEntity {
 
-    @Setter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter @Column(name = "username", length = 50) private String username;
-    @Setter @Column(name = "password") private String password;
-    @Setter @Column(nullable = false, length = 100) private String email;
-    @Setter @Column(nullable = false, length = 50) private String nickname;
+    @Column(name = "username", length = 50) private String username;
+    @Column(name = "password") private String password;
+    @Column(nullable = false, length = 100) private String email;
+    @Column(nullable = false, length = 50) private String nickname;
 
-    @Setter @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
+    @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
 
-    @Setter @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
-    public static UserEntity of(String username, String password, String nickname, String email){
-        return UserEntity.of(username, password, nickname, email, null);
-    }
-
-    public static UserEntity of(String username, String password, String nickname, String email, AddressEntity address){
-        UserEntity user = new UserEntity();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setNickname(nickname);
-        user.setEmail(email);
-        user.setAddressEntity(address);
-        user.setRole(address == null ? UserRole.USER : UserRole.SELLER);
-        return user;
-    }
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

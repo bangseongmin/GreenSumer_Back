@@ -1,5 +1,6 @@
 package org.swyg.greensumer.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,32 +30,32 @@ public class StoreController {
     }
 
     @PutMapping("/{storeId}")
-    public Response<StoreResponse> modify(@PathVariable Integer storeId, @RequestBody StoreModifyRequest request, Authentication authentication) {
+    public Response<StoreResponse> modify(@PathVariable Integer storeId, @RequestBody StoreModifyRequest request, Authentication authentication) throws JsonProcessingException {
         Store store = storeService.modify(storeId, request, authentication.getName());
 
         return Response.success(StoreResponse.fromStore(store));
     }
 
     @DeleteMapping("/{storeId}")
-    public Response<Void> delete(@PathVariable Integer storeId, Authentication authentication) {
+    public Response<Void> delete(@PathVariable Integer storeId, Authentication authentication) throws JsonProcessingException {
         storeService.delete(storeId, authentication.getName());
 
         return Response.success();
     }
 
     @GetMapping
-    public Response<Page<StoreResponse>> list(Pageable pageable, Authentication authentication) {
+    public Response<Page<StoreResponse>> list(Pageable pageable, Authentication authentication) throws JsonProcessingException {
         return Response.success(storeService.list(pageable, authentication.getName()).map(StoreResponse::fromStore));
     }
 
     @GetMapping("/my")
-    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) throws JsonProcessingException {
 
         return Response.success(storeService.mylist(pageable, authentication.getName()).map(SellerStoreResponse::fromSellerStore));
     }
 
     @PostMapping("/{storeId}/products")
-    public Response<ProductResponse> registerProduct(@PathVariable Integer storeId, @RequestBody ProductCreateRequest request, Authentication authentication) {
+    public Response<ProductResponse> registerProduct(@PathVariable Integer storeId, @RequestBody ProductCreateRequest request, Authentication authentication) throws JsonProcessingException {
         Product product = storeService.registerProduct(storeId, request, authentication.getName());
 
         return Response.success(ProductResponse.fromProduct(product));
@@ -66,14 +67,14 @@ public class StoreController {
             @PathVariable Integer productId,
             @RequestBody ProductModifyRequest request,
             Authentication authentication
-    ) {
+    ) throws JsonProcessingException {
         Product product = storeService.modifyProduct(storeId, productId, request, authentication.getName());
 
         return Response.success(ProductResponse.fromProduct(product));
     }
 
     @DeleteMapping("/{storeId}/products/{productId}")
-    public Response<Void> deleteProduct(@PathVariable Integer storeId, @PathVariable Integer productId, Authentication authentication) {
+    public Response<Void> deleteProduct(@PathVariable Integer storeId, @PathVariable Integer productId, Authentication authentication) throws JsonProcessingException {
         storeService.deleteProduct(storeId, productId, authentication.getName());
 
         return Response.success();
