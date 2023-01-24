@@ -20,7 +20,7 @@ import java.util.Objects;
 })
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class UserEntity {
+public class UserEntity extends DateTimeEntity {
 
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,21 +36,6 @@ public class UserEntity {
     @Setter @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
-    @Column(name = "registered_at")
-    private Timestamp registeredAt;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
-
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
-
-    @PrePersist
-    void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-
-    @PreUpdate
-    void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public static UserEntity of(String username, String password, String nickname, String email){
         return UserEntity.of(username, password, nickname, email, null);

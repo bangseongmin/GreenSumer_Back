@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table(name = "review_comment")
 @SQLDelete(sql = "UPDATE review_comment SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class ReviewCommentEntity {
+public class ReviewCommentEntity extends DateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -31,13 +31,6 @@ public class ReviewCommentEntity {
 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
-
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at")    private Timestamp updatedAt;
-    @Column(name = "deleted_at")    private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now()); }
 
     public ReviewCommentEntity() {}
 

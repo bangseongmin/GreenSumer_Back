@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "review_post")
 @SQLDelete(sql = "UPDATE review_post SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class ReviewPostEntity {
+public class ReviewPostEntity extends DateTimeEntity {
 
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,18 +50,6 @@ public class ReviewPostEntity {
 
     @Column(columnDefinition = "Integer default 0", nullable = false)
     private Integer views;
-
-    @Column(name = "registered_at")
-    private Timestamp registeredAt;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
-
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate void updatedAt() { this.updatedAt = Timestamp.from(Instant.now()); }
 
     public ReviewPostEntity() {}
 

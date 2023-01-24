@@ -12,14 +12,13 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
 
-@ToString
 @Setter
 @Getter
 @Table(name = "image")
 @SQLDelete(sql = "UPDATE image SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 @Entity
-public class ImageEntity {
+public class ImageEntity extends DateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,13 +47,6 @@ public class ImageEntity {
     @Lob @Basic(fetch = FetchType.LAZY)
     @Column(name = "imagedata", length = 16_000_000)
     private byte[] imageData;
-
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at") private Timestamp updatedAt;
-    @Column(name = "deleted_at") private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public ImageEntity() {}
 

@@ -20,7 +20,7 @@ import java.util.Set;
 @Table(name = "store")
 @SQLDelete(sql = "UPDATE store SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class StoreEntity {
+public class StoreEntity extends DateTimeEntity {
 
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,13 +45,6 @@ public class StoreEntity {
 
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = {CascadeType.ALL} )
     private Set<ImageEntity> logos = new LinkedHashSet<>();
-
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at") private Timestamp updatedAt;
-    @Column(name = "deleted_at") private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public StoreEntity(){}
 
