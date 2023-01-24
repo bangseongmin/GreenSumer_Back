@@ -22,7 +22,7 @@ import java.util.Optional;
 public class VerificationCacheRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final static Duration VERFICATION_CODE_TTL = Duration.ofMinutes(3);
+    private final static Duration VERFICATION_CODE_TTL = Duration.ofMinutes(5);
 
     private final ObjectMapper objectMapper;
     private ValueOperations<String, Object> valueOperations;

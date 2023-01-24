@@ -15,7 +15,6 @@ import java.time.Instant;
 public class Verification {
     private String subject;
     private String code;
-    private boolean status;
     private Timestamp startedAt;
     private Timestamp expiredAt;
 
@@ -25,7 +24,6 @@ public class Verification {
     private Verification(String subject, String code) {
         this.subject = subject;
         this.code = code;
-        this.status = false;
         this.startedAt = Timestamp.from(Instant.now());
         this.expiredAt = new Timestamp(System.currentTimeMillis() + 180_000);   // 3m
     }
