@@ -1,6 +1,5 @@
 package org.swyg.greensumer.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.swyg.greensumer.domain.UserEntity;

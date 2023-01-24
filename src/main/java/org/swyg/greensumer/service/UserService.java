@@ -1,13 +1,8 @@
 package org.swyg.greensumer.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,16 +14,17 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
-import org.swyg.greensumer.dto.request.*;
+import org.swyg.greensumer.dto.request.UpdateUserRequest;
+import org.swyg.greensumer.dto.request.UserLoginRequest;
+import org.swyg.greensumer.dto.request.UserLogoutRequest;
+import org.swyg.greensumer.dto.request.UserSignUpRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.SellerStoreEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service

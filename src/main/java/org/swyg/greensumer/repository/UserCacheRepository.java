@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.ObjectUtils;
 import org.swyg.greensumer.dto.User;
 
 import javax.annotation.PostConstruct;
