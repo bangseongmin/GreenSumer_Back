@@ -14,7 +14,7 @@ import java.util.Objects;
 @Table(name = "address")
 @SQLDelete(sql = "UPDATE address SET deleted_at = NOW() where id=?")
 @Entity
-public class AddressEntity {
+public class AddressEntity extends DateTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,13 +24,6 @@ public class AddressEntity {
 
     @Column(name = "lat", unique = true) private Double latitude;
     @Column(name = "lng", unique = true) private Double longitude;
-
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "updated_at") private Timestamp updatedAt;
-    @Column(name = "deleted_at") private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-    @PreUpdate  void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public AddressEntity() {}
 

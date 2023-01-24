@@ -14,7 +14,7 @@ import java.time.Instant;
 @Table(name = "seller_store")
 @SQLDelete(sql = "UPDATE seller_store SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class SellerStoreEntity {
+public class SellerStoreEntity extends DateTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,11 +22,6 @@ public class SellerStoreEntity {
     @Setter @ManyToOne @JoinColumn(name = "store_id") private StoreEntity store;        // 양방향
 
     @Setter @ManyToOne @JoinColumn(name = "seller_id") private UserEntity seller;       // 단방향
-
-    @Column(name = "registered_at") private Timestamp registeredAt;
-    @Column(name = "deleted_at")    private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
 
     public SellerStoreEntity() {}
 

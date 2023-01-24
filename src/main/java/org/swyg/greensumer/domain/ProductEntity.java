@@ -21,7 +21,7 @@ import java.util.Set;
 })
 @SQLDelete(sql = "UPDATE product SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class ProductEntity {
+public class ProductEntity extends DateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -39,19 +39,6 @@ public class ProductEntity {
     @OrderBy("id asc")  // 아이디 순으로 정렬
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<ImageEntity> images = new LinkedHashSet<>();
-
-    @Column(name = "registered_at")
-    private Timestamp registeredAt;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
-
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
-
-    @PrePersist void registeredAt() { this.registeredAt = Timestamp.from(Instant.now()); }
-
-    @PreUpdate void updatedAt() { this.updatedAt = Timestamp.from(Instant.now());}
 
     public void addStoreProduct(StoreProductEntity storeProductEntity){
         storeProductEntity.setProduct(this);
