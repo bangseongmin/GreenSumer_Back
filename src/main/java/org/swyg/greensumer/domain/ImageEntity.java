@@ -2,14 +2,11 @@ package org.swyg.greensumer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.ImageType;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Objects;
 
 @Setter

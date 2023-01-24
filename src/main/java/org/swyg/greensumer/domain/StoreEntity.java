@@ -8,8 +8,6 @@ import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.StoreType;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
