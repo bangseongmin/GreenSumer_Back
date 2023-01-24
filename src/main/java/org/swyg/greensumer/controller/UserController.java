@@ -36,7 +36,7 @@ public class UserController {
         return Response.success();
     }
 
-    @PutMapping("/mail")
+    @GetMapping("/mail")
     public Response<Void> checkMail(@RequestBody VerificationCheckRequest request) {
         verificationService.checkMail(request.getEmail(), request.getCode());
 

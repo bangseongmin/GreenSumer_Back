@@ -104,8 +104,6 @@ public class UserService {
 
         UserEntity userEntity = userEntityRepositoryService.findByEmail(email);
 
-        verificationService.clear(email);
-
         return User.fromEntity(userEntity);
     }
 
@@ -119,7 +117,6 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
 
-        verificationService.clear(email);
         userEntity.setPassword(encoder.encode(password));
     }
 
