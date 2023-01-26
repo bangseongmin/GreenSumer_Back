@@ -11,7 +11,6 @@ import org.swyg.greensumer.domain.ReviewPostViewerEntity;
 import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
-import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
