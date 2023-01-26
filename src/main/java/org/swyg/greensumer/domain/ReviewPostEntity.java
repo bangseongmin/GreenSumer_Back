@@ -55,15 +55,6 @@ public class ReviewPostEntity extends PostEntity {
         this.images.addAll(images);
     }
 
-    public void deleteImages(Collection<ImageEntity> images) {
-        images.forEach(e -> e.setReview(this));
-        this.images.retainAll(images);
-    }
-
-    public void clearImages() {
-        this.images.clear();
-    }
-
     public void addViewer(ReviewPostViewerEntity reviewPostViewerEntity) {
         if(this.viewer.contains(reviewPostViewerEntity)){
             return;
@@ -95,5 +86,11 @@ public class ReviewPostEntity extends PostEntity {
         this.title = title;
         this.content = content;
         addProducts(productEntities);
+    }
+
+    public void clear() {
+        this.products.clear();
+        this.images.clear();
+        this.viewer.clear();
     }
 }

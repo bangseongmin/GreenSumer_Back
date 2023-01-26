@@ -33,6 +33,9 @@ public class ProductEntity extends DateTimeEntity {
     @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "post_id")
     private ReviewPostEntity reviewPost;
 
+    @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "event_id")
+    private EventPostEntity eventPost;
+
     @Column(name = "name", length = 50) private String name;
 
     @Column(name = "price") private int price;
@@ -46,6 +49,10 @@ public class ProductEntity extends DateTimeEntity {
 
     public void setReviewPost(ReviewPostEntity reviewPost) {
         this.reviewPost = reviewPost;
+    }
+
+    public void setEventPost(EventPostEntity eventPost) {
+        this.eventPost = eventPost;
     }
 
     public void addStoreProduct(StoreProductEntity storeProductEntity){

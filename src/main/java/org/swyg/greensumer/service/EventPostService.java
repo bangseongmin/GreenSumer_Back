@@ -16,6 +16,7 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.EventPostEntityRepository;
 import org.swyg.greensumer.repository.EventPostViewerEntityRepository;
 
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -30,17 +31,19 @@ public class EventPostService {
     private final ImageService imageService;
 
     @Transactional
-    public void create(EventPostCreateRequest request, Long storeId, Long productId, String username) {
+    public void create(EventPostCreateRequest request, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
-        StoreEntity storeEntity = storeService.getStoreEntityOrException(storeId);
-        ProductEntity productEntity = storeService.getProductEntityOrException(productId);
+        List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
         EventPostEntity eventPostEntity = eventPostEntityRepository.save(EventPostEntity.builder()
-                .product(productEntity)
                 .user(userEntity)
                 .title(request.getTitle())
                 .content(request.getContent())
                 .build());
+
+        if(productEntities.size() > 0) {
+            eventPostEntity.addProducts(productEntities);
+        }
 
         if (request.getImages().size() > 0) {
             eventPostEntity.addImages(imageService.getImages(request.getImages()));
@@ -48,14 +51,13 @@ public class EventPostService {
     }
 
     @Transactional
-    public EventPost modify(EventPostModifyRequest request, Long postId, Long productId, String username) {
+    public EventPost modify(EventPostModifyRequest request, Long postId, String username) {
         EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
+        List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
         isEventMine(eventPostEntity.getUser().getUsername(), username, postId);
-        userEntityRepositoryService.loadUserByUsername(username);
-        ProductEntity productEntity = storeService.getProductEntityOrException(productId);
 
-        eventPostEntity.updateEventPost(productEntity, request.getTitle(), request.getContent());
+        eventPostEntity.updateEventPost(productEntities, request.getTitle(), request.getContent());
 
         if(request.getImages().size() > 0){
             eventPostEntity.addImages(imageService.getImages(request.getImages()));
@@ -67,9 +69,9 @@ public class EventPostService {
     @Transactional
     public void delete(Long postId, String username) {
         EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
-        userEntityRepositoryService.loadUserByUsername(username);
         isEventMine(eventPostEntity.getUser().getUsername(), username, postId);
 
+        eventPostEntity.clear();
         eventPostEntityRepository.delete(eventPostEntity);
     }
 
@@ -87,7 +89,6 @@ public class EventPostService {
     @Transactional
     public EventPostWithComment getPostAndComments(Long postId, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
-
         EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
 
         EventPostViewerEntity eventPostViewerEntity = eventPostViewerEntityRepository.findByEvent_IdAndUser_Id(postId, userEntity.getId()).orElseGet(

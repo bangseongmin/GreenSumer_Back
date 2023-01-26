@@ -7,5 +7,5 @@ import org.swyg.greensumer.domain.ReviewPostEntity;
 
 public interface ReviewPostEntityRepository extends JpaRepository<ReviewPostEntity, Long> {
 
-    Page<ReviewPostEntity> findAllByUser_Id(Long userId, Pageable pageable);
+    Page<ReviewPostEntity> findAllByUser_Username(String username, Pageable pageable);
 }

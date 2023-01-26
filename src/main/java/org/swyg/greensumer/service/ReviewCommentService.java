@@ -22,7 +22,6 @@ public class ReviewCommentService {
     @Transactional
     public void createComment(Long postId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
-
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         reviewCommentRepository.save(ReviewCommentEntity.of(
@@ -35,9 +34,6 @@ public class ReviewCommentService {
     @Transactional
     public ReviewComment modifyComment(Long postId, Long commentId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
-
-        userEntityRepositoryService.loadUserByUsername(username);
-
         ReviewCommentEntity reviewCommentEntity = getReviewCommentEntityOrException(commentId);
 
         if (!reviewCommentEntity.getUser().getUsername().equals(username)) {
@@ -51,9 +47,6 @@ public class ReviewCommentService {
 
     public void deleteComment(Long postId, Long commentId, String username) {
         ReviewPostEntity reviewPost = reviewPostService.getReviewPostEntityOrException(postId);
-
-        userEntityRepositoryService.loadUserByUsername(username);
-
         ReviewCommentEntity reviewCommentEntity = getReviewCommentEntityOrException(commentId);
 
         if (!reviewCommentEntity.getUser().getUsername().equals(username)) {
