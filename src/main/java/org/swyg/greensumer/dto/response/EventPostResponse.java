@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.EventPost;
 
 import java.sql.Timestamp;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import java.sql.Timestamp;
 public class EventPostResponse {
     private Long id;
     private UserResponse user;
-    private ProductResponse product;
+    private Set<ProductResponse> product;
     private String title;
     private String content;
     private Integer views;
@@ -25,7 +27,9 @@ public class EventPostResponse {
         return new EventPostResponse(
                 eventPost.getId(),
                 UserResponse.fromUser(eventPost.getUser()),
-                ProductResponse.fromProduct(eventPost.getProduct()),
+                eventPost.getProducts().stream()
+                        .map(ProductResponse::fromProduct)
+                        .collect(Collectors.toUnmodifiableSet()),
                 eventPost.getTitle(),
                 eventPost.getContent(),
                 eventPost.getViews(),

@@ -29,13 +29,13 @@ public class EventController {
 
     @PostMapping
     public Response<Void> createEvent(@RequestBody EventPostCreateRequest request, Authentication authentication){
-        eventPostService.create(request, request.getStoreId(), request.getProductId(), authentication.getName());
+        eventPostService.create(request, authentication.getName());
         return Response.success();
     }
 
     @PutMapping("/{postId}")
     public Response<EventPostResponse> modifyEvent(@PathVariable Long postId, @RequestBody EventPostModifyRequest request, Authentication authentication) {
-        EventPost eventPost = eventPostService.modify(request, postId, request.getProductId(), authentication.getName());
+        EventPost eventPost = eventPostService.modify(request, postId, authentication.getName());
         return Response.success(EventPostResponse.fromEventPost(eventPost));
     }
 

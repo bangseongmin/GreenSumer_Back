@@ -18,7 +18,7 @@ public class EventPostWithComment {
     private String title;
     private String content;
     private Integer views;
-    private Product product;
+    private Set<Product> products;
     private User user;
     private Set<EventComment> reviewComments;
     private Timestamp registeredAt;
@@ -31,7 +31,9 @@ public class EventPostWithComment {
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getViews(),
-                Product.fromEntity(entity.getProduct()),
+                entity.getProducts().stream()
+                        .map(Product::fromEntity)
+                        .collect(Collectors.toUnmodifiableSet()),
                 User.fromEntity(entity.getUser()),
                 entity.getComments().stream()
                         .map(EventComment::fromEntity)

@@ -8,10 +8,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @Getter
@@ -21,11 +18,11 @@ import java.util.Set;
 @Where(clause = "deleted_at is NULL")
 public class EventPostEntity extends PostEntity {
 
-    @OneToOne @JoinColumn(name = "product_id")
-    private ProductEntity product;
+    @OneToMany(mappedBy = "eventPost")
+    private Set<ProductEntity> products = new LinkedHashSet<>();
 
     @ToString.Exclude @OrderBy("registeredAt DESC")
-    @OneToMany(mappedBy = "eventPost", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "eventPost")
     private Set<EventCommentEntity> comments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "event", orphanRemoval = true, cascade = {CascadeType.ALL})
@@ -36,8 +33,7 @@ public class EventPostEntity extends PostEntity {
 
     protected EventPostEntity() {}
 
-    private EventPostEntity(ProductEntity product, UserEntity user, String title, String content) {
-        this.product = product;
+    private EventPostEntity(UserEntity user, String title, String content) {
         this.user = user;
         this.title = title;
         this.content = content;
@@ -45,8 +41,8 @@ public class EventPostEntity extends PostEntity {
     }
 
     @Builder
-    public static EventPostEntity of(ProductEntity product, UserEntity user, String title, String content) {
-        return new EventPostEntity(product, user, title, content);
+    public static EventPostEntity of(UserEntity user, String title, String content) {
+        return new EventPostEntity(user, title, content);
     }
 
     public void addImages(Collection<ImageEntity> images) {
@@ -65,6 +61,12 @@ public class EventPostEntity extends PostEntity {
         this.views++;
     }
 
+    public void addProducts(Collection<ProductEntity> productEntities) {
+        productEntities.forEach(p -> p.setEventPost(this));
+        this.products.clear();
+        this.products.addAll(productEntities);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,9 +79,16 @@ public class EventPostEntity extends PostEntity {
         return Objects.hash(this.getId());
     }
 
-    public void updateEventPost(ProductEntity productEntity, String title, String content) {
-        this.product = productEntity;
+    public void updateEventPost(List<ProductEntity> productEntities, String title, String content) {
         this.title = title;
         this.content = content;
+
+        addProducts(productEntities);
+    }
+
+    public void clear() {
+        this.images.clear();
+        this.viewer.clear();
+        this.products.clear();
     }
 }

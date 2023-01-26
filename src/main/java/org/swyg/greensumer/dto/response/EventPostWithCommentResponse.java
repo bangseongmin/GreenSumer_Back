@@ -18,7 +18,7 @@ public class EventPostWithCommentResponse {
     private String title;
     private String content;
     private Integer views;
-    private ProductResponse product;
+    private Set<ProductResponse> products;
     private UserResponse user;
     private Set<EventCommentResponse> reviewComments;
     private Timestamp registeredAt;
@@ -31,7 +31,9 @@ public class EventPostWithCommentResponse {
                 postWithComment.getTitle(),
                 postWithComment.getContent(),
                 postWithComment.getViews(),
-                ProductResponse.fromProduct(postWithComment.getProduct()),
+                postWithComment.getProducts().stream()
+                        .map(ProductResponse::fromProduct)
+                        .collect(Collectors.toUnmodifiableSet()),
                 UserResponse.fromUser(postWithComment.getUser()),
                 postWithComment.getReviewComments().stream()
                         .map(EventCommentResponse::fromEventComment)
