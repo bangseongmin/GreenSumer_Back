@@ -18,4 +18,8 @@ public abstract class CommentEntity extends DateTimeEntity {
 
     @Column(name = "content", columnDefinition = "TEXT")
     protected String content;
+
+    public void update(String content) {
+        this.content = content;
+    }
 }

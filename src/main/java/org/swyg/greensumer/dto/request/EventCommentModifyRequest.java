@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewCommentModifyRequest {
+public class EventCommentModifyRequest {
     private String content;
 
-    public static ReviewCommentModifyRequest of(String content){
-        return new ReviewCommentModifyRequest(content);
+    public static EventCommentModifyRequest of(String content){
+        return new EventCommentModifyRequest(content);
     }
 }

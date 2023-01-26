@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.EventPostEntity;
-import org.swyg.greensumer.domain.ReviewPostEntity;
 
 import java.sql.Timestamp;
 

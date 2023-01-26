@@ -56,8 +56,7 @@ public class ReviewPostService {
 
         ProductEntity productEntity = storeService.getProductEntityOrException(productId);
 
-        reviewPostEntity.setProduct(productEntity);
-        reviewPostEntity.updatePost(request.getTitle(), request.getContent());
+        reviewPostEntity.updateReviewPost(productEntity, request.getTitle(), request.getContent());
 
         if(request.getImages().size() > 0){
             reviewPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));
@@ -84,7 +83,6 @@ public class ReviewPostService {
     @Transactional(readOnly = true)
     public Page<ReviewPost> myList(String username, Pageable pageable) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
-
         return reviewPostEntityRepository.findAllByUser_Id(user.getId(), pageable).map(ReviewPost::fromEntity);
     }
 

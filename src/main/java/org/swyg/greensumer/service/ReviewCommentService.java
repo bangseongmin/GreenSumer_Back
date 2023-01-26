@@ -19,6 +19,7 @@ public class ReviewCommentService {
     private final ReviewPostService reviewPostService;
     private final UserEntityRepositoryService userEntityRepositoryService;
 
+    @Transactional
     public void createComment(Long postId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
 
@@ -43,7 +44,7 @@ public class ReviewCommentService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission", username));
         }
 
-        reviewCommentEntity.setContent(content);
+        reviewCommentEntity.update(content);
 
         return ReviewComment.fromEntity(reviewCommentEntity);
     }

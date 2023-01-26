@@ -1,20 +1,21 @@
 package org.swyg.greensumer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.swyg.greensumer.dto.ReviewPost;
-import org.swyg.greensumer.dto.ReviewPostWithComment;
+import org.swyg.greensumer.dto.EventComment;
+import org.swyg.greensumer.dto.EventPost;
+import org.swyg.greensumer.dto.EventPostWithComment;
+import org.swyg.greensumer.dto.request.EventCommentCreateRequest;
+import org.swyg.greensumer.dto.request.EventCommentModifyRequest;
 import org.swyg.greensumer.dto.request.EventPostCreateRequest;
-import org.swyg.greensumer.dto.request.ReviewCommentCreateRequest;
-import org.swyg.greensumer.dto.request.ReviewCommentModifyRequest;
-import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
+import org.swyg.greensumer.dto.request.EventPostModifyRequest;
+import org.swyg.greensumer.dto.response.EventCommentResponse;
+import org.swyg.greensumer.dto.response.EventPostResponse;
+import org.swyg.greensumer.dto.response.EventPostWithCommentResponse;
 import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.ReviewPostResponse;
-import org.swyg.greensumer.dto.response.ReviewPostWithCommentResponse;
 import org.swyg.greensumer.service.EventCommentService;
 import org.swyg.greensumer.service.EventPostService;
 
@@ -29,45 +30,40 @@ public class EventController {
     @PostMapping
     public Response<Void> createEvent(@RequestBody EventPostCreateRequest request, Authentication authentication){
         eventPostService.create(request, request.getStoreId(), request.getProductId(), authentication.getName());
-
         return Response.success();
     }
 
     @PutMapping("/{postId}")
-    public Response<ReviewPostResponse> modifyEvent(@PathVariable Long postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) throws JsonProcessingException {
-        ReviewPost reviewPost = eventPostService.modify(request, postId, request.getProductId(), authentication.getName());
-
-
-        return Response.success(ReviewPostResponse.fromReviewPost(reviewPost));
+    public Response<EventPostResponse> modifyEvent(@PathVariable Long postId, @RequestBody EventPostModifyRequest request, Authentication authentication) {
+        EventPost eventPost = eventPostService.modify(request, postId, request.getProductId(), authentication.getName());
+        return Response.success(EventPostResponse.fromEventPost(eventPost));
     }
 
     @DeleteMapping("/{postId}")
     public Response<Void> deleteEvent(@PathVariable Long postId, Authentication authentication) {
         eventPostService.delete(postId, authentication.getName());
-
         return Response.success();
     }
 
     @GetMapping
-    public Response<Page<ReviewPostResponse>> eventList(Pageable pageable, Authentication authentication) {
-        return Response.success(eventPostService.list(pageable).map(ReviewPostResponse::fromReviewPost));
+    public Response<Page<EventPostResponse>> eventList(Pageable pageable, Authentication authentication) {
+        return Response.success(eventPostService.list(pageable).map(EventPostResponse::fromEventPost));
     }
 
     @GetMapping("/{postId}")
-    public Response<ReviewPostWithCommentResponse> getEventPostAndComments(@PathVariable Long postId, Authentication authentication) {
-        ReviewPostWithComment postWithComment = eventPostService.getPostAndComments(postId, authentication.getName());
-        return Response.success(ReviewPostWithCommentResponse.fromReviewPostWithComment(postWithComment));
+    public Response<EventPostWithCommentResponse> getEventPostAndComments(@PathVariable Long postId, Authentication authentication) {
+        EventPostWithComment eventPostWithComment = eventPostService.getPostAndComments(postId, authentication.getName());
+        return Response.success(EventPostWithCommentResponse.fromEventPostWithComment(eventPostWithComment));
     }
 
     @GetMapping("/my")
-    public Response<Page<ReviewPostResponse>> myEventList(Pageable pageable, Authentication authentication) throws JsonProcessingException {
-        return Response.success(eventPostService.myList(authentication.getName(), pageable).map(ReviewPostResponse::fromReviewPost));
+    public Response<Page<EventPostResponse>> myEventList(Pageable pageable, Authentication authentication) {
+        return Response.success(eventPostService.myList(authentication.getName(), pageable).map(EventPostResponse::fromEventPost));
     }
 
     @PostMapping("/{postId}/comments")
-    public Response<Void> createComment(@PathVariable Long postId, @RequestBody ReviewCommentCreateRequest request, Authentication authentication) {
+    public Response<Void> createComment(@PathVariable Long postId, @RequestBody EventCommentCreateRequest request, Authentication authentication) {
         eventCommentService.createComment(postId, request.getContent(), authentication.getName());
-
         return Response.success();
     }
 
@@ -75,7 +71,7 @@ public class EventController {
     public Response<EventCommentResponse> modifyComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @RequestBody ReviewCommentModifyRequest request,
+            @RequestBody EventCommentModifyRequest request,
             Authentication authentication
     ) {
         EventComment reviewComment = eventCommentService.modifyComment(postId, commentId, request.getContent(), authentication.getName());
