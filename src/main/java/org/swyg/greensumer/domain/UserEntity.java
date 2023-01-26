@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Builder
-@Setter
+@ToString(callSuper = true)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,5 +50,19 @@ public class UserEntity extends DateTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateUserInfo(String password, String nickname, String email) {
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+    }
+
+    public void updateAddress(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
     }
 }

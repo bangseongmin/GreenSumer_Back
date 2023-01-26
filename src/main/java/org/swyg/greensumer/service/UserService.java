@@ -2,7 +2,6 @@ package org.swyg.greensumer.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ import java.util.Objects;
 @Service
 public class UserService {
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final StoreService storeService;
     private final AddressService addressService;
     private final UserEntityRepositoryService userEntityRepositoryService;
@@ -143,7 +141,7 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
 
-        userEntity.setPassword(encoder.encode(password));
+        userEntity.updatePassword(encoder.encode(password));
     }
 
     @Transactional
@@ -153,13 +151,10 @@ public class UserService {
         }
 
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
-
-        userEntity.setPassword(encoder.encode(request.getPassword()));
-        userEntity.setNickname(request.getNickname());
-        userEntity.setEmail(request.getEmail());
+        userEntity.updateUserInfo(encoder.encode(request.getPassword()), request.getNickname(), request.getEmail());
 
         AddressEntity addressEntity = addressService.updateAddress(userEntity.getAddressEntity().getId(), request.getAddress(), request.getAddress(), request.getLat(), request.getLat());
-        userEntity.setAddressEntity(addressEntity);
+        userEntity.updateAddress(addressEntity);
 
         return User.fromEntity(userEntity);
     }

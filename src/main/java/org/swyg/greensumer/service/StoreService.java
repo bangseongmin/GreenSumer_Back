@@ -62,15 +62,11 @@ public class StoreService {
     public Store modify(Long storeId, StoreModifyRequest request, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
-        SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
 
-        // 3. 가게 정보 업데이트
-        storeEntity.setStoreType(StoreType.valueOf(request.getType()));
-        storeEntity.setDescription(request.getDescription());
-        storeEntity.setHours(request.getHours());
+        isStoreManager(user.getId(), storeId);
 
-        AddressEntity updatedAddress = addressService.updateAddress(storeEntity.getAddress().getId(), request.getAddress(), request.getRoadname(), request.getLat(), request.getLng());
-        storeEntity.setAddress(updatedAddress);
+        storeEntity.updateStore(request.getType(), request.getDescription(), request.getHours());
+        storeEntity.updateAddress(addressService.updateAddress(storeEntity.getAddress().getId(), request.getAddress(), request.getRoadname(), request.getLat(), request.getLng()));
 
         if(request.getImages().size() > 0){
             storeEntity.addImages(imageService.findAllByIdIn(request.getImages()));
@@ -130,10 +126,7 @@ public class StoreService {
         ProductEntity productEntity = getProductEntityOrException(productId);
         StoreProductEntity storeProductEntity = getStoreProductOrException(storeId, productId);
 
-        productEntity.setName(request.getName());
-        productEntity.setDescription(request.getDescription());
-        productEntity.setPrice(request.getPrice());
-        productEntity.setStock(request.getStock());
+        productEntity.updateProductInfo(request.getName(), request.getDescription(), request.getPrice(), request.getStock());
 
         if(request.getImages().size() > 0){
             productEntity.addImages(imageService.findAllByIdIn(request.getImages()));

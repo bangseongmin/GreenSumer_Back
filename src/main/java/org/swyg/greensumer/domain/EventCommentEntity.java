@@ -2,7 +2,6 @@ package org.swyg.greensumer.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -12,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
-@Setter
 @Getter
 @Entity
 @Table(name = "event_comment")

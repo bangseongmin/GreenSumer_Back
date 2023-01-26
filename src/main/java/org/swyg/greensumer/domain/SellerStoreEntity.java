@@ -1,12 +1,15 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "seller_store")
@@ -17,9 +20,9 @@ public class SellerStoreEntity extends DateTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @ManyToOne @JoinColumn(name = "store_id") private StoreEntity store;        // 양방향
+    @ManyToOne @JoinColumn(name = "store_id") private StoreEntity store;        // 양방향
 
-    @Setter @ManyToOne @JoinColumn(name = "seller_id") private UserEntity seller;       // 단방향
+    @ManyToOne @JoinColumn(name = "seller_id") private UserEntity seller;       // 단방향
 
     public SellerStoreEntity() {}
 
@@ -30,5 +33,13 @@ public class SellerStoreEntity extends DateTimeEntity {
 
     public static SellerStoreEntity of(StoreEntity store, UserEntity seller) {
         return new SellerStoreEntity(store, seller);
+    }
+
+    public void setStore(StoreEntity storeEntity) {
+        this.store = storeEntity;
+    }
+
+    public void setSeller(UserEntity seller) {
+        this.seller = seller;
     }
 }
