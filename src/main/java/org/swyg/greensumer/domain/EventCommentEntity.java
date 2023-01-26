@@ -1,6 +1,5 @@
 package org.swyg.greensumer.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
