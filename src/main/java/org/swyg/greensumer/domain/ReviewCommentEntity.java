@@ -14,21 +14,11 @@ import java.util.Objects;
 @Table(name = "review_comment")
 @SQLDelete(sql = "UPDATE review_comment SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class ReviewCommentEntity extends DateTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ReviewCommentEntity extends CommentEntity {
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "post_id")
+    @ManyToOne(optional = false) @JoinColumn(name = "post_id")
     private ReviewPostEntity reviewPost;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
 
     public ReviewCommentEntity() {}
 

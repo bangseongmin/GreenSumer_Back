@@ -28,7 +28,7 @@ public class ReviewPostService {
     private final StoreService storeService;
     private final ImageService imageService;
 
-    public void create(ReviewPostCreateRequest request, Integer storeId, Integer productId, String username) {
+    public void create(ReviewPostCreateRequest request, Long storeId, Long productId, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         StoreEntity storeEntity = storeService.getStoreEntityOrException(storeId);
@@ -47,7 +47,7 @@ public class ReviewPostService {
     }
 
     @Transactional
-    public ReviewPost modify(ReviewPostModifyRequest request, Long postId, Integer productId, String username) {
+    public ReviewPost modify(ReviewPostModifyRequest request, Long postId, Long productId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
 
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
@@ -57,8 +57,7 @@ public class ReviewPostService {
         ProductEntity productEntity = storeService.getProductEntityOrException(productId);
 
         reviewPostEntity.setProduct(productEntity);
-        reviewPostEntity.setTitle(request.getTitle());
-        reviewPostEntity.setContent(request.getContent());
+        reviewPostEntity.updatePost(request.getTitle(), request.getContent());
 
         if(request.getImages().size() > 0){
             reviewPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));

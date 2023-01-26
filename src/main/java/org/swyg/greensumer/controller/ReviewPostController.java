@@ -36,7 +36,7 @@ public class ReviewPostController {
     }
 
     @PutMapping("/{postId}")
-    public Response<ReviewPostResponse> modify(@PathVariable Integer postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) throws JsonProcessingException {
+    public Response<ReviewPostResponse> modify(@PathVariable Long postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) {
         ReviewPost reviewPost = reviewPostService.modify(request, postId, request.getProductId(), authentication.getName());
 
 
@@ -44,7 +44,7 @@ public class ReviewPostController {
     }
 
     @DeleteMapping("/{postId}")
-    public Response<Void> delete(@PathVariable Integer postId, Authentication authentication) throws JsonProcessingException {
+    public Response<Void> delete(@PathVariable Long postId, Authentication authentication) {
         reviewPostService.delete(postId, authentication.getName());
 
         return Response.success();
@@ -56,18 +56,18 @@ public class ReviewPostController {
     }
 
     @GetMapping("/{postId}")
-    public Response<ReviewPostWithCommentResponse> getPostAndComments(@PathVariable Integer postId, Authentication authentication) {
+    public Response<ReviewPostWithCommentResponse> getPostAndComments(@PathVariable Long postId, Authentication authentication) {
         ReviewPostWithComment postWithComment = reviewPostService.getPostAndComments(postId, authentication.getName());
         return Response.success(ReviewPostWithCommentResponse.fromReviewPostWithComment(postWithComment));
     }
 
     @GetMapping("/my")
-    public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) throws JsonProcessingException {
+    public Response<Page<ReviewPostResponse>> mylist(Pageable pageable, Authentication authentication) {
         return Response.success(reviewPostService.myList(authentication.getName(), pageable).map(ReviewPostResponse::fromReviewPost));
     }
 
     @PostMapping("/{postId}/comments")
-    public Response<Void> createComment(@PathVariable Integer postId, @RequestBody ReviewCommentCreateRequest request, Authentication authentication) {
+    public Response<Void> createComment(@PathVariable Long postId, @RequestBody ReviewCommentCreateRequest request, Authentication authentication) {
         reviewCommentService.createComment(postId, request.getContent(), authentication.getName());
 
         return Response.success();
@@ -75,17 +75,17 @@ public class ReviewPostController {
 
     @PutMapping("/{postId}/comments/{commentId}")
     public Response<ReviewCommentResponse> modifyComment(
-            @PathVariable Integer postId,
-            @PathVariable Integer commentId,
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
             @RequestBody ReviewCommentModifyRequest request,
             Authentication authentication
-    ) throws JsonProcessingException {
+    ) {
         ReviewComment reviewComment = reviewCommentService.modifyComment(postId, commentId, request.getContent(), authentication.getName());
         return Response.success(ReviewCommentResponse.fromReviewComment(reviewComment));
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public Response<Void> deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId, Authentication authentication) {
+    public Response<Void> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Authentication authentication) {
         reviewCommentService.deleteComment(postId, commentId, authentication.getName());
         return Response.success();
     }
