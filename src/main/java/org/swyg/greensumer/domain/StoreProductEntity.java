@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class StoreProductEntity extends DateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Setter @ManyToOne @JoinColumn(name = "store_id") private StoreEntity store;
 

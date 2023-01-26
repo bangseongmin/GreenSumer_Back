@@ -10,13 +10,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewPostCreateRequest {
-    private Integer storeId;
-    private Integer productId;
+    private Long storeId;
+    private Long productId;
     private String title;
     private String content;
-    private List<Integer> images;
+    private List<Long> images;
 
-    public static ReviewPostCreateRequest of(Integer storeId, Integer productId, String title, String content, List<Integer> images) {
+    public static ReviewPostCreateRequest of(Long storeId, Long productId, String title, String content, List<Long> images) {
         return new ReviewPostCreateRequest(storeId, productId, title, content, images);
     }
 }

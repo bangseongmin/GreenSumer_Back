@@ -5,7 +5,7 @@ import org.swyg.greensumer.domain.UserEntity;
 
 import java.util.Optional;
 
-public interface UserEntityRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByUsername(String username);
 

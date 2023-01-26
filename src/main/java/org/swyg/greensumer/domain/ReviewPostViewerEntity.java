@@ -16,7 +16,7 @@ public class ReviewPostViewerEntity extends DateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Setter @ManyToOne @JoinColumn(name = "post_id") private ReviewPostEntity review;       // 양방향
     @Setter @ManyToOne @JoinColumn(name = "user_id") private UserEntity user;         // 단방향

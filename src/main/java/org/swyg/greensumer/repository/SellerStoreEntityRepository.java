@@ -7,11 +7,11 @@ import org.swyg.greensumer.domain.SellerStoreEntity;
 
 import java.util.Optional;
 
-public interface SellerStoreEntityRepository extends JpaRepository<SellerStoreEntity, Integer> {
+public interface SellerStoreEntityRepository extends JpaRepository<SellerStoreEntity, Long> {
 
-    Optional<SellerStoreEntity> findBySeller_IdAndStore_Id(Integer seller_Id, Integer store_id);
+    Optional<SellerStoreEntity> findBySeller_IdAndStore_Id(Long seller_Id, Long store_id);
 
-    void deleteAllByStore_Id(Integer store_id);
+    void deleteAllByStore_Id(Long store_id);
 
-    Page<SellerStoreEntity> findAllBySeller_Id(Integer seller_Id, Pageable pageable);
+    Page<SellerStoreEntity> findAllBySeller_Id(Long seller_Id, Pageable pageable);
 }

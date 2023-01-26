@@ -5,8 +5,8 @@ import org.swyg.greensumer.domain.ReviewPostViewerEntity;
 
 import java.util.Optional;
 
-public interface ReviewPostViewerEntityRepository extends JpaRepository<ReviewPostViewerEntity, Integer> {
+public interface ReviewPostViewerEntityRepository extends JpaRepository<ReviewPostViewerEntity, Long> {
 
 
-    Optional<ReviewPostViewerEntity> findByReview_IdAndUser_Id(Integer reviewPostId, Integer userId);
+    Optional<ReviewPostViewerEntity> findByReview_IdAndUser_Id(Long reviewPostId, Long userId);
 }

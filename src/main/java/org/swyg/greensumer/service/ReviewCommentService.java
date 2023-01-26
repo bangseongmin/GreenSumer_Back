@@ -19,7 +19,7 @@ public class ReviewCommentService {
     private final ReviewPostService reviewPostService;
     private final UserEntityRepositoryService userEntityRepositoryService;
 
-    public void createComment(Integer postId, String content, String username) {
+    public void createComment(Long postId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
 
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
@@ -32,7 +32,7 @@ public class ReviewCommentService {
     }
 
     @Transactional
-    public ReviewComment modifyComment(Integer postId, Integer commentId, String content, String username) {
+    public ReviewComment modifyComment(Long postId, Long commentId, String content, String username) {
         ReviewPostEntity reviewPostEntity = reviewPostService.getReviewPostEntityOrException(postId);
 
         userEntityRepositoryService.loadUserByUsername(username);
@@ -48,7 +48,7 @@ public class ReviewCommentService {
         return ReviewComment.fromEntity(reviewCommentEntity);
     }
 
-    public void deleteComment(Integer postId, Integer commentId, String username) {
+    public void deleteComment(Long postId, Long commentId, String username) {
         ReviewPostEntity reviewPost = reviewPostService.getReviewPostEntityOrException(postId);
 
         userEntityRepositoryService.loadUserByUsername(username);
@@ -62,7 +62,7 @@ public class ReviewCommentService {
         reviewCommentRepository.deleteById(commentId);
     }
 
-    private ReviewCommentEntity getReviewCommentEntityOrException(Integer commentId){
+    private ReviewCommentEntity getReviewCommentEntityOrException(Long commentId){
         return reviewCommentRepository.findById(commentId)
                 .orElseThrow(() -> new GreenSumerBackApplicationException(ErrorCode.COMMENT_NOT_FOUND, String.format("%s not founded", commentId)));
     }

@@ -9,8 +9,7 @@ import org.swyg.greensumer.dto.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-
-    private Integer id;
+    private Long id;
     private String username;
     private String nickname;
     private String email;

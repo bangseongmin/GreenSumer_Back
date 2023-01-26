@@ -59,7 +59,7 @@ public class StoreService {
     }
 
     @Transactional
-    public Store modify(Integer storeId, StoreModifyRequest request, String username) {
+    public Store modify(Long storeId, StoreModifyRequest request, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
@@ -79,7 +79,7 @@ public class StoreService {
         return Store.fromEntity(storeEntity);
     }
 
-    public void delete(Integer storeId, String username) {
+    public void delete(Long storeId, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
@@ -101,7 +101,7 @@ public class StoreService {
     }
 
     @Transactional
-    public Product registerProduct(Integer storeId, ProductCreateRequest request, String username) {
+    public Product registerProduct(Long storeId, ProductCreateRequest request, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
@@ -123,7 +123,7 @@ public class StoreService {
     }
 
     @Transactional
-    public Product modifyProduct(Integer storeId, Integer productId, ProductModifyRequest request, String username) {
+    public Product modifyProduct(Long storeId, Long productId, ProductModifyRequest request, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
@@ -143,7 +143,7 @@ public class StoreService {
     }
 
     @Transactional
-    public void deleteProduct(Integer storeId, Integer productId, String username) {
+    public void deleteProduct(Long storeId, Long productId, String username) {
         User user = userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
@@ -155,13 +155,13 @@ public class StoreService {
         productEntityRepository.delete(productEntity);
     }
 
-    public Page<StoreProduct> getProductList(Integer storeId, Pageable pageable) {
+    public Page<StoreProduct> getProductList(Long storeId, Pageable pageable) {
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
 
         return storeProductEntityRepository.findAllByStore(storeEntity, pageable).map(StoreProduct::fromEntity);
     }
 
-    public StoreProduct getProduct(Integer storeId, Integer productId) {
+    public StoreProduct getProduct(Long storeId, Long productId) {
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         ProductEntity productEntity = getProductEntityOrException(productId);
         StoreProductEntity storeProductEntity = getStoreProductOrException(storeId, productId);
@@ -175,25 +175,25 @@ public class StoreService {
         });
     }
 
-    public ProductEntity getProductEntityOrException(Integer productId){
+    public ProductEntity getProductEntityOrException(Long productId){
         return productEntityRepository.findById(productId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded", productId));
         });
     }
 
-    public StoreEntity getStoreEntityOrException(Integer storeId){
+    public StoreEntity getStoreEntityOrException(Long storeId){
         return storeEntityRepository.findById(storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
     }
 
-    private SellerStoreEntity isStoreManager(Integer userId, Integer storeId) {
+    private SellerStoreEntity isStoreManager(Long userId, Long storeId) {
         return sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userId, storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", userId, storeId));
         });
     }
 
-    private StoreProductEntity getStoreProductOrException(Integer storeId, Integer productId) {
+    private StoreProductEntity getStoreProductOrException(Long storeId, Long productId) {
         return storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND_ON_STORE, String.format("%s not founded on Store #%s", productId, storeId));
         });
