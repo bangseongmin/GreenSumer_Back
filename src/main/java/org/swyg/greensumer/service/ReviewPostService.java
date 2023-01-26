@@ -16,6 +16,8 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
 import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Service
 public class ReviewPostService {
@@ -45,7 +47,7 @@ public class ReviewPostService {
     }
 
     @Transactional
-    public ReviewPost modify(ReviewPostModifyRequest request, Integer postId, Integer productId, String username) {
+    public ReviewPost modify(ReviewPostModifyRequest request, Long postId, Integer productId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
 
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
@@ -66,7 +68,7 @@ public class ReviewPostService {
     }
 
     @Transactional
-    public void delete(Integer postId, String username) {
+    public void delete(Long postId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
 
         userEntityRepositoryService.loadUserByUsername(username);
@@ -88,7 +90,7 @@ public class ReviewPostService {
     }
 
     @Transactional
-    public ReviewPostWithComment getPostAndComments(Integer postId, String username) {
+    public ReviewPostWithComment getPostAndComments(Long postId, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
@@ -102,14 +104,14 @@ public class ReviewPostService {
         return ReviewPostWithComment.fromEntity(reviewPostEntity);
     }
 
-    public ReviewPostEntity getReviewPostEntityOrException(Integer postId) {
+    public ReviewPostEntity getReviewPostEntityOrException(Long postId) {
         return reviewPostEntityRepository.findById(postId).orElseThrow(
                 () -> {throw new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId));}
         );
     }
 
-    private void isPostMine(String writer, String username, Integer postId){
-        if(writer != username){
+    private void isPostMine(String writer, String username, Long postId){
+        if(!Objects.equals(writer, username)){
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, postId));
         }
     }

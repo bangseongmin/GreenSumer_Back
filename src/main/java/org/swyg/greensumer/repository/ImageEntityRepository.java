@@ -7,11 +7,11 @@ import org.swyg.greensumer.domain.UserEntity;
 
 import java.util.List;
 
-public interface ImageEntityRepository extends JpaRepository<ImageEntity, Integer> {
+public interface ImageEntityRepository extends JpaRepository<ImageEntity, Long> {
 
     List<ImageEntity> findAllByUserEntity(UserEntity user);
 
-    List<ImageEntity> findAllByIdIn(List<Integer> id);
+    List<ImageEntity> findAllByIdIn(List<Long> id);
 
     void deleteAllByProduct(ProductEntity productEntity);
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 public class ProductEntity extends DateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();

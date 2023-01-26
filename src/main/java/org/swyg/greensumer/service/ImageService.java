@@ -46,7 +46,7 @@ public class ImageService {
         return Image.fromEntity(imageEntity);
     }
 
-    public Image searchImage(Integer imageId, String username) {
+    public Image searchImage(Long imageId, String username) {
         userEntityRepositoryService.loadUserByUsername(username);
 
         ImageEntity imageEntity = getImageEntityOrException(imageId);
@@ -75,7 +75,7 @@ public class ImageService {
         return imageEntityRepository.saveAll(imageEntities).stream().map(Image::fromEntity).collect(Collectors.toList());
     }
 
-    public Image modifyImage(Integer imageId, ImageModifyRequest request, String username) throws IOException {
+    public Image modifyImage(Long imageId, ImageModifyRequest request, String username) throws IOException {
         userEntityRepositoryService.loadUserByUsername(username);
 
         ImageEntity imageEntity = getImageEntityOrException(imageId);
@@ -86,7 +86,7 @@ public class ImageService {
         return Image.fromEntity(imageEntity);
     }
 
-    public void removeImage(Integer imageId, String username) {
+    public void removeImage(Long imageId, String username) {
         userEntityRepositoryService.loadUserByUsername(username);
 
         imageEntityRepository.deleteById(imageId);
@@ -96,13 +96,13 @@ public class ImageService {
         return UUID.randomUUID() + "_" + filename;
     }
 
-    private ImageEntity getImageEntityOrException(Integer imageId) {
+    private ImageEntity getImageEntityOrException(Long imageId) {
         return imageEntityRepository.findById(imageId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_NOT_FOUND, String.format("%s not founded", imageId));
         });
     }
 
-    public List<ImageEntity> findAllByIdIn(List<Integer> imageIds) {
+    public List<ImageEntity> findAllByIdIn(List<Long> imageIds) {
         return imageEntityRepository.findAllByIdIn(imageIds);
     }
 

@@ -9,7 +9,7 @@ import org.swyg.greensumer.domain.StoreEntity;
 
 import java.util.Optional;
 
-public interface StoreEntityRepository extends JpaRepository<StoreEntity, Integer> {
+public interface StoreEntityRepository extends JpaRepository<StoreEntity, Long> {
     boolean existsByName(String name);
 
     Page<StoreEntity> findAllBySellerStores(SellerStoreEntity sellerStoreEntity, Pageable pageable);

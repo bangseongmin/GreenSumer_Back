@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails {
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String email;

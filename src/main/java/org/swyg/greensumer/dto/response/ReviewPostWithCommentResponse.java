@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewPostWithCommentResponse {
-    private Integer id;
+    private Long id;
     private String title;
     private String content;
     private Integer views;

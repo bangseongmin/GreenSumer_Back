@@ -21,7 +21,7 @@ public class ReviewPostEntity extends DateTimeEntity {
 
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Setter @OneToOne
     @JoinColumn(name = "product_id")

@@ -26,7 +26,7 @@ public class UserEntity extends DateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "username", length = 50) private String username;
     @Column(name = "password") private String password;

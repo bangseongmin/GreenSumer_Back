@@ -17,7 +17,7 @@ import java.util.Objects;
 public class ReviewCommentEntity extends DateTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "post_id")

@@ -22,7 +22,7 @@ public class StoreEntity extends DateTimeEntity {
 
     @Setter @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Setter @Column(name = "name", length = 30) private String name;
 

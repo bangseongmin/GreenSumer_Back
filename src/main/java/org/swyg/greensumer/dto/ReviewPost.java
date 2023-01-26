@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewPost {
-    private Integer id;
+    private Long id;
     private String title;
     private String content;
     private Integer views;

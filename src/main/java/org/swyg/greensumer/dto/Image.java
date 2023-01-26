@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image {
-    private Integer id;
+    private Long id;
     private ImageType imageType;
     private String username;
     private String originFilename;

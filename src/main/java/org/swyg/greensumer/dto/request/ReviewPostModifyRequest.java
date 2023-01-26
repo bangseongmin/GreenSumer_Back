@@ -13,9 +13,9 @@ public class ReviewPostModifyRequest {
     private Integer productId;
     private String title;
     private String content;
-    private List<Integer> images;
+    private List<Long> images;
 
-    public static ReviewPostModifyRequest of(Integer productId, String title, String content, List<Integer> images) {
+    public static ReviewPostModifyRequest of(Integer productId, String title, String content, List<Long> images) {
         return new ReviewPostModifyRequest(productId, title, content, images);
     }
 }
