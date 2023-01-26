@@ -56,7 +56,6 @@ public class ReviewPostService {
     public ReviewPost modify(ReviewPostModifyRequest request, Long postId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
-        userEntityRepositoryService.loadUserByUsername(username);
 
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
@@ -72,10 +71,9 @@ public class ReviewPostService {
     @Transactional
     public void delete(Long postId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
-
-        userEntityRepositoryService.loadUserByUsername(username);
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
 
+        reviewPostEntity.clear();
         reviewPostEntityRepository.delete(reviewPostEntity);
     }
 
@@ -86,8 +84,7 @@ public class ReviewPostService {
 
     @Transactional(readOnly = true)
     public Page<ReviewPost> myList(String username, Pageable pageable) {
-        User user = userEntityRepositoryService.loadUserByUsername(username);
-        return reviewPostEntityRepository.findAllByUser_Id(user.getId(), pageable).map(ReviewPost::fromEntity);
+        return reviewPostEntityRepository.findAllByUser_Username(username, pageable).map(ReviewPost::fromEntity);
     }
 
     @Transactional
@@ -96,7 +93,7 @@ public class ReviewPostService {
 
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
 
-        ReviewPostViewerEntity reviewPostViewerEntity = reviewPostViewerEntityRepository.findByReview_IdAndUser_Id(postId, userEntity.getId()).orElseGet(
+        ReviewPostViewerEntity reviewPostViewerEntity = reviewPostViewerEntityRepository.findByReview_IdAndUser_Username(postId, username).orElseGet(
                 () -> reviewPostViewerEntityRepository.save(ReviewPostViewerEntity.of(reviewPostEntity, userEntity))
         );
 

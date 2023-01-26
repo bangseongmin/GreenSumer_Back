@@ -35,9 +35,11 @@ public class EventCommentService {
 
     public EventComment modifyComment(Long postId, Long commentId, String content, String username) {
         EventPostEntity eventPostEntity = eventPostService.getEventPostEntityOrException(postId);
-        userEntityRepositoryService.loadUserByUsername(username);
-
         EventCommentEntity eventCommentEntity = getEventCommentEntityOrException(commentId);
+        if(!eventCommentEntity.getUser().getUsername().equals(username)){
+            throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission", username));
+        }
+
         eventCommentEntity.update(content);
 
         return EventComment.fromEntity(eventCommentEntity);
@@ -45,7 +47,6 @@ public class EventCommentService {
 
     public void deleteComment(Long postId, Long commentId, String username) {
         EventPostEntity eventPostEntity = eventPostService.getEventPostEntityOrException(postId);
-        userEntityRepositoryService.loadUserByUsername(username);
         EventCommentEntity eventCommentEntity = getEventCommentEntityOrException(commentId);
 
         if (!eventCommentEntity.getUser().getUsername().equals(username)) {
