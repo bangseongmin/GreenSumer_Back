@@ -2,7 +2,6 @@ package org.swyg.greensumer.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.swyg.greensumer.dto.Address;
 import org.swyg.greensumer.dto.User;
 
 @Getter
