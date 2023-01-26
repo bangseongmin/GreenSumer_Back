@@ -33,8 +33,6 @@ public class UserEntity extends DateTimeEntity {
     @Column(nullable = false, length = 100) private String email;
     @Column(nullable = false, length = 50) private String nickname;
 
-    @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
-
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -62,7 +60,4 @@ public class UserEntity extends DateTimeEntity {
         this.email = email;
     }
 
-    public void updateAddress(AddressEntity addressEntity) {
-        this.addressEntity = addressEntity;
-    }
 }

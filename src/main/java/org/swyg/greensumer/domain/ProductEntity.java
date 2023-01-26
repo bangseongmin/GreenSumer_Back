@@ -1,5 +1,6 @@
 package org.swyg.greensumer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,9 @@ public class ProductEntity extends DateTimeEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
 
+    @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "post_id")
+    private ReviewPostEntity reviewPost;
+
     @Column(name = "name", length = 50) private String name;
 
     @Column(name = "price") private int price;
@@ -39,6 +43,10 @@ public class ProductEntity extends DateTimeEntity {
     @OrderBy("id asc")  // 아이디 순으로 정렬
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<ImageEntity> images = new LinkedHashSet<>();
+
+    public void setReviewPost(ReviewPostEntity reviewPost) {
+        this.reviewPost = reviewPost;
+    }
 
     public void addStoreProduct(StoreProductEntity storeProductEntity){
         storeProductEntity.setProduct(this);

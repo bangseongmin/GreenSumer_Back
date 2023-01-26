@@ -5,7 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.ProductEntity;
+import org.swyg.greensumer.domain.ReviewPostEntity;
+import org.swyg.greensumer.domain.ReviewPostViewerEntity;
+import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.User;
@@ -16,6 +19,7 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
 import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -28,38 +32,38 @@ public class ReviewPostService {
     private final StoreService storeService;
     private final ImageService imageService;
 
-    public void create(ReviewPostCreateRequest request, Long storeId, Long productId, String username) {
+    @Transactional
+    public void create(ReviewPostCreateRequest request, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
-
-        StoreEntity storeEntity = storeService.getStoreEntityOrException(storeId);
-        ProductEntity productEntity = storeService.getProductEntityOrException(productId);
+        List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
         ReviewPostEntity reviewPostEntity = reviewPostEntityRepository.save(ReviewPostEntity.of(
-                productEntity,
                 userEntity,
                 request.getTitle(),
                 request.getContent()
         ));
 
+        if(productEntities.size() > 0){
+            reviewPostEntity.addProducts(productEntities);
+        }
+
         if(request.getImages().size() > 0){
-            reviewPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            reviewPostEntity.addImages(imageService.getImages(request.getImages()));
         }
     }
 
     @Transactional
-    public ReviewPost modify(ReviewPostModifyRequest request, Long postId, Long productId, String username) {
+    public ReviewPost modify(ReviewPostModifyRequest request, Long postId, String username) {
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
-
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
-
         userEntityRepositoryService.loadUserByUsername(username);
 
-        ProductEntity productEntity = storeService.getProductEntityOrException(productId);
+        List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
-        reviewPostEntity.updateReviewPost(productEntity, request.getTitle(), request.getContent());
+        reviewPostEntity.updateReviewPost(request.getTitle(), request.getContent(), productEntities);
 
         if(request.getImages().size() > 0){
-            reviewPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            reviewPostEntity.addImages(imageService.getImages(request.getImages()));
         }
 
         return ReviewPost.fromEntity(reviewPostEntity);

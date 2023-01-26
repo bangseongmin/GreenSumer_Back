@@ -24,7 +24,6 @@ public class ReviewCommentEntity extends CommentEntity {
     @ManyToOne(optional = false) @JoinColumn(name = "post_id")
     private ReviewPostEntity reviewPost;
 
-
     public ReviewCommentEntity() {}
 
     private ReviewCommentEntity(ReviewPostEntity reviewPost, UserEntity user, String content) {

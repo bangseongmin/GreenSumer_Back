@@ -43,7 +43,7 @@ public class EventPostService {
                 .build());
 
         if (request.getImages().size() > 0) {
-            eventPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            eventPostEntity.addImages(imageService.getImages(request.getImages()));
         }
     }
 
@@ -58,7 +58,7 @@ public class EventPostService {
         eventPostEntity.updateEventPost(productEntity, request.getTitle(), request.getContent());
 
         if(request.getImages().size() > 0){
-            eventPostEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            eventPostEntity.addImages(imageService.getImages(request.getImages()));
         }
 
         return EventPost.fromEntity(eventPostEntity);

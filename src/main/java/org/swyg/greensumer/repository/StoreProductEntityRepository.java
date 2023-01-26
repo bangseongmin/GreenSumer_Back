@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.swyg.greensumer.domain.StoreEntity;
 import org.swyg.greensumer.domain.StoreProductEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StoreProductEntityRepository extends JpaRepository<StoreProductEntity, Long> {
@@ -14,5 +15,5 @@ public interface StoreProductEntityRepository extends JpaRepository<StoreProduct
 
     Optional<StoreProductEntity> findByStore_IdAndProduct_Id(Long storeId, Long productId);
 
-    void deleteByProduct_Id(Long productId);
+    List<StoreProductEntity> findAllByStore_IdAndProductIn(Long storeId, List<Long> productsId);
 }

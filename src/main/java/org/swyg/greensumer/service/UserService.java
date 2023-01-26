@@ -52,22 +52,14 @@ public class UserService {
     public User signup(UserSignUpRequest request) {
         userEntityRepositoryService.existUsername(request.getUsername());
 
-        AddressEntity addressEntity = null;
-
-        if(request.getAddress() != null){
-            addressEntity = addressService.findAddressEntity(request.getAddress(), request.getAddress(), request.getLat(), request.getLat());
-        }
-
         UserEntity userEntity = userEntityRepositoryService.save(UserEntity.builder()
                 .username(request.getUsername())
                 .password(encoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
                 .email(request.getEmail())
-                .addressEntity(addressEntity)
                 .roles(Collections.singletonList(UserRole.USER.name()))
                 .build());
 
-        mappingSellerAndStore(userEntity, addressEntity);
         return User.fromEntity(userEntity);
     }
 
@@ -87,9 +79,7 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PASSWORD);
         }
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenInfo tokenInfo = JwtTokenUtils.createTokenInfo(user, secretKey);
-
         userEntityRepositoryService.setRefreshToken(user, tokenInfo.getRefreshToken());
 
         return tokenInfo;
@@ -102,7 +92,7 @@ public class UserService {
         User user = User.fromEntity(userEntity);
 
         if(ObjectUtils.isEmpty(refreshTokenFromRedis)) {
-            throw new GreenSumerBackApplicationException(ErrorCode.INVALID_TOKEN, "잘못된 요청입니다.");
+            throw new GreenSumerBackApplicationException(ErrorCode.INVALID_TOKEN, "Invalid Access Token");
         }
 
         if(!refreshToken.equals(refreshTokenFromRedis.substring(1, refreshTokenFromRedis.length()-1))) {
@@ -137,7 +127,7 @@ public class UserService {
 
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
-        if (!encoder.matches(password, userEntity.getPassword())) {
+        if (encoder.matches(password, userEntity.getPassword())) {
             throw new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD, String.format("%s same as before", password));
         }
 
@@ -152,9 +142,6 @@ public class UserService {
 
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         userEntity.updateUserInfo(encoder.encode(request.getPassword()), request.getNickname(), request.getEmail());
-
-        AddressEntity addressEntity = addressService.updateAddress(userEntity.getAddressEntity().getId(), request.getAddress(), request.getAddress(), request.getLat(), request.getLat());
-        userEntity.updateAddress(addressEntity);
 
         return User.fromEntity(userEntity);
     }
