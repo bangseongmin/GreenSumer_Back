@@ -22,9 +22,8 @@ import java.util.Set;
 @Where(clause = "deleted_at is NULL")
 public class ReviewPostEntity extends PostEntity {
 
-    @OneToOne
-    @JoinColumn(name = "product_id")
-    private ProductEntity product;
+    @OneToMany(mappedBy = "reviewPost")
+    private Set<ProductEntity> products = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("registeredAt DESC")
@@ -39,16 +38,15 @@ public class ReviewPostEntity extends PostEntity {
 
     public ReviewPostEntity() {}
 
-    private ReviewPostEntity (ProductEntity product, UserEntity user, String title, String content) {
-       this.product = product;
+    private ReviewPostEntity (UserEntity user, String title, String content) {
        this.user = user;
        this.title = title;
        this.content = content;
        this.views = 0;
     }
 
-    public static ReviewPostEntity of(ProductEntity product, UserEntity user, String title, String content) {
-        return new ReviewPostEntity(product, user, title, content);
+    public static ReviewPostEntity of(UserEntity user, String title, String content) {
+        return new ReviewPostEntity(user, title, content);
     }
 
     public void addImages(Collection<ImageEntity> images) {
@@ -75,6 +73,12 @@ public class ReviewPostEntity extends PostEntity {
         this.views++;
     }
 
+    public void addProducts(Collection<ProductEntity> productEntities) {
+        productEntities.forEach(p -> p.setReviewPost(this));
+        this.products.clear();
+        this.products.addAll(productEntities);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,9 +91,9 @@ public class ReviewPostEntity extends PostEntity {
         return Objects.hash(this.getId());
     }
 
-    public void updateReviewPost(ProductEntity product, String title, String content) {
-        this.product = product;
+    public void updateReviewPost(String title, String content, Collection<ProductEntity> productEntities) {
         this.title = title;
         this.content = content;
+        addProducts(productEntities);
     }
 }

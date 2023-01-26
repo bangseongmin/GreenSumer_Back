@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.ReviewPost;
 
 import java.sql.Timestamp;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import java.sql.Timestamp;
 public class ReviewPostResponse {
     private Long id;
     private UserResponse user;
-    private ProductResponse product;
+    private Set<ProductResponse> products;
     private String title;
     private String content;
     private Integer views;
@@ -25,7 +27,9 @@ public class ReviewPostResponse {
         return new ReviewPostResponse(
                 reviewPost.getId(),
                 UserResponse.fromUser(reviewPost.getUser()),
-                ProductResponse.fromProduct(reviewPost.getProduct()),
+                reviewPost.getProducts().stream()
+                        .map(ProductResponse::fromProduct)
+                        .collect(Collectors.toUnmodifiableSet()),
                 reviewPost.getTitle(),
                 reviewPost.getContent(),
                 reviewPost.getViews(),

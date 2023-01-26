@@ -11,12 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ReviewPostCreateRequest {
     private Long storeId;
-    private Long productId;
     private String title;
     private String content;
+    private List<Long> products;
     private List<Long> images;
 
-    public static ReviewPostCreateRequest of(Long storeId, Long productId, String title, String content, List<Long> images) {
-        return new ReviewPostCreateRequest(storeId, productId, title, content, images);
+    public static ReviewPostCreateRequest of(Long storeId, String title, String content, List<Long> products, List<Long> images) {
+        return new ReviewPostCreateRequest(storeId, title, content, products, images);
     }
 }

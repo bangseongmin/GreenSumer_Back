@@ -29,13 +29,13 @@ public class ReviewPostController {
 
     @PostMapping
     public Response<Void> create(@RequestBody ReviewPostCreateRequest request, Authentication authentication) {
-        reviewPostService.create(request, request.getStoreId(), request.getProductId(), authentication.getName());
+        reviewPostService.create(request, authentication.getName());
         return Response.success();
     }
 
     @PutMapping("/{postId}")
     public Response<ReviewPostResponse> modify(@PathVariable Long postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) {
-        ReviewPost reviewPost = reviewPostService.modify(request, postId, request.getProductId(), authentication.getName());
+        ReviewPost reviewPost = reviewPostService.modify(request, postId, authentication.getName());
         return Response.success(ReviewPostResponse.fromReviewPost(reviewPost));
     }
 

@@ -17,6 +17,7 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -51,7 +52,7 @@ public class StoreService {
         );
 
         if(request.getImages().size() > 0){
-            storeEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            storeEntity.addImages(imageService.getImages(request.getImages()));
         }
 
         // 4. 가게 정보 반환
@@ -69,7 +70,7 @@ public class StoreService {
         storeEntity.updateAddress(addressService.updateAddress(storeEntity.getAddress().getId(), request.getAddress(), request.getRoadname(), request.getLat(), request.getLng()));
 
         if(request.getImages().size() > 0){
-            storeEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            storeEntity.addImages(imageService.getImages(request.getImages()));
         }
 
         return Store.fromEntity(storeEntity);
@@ -129,7 +130,7 @@ public class StoreService {
         productEntity.updateProductInfo(request.getName(), request.getDescription(), request.getPrice(), request.getStock());
 
         if(request.getImages().size() > 0){
-            productEntity.addImages(imageService.findAllByIdIn(request.getImages()));
+            productEntity.addImages(imageService.getImages(request.getImages()));
         }
 
         return Product.fromEntity(productEntity);
@@ -190,6 +191,15 @@ public class StoreService {
         return storeProductEntityRepository.findByStore_IdAndProduct_Id(storeId, productId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND_ON_STORE, String.format("%s not founded on Store #%s", productId, storeId));
         });
+    }
+
+    public List<ProductEntity> getProductList(List<Long> productsId){
+        return productEntityRepository.findAllByIdIn(productsId);
+    }
+
+    public List<ProductEntity> getProductListOnStore(List<Long> productsId, Long storeId){
+        return storeProductEntityRepository.findAllByStore_IdAndProductIn(storeId, productsId)
+                .stream().map(StoreProductEntity::getProduct).collect(Collectors.toList());
     }
 
 }

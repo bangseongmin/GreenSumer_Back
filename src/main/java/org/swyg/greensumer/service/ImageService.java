@@ -102,7 +102,7 @@ public class ImageService {
         });
     }
 
-    public List<ImageEntity> findAllByIdIn(List<Long> imageIds) {
+    public List<ImageEntity> getImages(List<Long> imageIds) {
         return imageEntityRepository.findAllByIdIn(imageIds);
     }
 
