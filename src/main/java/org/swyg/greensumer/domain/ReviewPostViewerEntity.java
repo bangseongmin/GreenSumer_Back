@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "post_viewer")
@@ -18,8 +19,8 @@ public class ReviewPostViewerEntity extends DateTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @ManyToOne @JoinColumn(name = "post_id") private ReviewPostEntity review;       // 양방향
-    @Setter @ManyToOne @JoinColumn(name = "user_id") private UserEntity user;         // 단방향
+    @ManyToOne @JoinColumn(name = "post_id") private ReviewPostEntity review;       // 양방향
+    @ManyToOne @JoinColumn(name = "user_id") private UserEntity user;         // 단방향
 
     public ReviewPostViewerEntity() {}
 

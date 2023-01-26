@@ -32,6 +32,9 @@ public class ImageEntity extends DateTimeEntity {
     @ManyToOne @JoinColumn(name = "review_post_id")
     private ReviewPostEntity review;
 
+    @ManyToOne @JoinColumn(name = "event_id")
+    private EventPostEntity event;
+
     @ManyToOne @JoinColumn(name = "store_id")
     private StoreEntity store;
 

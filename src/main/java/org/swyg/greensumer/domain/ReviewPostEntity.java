@@ -12,42 +12,28 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "review_post")
 @SQLDelete(sql = "UPDATE review_post SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class ReviewPostEntity extends DateTimeEntity {
+public class ReviewPostEntity extends PostEntity {
 
-    @Setter @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Setter @OneToOne
+    @OneToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
 
     @ToString.Exclude
     @OrderBy("registeredAt DESC")
     @OneToMany(mappedBy = "reviewPost", cascade = CascadeType.ALL)
     private Set<ReviewCommentEntity> comments = new LinkedHashSet<>();
 
-    @Setter @Column(name = "title", length = 50) private String title;
-    @Setter @Column(name = "content", columnDefinition = "TEXT")  private String content;
-
     @OneToMany(mappedBy = "review", orphanRemoval = true, cascade = {CascadeType.ALL})
     private Set<ImageEntity> images = new LinkedHashSet<>();
 
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "review", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<ReviewPostViewerEntity> viewer = new LinkedHashSet<>();
-
-    @Column(columnDefinition = "Integer default 0", nullable = false)
-    private Integer views;
 
     public ReviewPostEntity() {}
 
@@ -109,4 +95,9 @@ public class ReviewPostEntity extends DateTimeEntity {
         return Objects.hash(this.getId());
     }
 
+    public void updatePost(ProductEntity product, String title, String content) {
+        this.product = product;
+        this.title = title;
+        this.content = content;
+    }
 }
