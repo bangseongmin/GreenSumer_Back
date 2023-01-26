@@ -1,7 +1,8 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -12,7 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Setter
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "review_post")
@@ -49,20 +51,10 @@ public class ReviewPostEntity extends PostEntity {
         return new ReviewPostEntity(product, user, title, content);
     }
 
-    public void addImage(ImageEntity image) {
-        image.setReview(this);
-        this.images.add(image);
-    }
-
     public void addImages(Collection<ImageEntity> images) {
         images.forEach(e -> e.setReview(this));
         this.images.clear();
         this.images.addAll(images);
-    }
-
-    public void deleteImage(ImageEntity image) {
-        image.setReview(this);
-        this.images.remove(image);
     }
 
     public void deleteImages(Collection<ImageEntity> images) {

@@ -1,7 +1,8 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -13,6 +14,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "store")
@@ -20,20 +23,20 @@ import java.util.Set;
 @Where(clause = "deleted_at is NULL")
 public class StoreEntity extends DateTimeEntity {
 
-    @Setter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(name = "name", length = 30) private String name;
+    @Column(name = "name", length = 30) private String name;
 
-    @Setter @Column(name = "description", columnDefinition = "TEXT") private String description;
+    @Column(name = "description", columnDefinition = "TEXT") private String description;
 
-    @Setter @Column(name = "type") @Enumerated(EnumType.STRING) private StoreType storeType;
+    @Column(name = "type") @Enumerated(EnumType.STRING) private StoreType storeType;
 
-    @Setter @ToString.Exclude @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true) @JoinColumn(name = "address_id")
+    @ToString.Exclude @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true) @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @Setter private String hours;
+    @Column(name = "hours") private String hours;
 
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<SellerStoreEntity> sellerStores = new LinkedHashSet<>();
@@ -97,19 +100,10 @@ public class StoreEntity extends DateTimeEntity {
     }
 
     // image
-    public void addImage(ImageEntity image) {
-        image.setStore(this);
-        this.logos.add(image);
-    }
-
     public void addImages(Collection<ImageEntity> images) {
         images.forEach(e -> e.setStore(this));
         this.logos.clear();
         this.logos.addAll(images);
-    }
-
-    public void deleteImage(ImageEntity image) {
-        this.logos.remove(image);
     }
 
     public void deleteImages(Collection<ImageEntity> images) {
@@ -130,5 +124,15 @@ public class StoreEntity extends DateTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());
+    }
+
+    public void updateStore(String type, String description, String hours) {
+        this.storeType = StoreType.valueOf(type);
+        this.description = description;
+        this.hours = hours;
+    }
+
+    public void updateAddress(AddressEntity address) {
+        this.address = address;
     }
 }

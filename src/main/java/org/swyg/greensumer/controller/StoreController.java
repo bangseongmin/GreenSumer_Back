@@ -30,32 +30,32 @@ public class StoreController {
     }
 
     @PutMapping("/{storeId}")
-    public Response<StoreResponse> modify(@PathVariable Integer storeId, @RequestBody StoreModifyRequest request, Authentication authentication) throws JsonProcessingException {
+    public Response<StoreResponse> modify(@PathVariable Long storeId, @RequestBody StoreModifyRequest request, Authentication authentication) {
         Store store = storeService.modify(storeId, request, authentication.getName());
 
         return Response.success(StoreResponse.fromStore(store));
     }
 
     @DeleteMapping("/{storeId}")
-    public Response<Void> delete(@PathVariable Integer storeId, Authentication authentication) throws JsonProcessingException {
+    public Response<Void> delete(@PathVariable Long storeId, Authentication authentication) {
         storeService.delete(storeId, authentication.getName());
 
         return Response.success();
     }
 
     @GetMapping
-    public Response<Page<StoreResponse>> list(Pageable pageable, Authentication authentication) throws JsonProcessingException {
+    public Response<Page<StoreResponse>> list(Pageable pageable, Authentication authentication) {
         return Response.success(storeService.list(pageable, authentication.getName()).map(StoreResponse::fromStore));
     }
 
     @GetMapping("/my")
-    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) throws JsonProcessingException {
+    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) {
 
         return Response.success(storeService.mylist(pageable, authentication.getName()).map(SellerStoreResponse::fromSellerStore));
     }
 
     @PostMapping("/{storeId}/products")
-    public Response<ProductResponse> registerProduct(@PathVariable Integer storeId, @RequestBody ProductCreateRequest request, Authentication authentication) throws JsonProcessingException {
+    public Response<ProductResponse> registerProduct(@PathVariable Long storeId, @RequestBody ProductCreateRequest request, Authentication authentication) {
         Product product = storeService.registerProduct(storeId, request, authentication.getName());
 
         return Response.success(ProductResponse.fromProduct(product));
@@ -63,31 +63,31 @@ public class StoreController {
 
     @PutMapping("/{storeId}/products/{productId}")
     public Response<ProductResponse> modifyProduct(
-            @PathVariable Integer storeId,
-            @PathVariable Integer productId,
+            @PathVariable Long storeId,
+            @PathVariable Long productId,
             @RequestBody ProductModifyRequest request,
             Authentication authentication
-    ) throws JsonProcessingException {
+    ) {
         Product product = storeService.modifyProduct(storeId, productId, request, authentication.getName());
 
         return Response.success(ProductResponse.fromProduct(product));
     }
 
     @DeleteMapping("/{storeId}/products/{productId}")
-    public Response<Void> deleteProduct(@PathVariable Integer storeId, @PathVariable Integer productId, Authentication authentication) throws JsonProcessingException {
+    public Response<Void> deleteProduct(@PathVariable Long storeId, @PathVariable Long productId, Authentication authentication) {
         storeService.deleteProduct(storeId, productId, authentication.getName());
 
         return Response.success();
     }
 
     @GetMapping("/{storeId}/products")
-    public Response<Page<StoreProductResponse>> getProductList(@PathVariable Integer storeId, Authentication authentication, Pageable pageable
+    public Response<Page<StoreProductResponse>> getProductList(@PathVariable Long storeId, Authentication authentication, Pageable pageable
     ) {
         return Response.success(storeService.getProductList(storeId, pageable).map(StoreProductResponse::fromStoreProduct));
     }
 
     @GetMapping("/{storeId}/products/{productId}")
-    public Response<StoreProductResponse> getProduct(@PathVariable Integer storeId, @PathVariable Integer productId, Authentication authentication) {
+    public Response<StoreProductResponse> getProduct(@PathVariable Long storeId, @PathVariable Long productId, Authentication authentication) {
         return Response.success(StoreProductResponse.fromStoreProduct(storeService.getProduct(storeId, productId)));
     }
 }

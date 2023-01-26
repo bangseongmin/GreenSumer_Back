@@ -1,7 +1,8 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -11,7 +12,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Setter
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "product", indexes = {
@@ -47,24 +49,17 @@ public class ProductEntity extends DateTimeEntity {
         this.storeProducts.clear();
     }
 
-    public void addImage(ImageEntity image) {
-        image.setProduct(this);
-        this.images.add(image);
-    }
-
     public void addImages(Collection<ImageEntity> images) {
         images.forEach(e -> e.setProduct(this));
         this.images.clear();
         this.images.addAll(images);
     }
-    public void deleteImage(ImageEntity image) {
-        image.setProduct(this);
-        this.images.remove(image);
-    }
+
     public void deleteImages(Collection<ImageEntity> images) {
         images.forEach(e -> e.setProduct(this));
         this.images.retainAll(images);
     }
+
     public void clearImages() {
         this.images.clear();
     }
@@ -92,5 +87,12 @@ public class ProductEntity extends DateTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());
+    }
+
+    public void updateProductInfo(String name, String description, int price, int stock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
     }
 }

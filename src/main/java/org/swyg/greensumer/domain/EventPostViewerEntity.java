@@ -1,14 +1,15 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
-@Setter
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "event_post_viewer")
@@ -33,5 +34,9 @@ public class EventPostViewerEntity {
 
     public static EventPostViewerEntity of(EventPostEntity eventPostEntity, UserEntity userEntity) {
         return new EventPostViewerEntity(eventPostEntity, userEntity);
+    }
+
+    public void setEvent(EventPostEntity eventPostEntity) {
+        this.event = eventPostEntity;
     }
 }

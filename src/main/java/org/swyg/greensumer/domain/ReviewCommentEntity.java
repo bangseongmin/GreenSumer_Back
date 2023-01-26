@@ -1,7 +1,8 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -11,7 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
-@Setter
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "review_comment")

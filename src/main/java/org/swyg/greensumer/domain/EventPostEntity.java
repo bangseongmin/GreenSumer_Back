@@ -1,8 +1,8 @@
 package org.swyg.greensumer.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -13,13 +13,13 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Setter
+@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "event_post")
 @SQLDelete(sql = "UPDATE event_post SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
-public class EventPostEntity extends PostEntity{
+public class EventPostEntity extends PostEntity {
 
     @OneToOne @JoinColumn(name = "product_id")
     private ProductEntity product;
@@ -36,7 +36,6 @@ public class EventPostEntity extends PostEntity{
 
     protected EventPostEntity() {}
 
-    @Builder
     private EventPostEntity(ProductEntity product, UserEntity user, String title, String content) {
         this.product = product;
         this.user = user;
@@ -45,6 +44,7 @@ public class EventPostEntity extends PostEntity{
         this.views = 0;
     }
 
+    @Builder
     public static EventPostEntity of(ProductEntity product, UserEntity user, String title, String content) {
         return new EventPostEntity(product, user, title, content);
     }
