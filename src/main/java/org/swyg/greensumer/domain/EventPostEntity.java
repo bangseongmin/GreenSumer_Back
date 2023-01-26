@@ -77,7 +77,7 @@ public class EventPostEntity extends PostEntity{
         return Objects.hash(this.getId());
     }
 
-    public void updateEvent(ProductEntity productEntity, String title, String content) {
+    public void updateEventPost(ProductEntity productEntity, String title, String content) {
         this.product = productEntity;
         this.title = title;
         this.content = content;

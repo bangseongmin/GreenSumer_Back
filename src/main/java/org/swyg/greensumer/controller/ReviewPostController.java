@@ -1,6 +1,5 @@
 package org.swyg.greensumer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,22 +30,18 @@ public class ReviewPostController {
     @PostMapping
     public Response<Void> create(@RequestBody ReviewPostCreateRequest request, Authentication authentication) {
         reviewPostService.create(request, request.getStoreId(), request.getProductId(), authentication.getName());
-
         return Response.success();
     }
 
     @PutMapping("/{postId}")
     public Response<ReviewPostResponse> modify(@PathVariable Long postId, @RequestBody ReviewPostModifyRequest request, Authentication authentication) {
         ReviewPost reviewPost = reviewPostService.modify(request, postId, request.getProductId(), authentication.getName());
-
-
         return Response.success(ReviewPostResponse.fromReviewPost(reviewPost));
     }
 
     @DeleteMapping("/{postId}")
     public Response<Void> delete(@PathVariable Long postId, Authentication authentication) {
         reviewPostService.delete(postId, authentication.getName());
-
         return Response.success();
     }
 

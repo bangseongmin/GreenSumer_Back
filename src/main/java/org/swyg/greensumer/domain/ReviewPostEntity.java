@@ -95,7 +95,7 @@ public class ReviewPostEntity extends PostEntity {
         return Objects.hash(this.getId());
     }
 
-    public void updatePost(ProductEntity product, String title, String content) {
+    public void updateReviewPost(ProductEntity product, String title, String content) {
         this.product = product;
         this.title = title;
         this.content = content;

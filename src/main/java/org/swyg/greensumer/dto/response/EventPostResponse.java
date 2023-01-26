@@ -3,14 +3,14 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.dto.ReviewPost;
+import org.swyg.greensumer.dto.EventPost;
 
 import java.sql.Timestamp;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewPostResponse {
+public class EventPostResponse {
     private Long id;
     private UserResponse user;
     private ProductResponse product;
@@ -21,17 +21,17 @@ public class ReviewPostResponse {
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public static ReviewPostResponse fromReviewPost(ReviewPost reviewPost) {
-        return new ReviewPostResponse(
-                reviewPost.getId(),
-                UserResponse.fromUser(reviewPost.getUser()),
-                ProductResponse.fromProduct(reviewPost.getProduct()),
-                reviewPost.getTitle(),
-                reviewPost.getContent(),
-                reviewPost.getViews(),
-                reviewPost.getRegisteredAt(),
-                reviewPost.getUpdatedAt(),
-                reviewPost.getDeletedAt()
+    public static EventPostResponse fromEventPost(EventPost eventPost) {
+        return new EventPostResponse(
+                eventPost.getId(),
+                UserResponse.fromUser(eventPost.getUser()),
+                ProductResponse.fromProduct(eventPost.getProduct()),
+                eventPost.getTitle(),
+                eventPost.getContent(),
+                eventPost.getViews(),
+                eventPost.getRegisteredAt(),
+                eventPost.getUpdatedAt(),
+                eventPost.getDeletedAt()
         );
     }
 }

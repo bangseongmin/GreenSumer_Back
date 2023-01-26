@@ -9,13 +9,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewPostModifyRequest {
+public class EventPostModifyRequest {
     private Long productId;
     private String title;
     private String content;
     private List<Long> images;
 
-    public static ReviewPostModifyRequest of(Long productId, String title, String content, List<Long> images) {
-        return new ReviewPostModifyRequest(productId, title, content, images);
+    public static EventPostModifyRequest of(Long productId, String title, String content, List<Long> images) {
+        return new EventPostModifyRequest(productId, title, content, images);
     }
 }
