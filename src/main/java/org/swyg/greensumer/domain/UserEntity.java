@@ -5,9 +5,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Builder
 @ToString(callSuper = true)
@@ -32,8 +30,6 @@ public class UserEntity extends DateTimeEntity {
     @Column(name = "password") private String password;
     @Column(nullable = false, length = 100) private String email;
     @Column(nullable = false, length = 50) private String nickname;
-
-    @OneToOne @JoinColumn(name = "address_id") AddressEntity addressEntity;
 
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
@@ -62,7 +58,4 @@ public class UserEntity extends DateTimeEntity {
         this.email = email;
     }
 
-    public void updateAddress(AddressEntity addressEntity) {
-        this.addressEntity = addressEntity;
-    }
 }

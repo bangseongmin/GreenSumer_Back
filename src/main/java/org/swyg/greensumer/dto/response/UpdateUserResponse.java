@@ -13,9 +13,6 @@ public class UpdateUserResponse {
     private String username;
     private String email;
     private String nickname;
-    private String address;
-    private Double lat;
-    private Double lng;
     private String roles;
 
     public static UpdateUserResponse fromUser(User user) {
@@ -24,9 +21,6 @@ public class UpdateUserResponse {
                 user.getUsername(),
                 user.getNickname(),
                 user.getEmail(),
-                user.getAddress().getAddress(),
-                user.getAddress().getLat(),
-                user.getAddress().getLng(),
                 user.getRoles()
         );
     }

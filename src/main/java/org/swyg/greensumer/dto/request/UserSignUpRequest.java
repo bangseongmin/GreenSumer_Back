@@ -12,17 +12,9 @@ public class UserSignUpRequest {
     private String password;
     private String nickname;
     private String email;
-    private Long storeId;
-    private String address;
-    private Double lat;
-    private Double lng;
 
     public static UserSignUpRequest of(String username, String password, String email, String nickname) {
-        return new UserSignUpRequest(username, password, email, nickname, null, null, null, null);
-    }
-
-    public static UserSignUpRequest of(String username, String password, String email, String nickname, Long storeId, String address, Double lat, Double lng) {
-        return new UserSignUpRequest(username, password, email, nickname, storeId, address, lat, lng);
+        return new UserSignUpRequest(username, password, email, nickname);
     }
 
 }
