@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class DocumentDto {
 
     @JsonProperty("place_name")
-    private String placeName;       // 약국명
+    private String placeName;       // 상호명
 
     @JsonProperty("address_name")
     private String addressName;     // 전체 지번 주소 또는 전체 도로명 주소, 입력에 따라 결정됨

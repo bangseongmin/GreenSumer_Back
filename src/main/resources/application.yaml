@@ -46,6 +46,10 @@ jwt:
   token.expired-time-ms: ${JWT_EXPIRED_TIME_MS}           # 30 days
 
 kakao.rest.api.key: ${KAKAO_REST_API_KEY}
+zerowasteshop:
+  recommendation:
+    base:
+      url: http://localhost:8080/dir/
 
 ---
 
