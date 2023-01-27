@@ -33,6 +33,7 @@ public class EventPostService {
     @Transactional
     public void create(EventPostCreateRequest request, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        storeService.isStoreManager(userEntity.getId(), request.getStoreId());
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
         EventPostEntity eventPostEntity = eventPostEntityRepository.save(EventPostEntity.builder()
