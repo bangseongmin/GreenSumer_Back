@@ -51,7 +51,7 @@ public class StoreService {
                 request.getHours()
         );
 
-        if(request.getImages().size() > 0){
+        if (request.getImages().size() > 0) {
             storeEntity.addImages(imageService.getImages(request.getImages()));
         }
 
@@ -69,7 +69,7 @@ public class StoreService {
         storeEntity.updateStore(request.getType(), request.getDescription(), request.getHours());
         storeEntity.updateAddress(addressService.updateAddress(storeEntity.getAddress().getId(), request.getAddress(), request.getRoadname(), request.getLat(), request.getLng()));
 
-        if(request.getImages().size() > 0){
+        if (request.getImages().size() > 0) {
             storeEntity.addImages(imageService.getImages(request.getImages()));
         }
 
@@ -104,7 +104,7 @@ public class StoreService {
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = ProductEntity.of(request.getName(), request.getPrice(), request.getStock(), request.getDescription());
 
-        if(request.getImages().size() != 0){
+        if (request.getImages().size() != 0) {
             List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
 
             productEntity.addImages(imageEntities);
@@ -125,11 +125,10 @@ public class StoreService {
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = getProductEntityOrException(productId);
-        StoreProductEntity storeProductEntity = getStoreProductOrException(storeId, productId);
 
         productEntity.updateProductInfo(request.getName(), request.getDescription(), request.getPrice(), request.getStock());
 
-        if(request.getImages().size() > 0){
+        if (request.getImages().size() > 0) {
             productEntity.addImages(imageService.getImages(request.getImages()));
         }
 
@@ -156,8 +155,6 @@ public class StoreService {
     }
 
     public StoreProduct getProduct(Long storeId, Long productId) {
-        StoreEntity storeEntity = getStoreEntityOrException(storeId);
-        ProductEntity productEntity = getProductEntityOrException(productId);
         StoreProductEntity storeProductEntity = getStoreProductOrException(storeId, productId);
 
         return StoreProduct.fromEntity(storeProductEntity);
@@ -169,19 +166,19 @@ public class StoreService {
         });
     }
 
-    public ProductEntity getProductEntityOrException(Long productId){
+    public ProductEntity getProductEntityOrException(Long productId) {
         return productEntityRepository.findById(productId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.PRODUCT_NOT_FOUND, String.format("%s not founded", productId));
         });
     }
 
-    public StoreEntity getStoreEntityOrException(Long storeId){
+    public StoreEntity getStoreEntityOrException(Long storeId) {
         return storeEntityRepository.findById(storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND, String.format("%s not founded", storeId));
         });
     }
 
-    private SellerStoreEntity isStoreManager(Long userId, Long storeId) {
+    public SellerStoreEntity isStoreManager(Long userId, Long storeId) {
         return sellerStoreEntityRepository.findBySeller_IdAndStore_Id(userId, storeId).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", userId, storeId));
         });
@@ -193,11 +190,11 @@ public class StoreService {
         });
     }
 
-    public List<ProductEntity> getProductList(List<Long> productsId){
+    public List<ProductEntity> getProductList(List<Long> productsId) {
         return productEntityRepository.findAllByIdIn(productsId);
     }
 
-    public List<ProductEntity> getProductListOnStore(List<Long> productsId, Long storeId){
+    public List<ProductEntity> getProductListOnStore(List<Long> productsId, Long storeId) {
         return storeProductEntityRepository.findAllByStore_IdAndProductIn(storeId, productsId)
                 .stream().map(StoreProductEntity::getProduct).collect(Collectors.toList());
     }

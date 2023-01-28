@@ -32,12 +32,13 @@ public class ImageService {
     @Transactional
     public Image saveImage(MultipartFile image, String type, String username) throws IOException {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
-        String originFilename = image.getOriginalFilename();
-        String savedFilename = getSavedFilename(originFilename);
 
         if (Objects.isNull(image)) {
             throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_IS_NULL, String.format("Image is Null"));
         }
+
+        String originFilename = image.getOriginalFilename();
+        String savedFilename = getSavedFilename(originFilename);
 
         ImageEntity imageEntity = imageEntityRepository.save(
                 ImageEntity.of(ImageType.valueOf(type), userEntity, originFilename, savedFilename, ImageUtils.compressImage(image.getBytes()))
