@@ -155,8 +155,6 @@ public class StoreService {
     }
 
     public StoreProduct getProduct(Long storeId, Long productId) {
-        StoreEntity storeEntity = getStoreEntityOrException(storeId);
-        ProductEntity productEntity = getProductEntityOrException(productId);
         StoreProductEntity storeProductEntity = getStoreProductOrException(storeId, productId);
 
         return StoreProduct.fromEntity(storeProductEntity);

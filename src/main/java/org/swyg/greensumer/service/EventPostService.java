@@ -92,8 +92,8 @@ public class EventPostService {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
 
-        EventPostViewerEntity eventPostViewerEntity = eventPostViewerEntityRepository.findByEvent_IdAndUser_Id(postId, userEntity.getId()).orElseGet(
-                () -> eventPostViewerEntityRepository.save(EventPostViewerEntity.of(eventPostEntity, userEntity))
+        EventPostViewerEntity eventPostViewerEntity = eventPostViewerEntityRepository.findByEvent_IdAndUser_Id(postId, userEntity.getId())
+                .orElseGet(() -> eventPostViewerEntityRepository.save(EventPostViewerEntity.of(eventPostEntity, userEntity))
         );
 
         eventPostEntity.addViewer(eventPostViewerEntity);
