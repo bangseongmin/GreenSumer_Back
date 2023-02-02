@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.swyg.greensumer.domain.UserEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +24,10 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String email;
+    private String fullname;
     private String nickname;
+    private LocalDateTime birth;
+    private boolean gender;
     private String roles;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -36,7 +40,10 @@ public class User implements UserDetails {
                 entity.getUsername(),
                 entity.getPassword(),
                 entity.getEmail(),
+                entity.getFullname(),
                 entity.getNickname(),
+                entity.getBirth(),
+                entity.isGender(),
                 entity.getRoles().toString(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
@@ -47,7 +54,7 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRoles().toString()));
+        return List.of(new SimpleGrantedAuthority(this.getRoles()));
     }
 
     @Override @JsonIgnore public boolean isAccountNonExpired() { return this.deletedAt == null; }
