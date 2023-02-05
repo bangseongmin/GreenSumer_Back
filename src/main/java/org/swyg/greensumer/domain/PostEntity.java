@@ -20,4 +20,7 @@ public abstract class PostEntity extends DateTimeEntity {
 
     @Column(columnDefinition = "Integer default 0", nullable = false)
     protected Integer views;
+
+    @Column(columnDefinition = "Integer default 0", nullable = false)
+    protected Integer like;
 }

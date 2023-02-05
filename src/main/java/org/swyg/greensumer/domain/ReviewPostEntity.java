@@ -36,6 +36,9 @@ public class ReviewPostEntity extends PostEntity {
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "review", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<ReviewPostViewerEntity> viewer = new LinkedHashSet<>();
 
+    @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "review", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<ReviewPostLikeEntity> likes = new LinkedHashSet<>();
+
     public ReviewPostEntity() {}
 
     private ReviewPostEntity (UserEntity user, String title, String content) {
@@ -43,6 +46,7 @@ public class ReviewPostEntity extends PostEntity {
        this.title = title;
        this.content = content;
        this.views = 0;
+       this.like = 0;
     }
 
     public static ReviewPostEntity of(UserEntity user, String title, String content) {
@@ -68,6 +72,17 @@ public class ReviewPostEntity extends PostEntity {
         productEntities.forEach(p -> p.setReviewPost(this));
         this.products.clear();
         this.products.addAll(productEntities);
+    }
+
+    public void addLikes(ReviewPostLikeEntity reviewPostLikeEntity){
+        if(this.likes.remove(reviewPostLikeEntity)) {
+            this.like--;
+            return;
+        }
+
+        reviewPostLikeEntity.setReview(this);
+        this.likes.add(reviewPostLikeEntity);
+        this.like++;
     }
 
     @Override
