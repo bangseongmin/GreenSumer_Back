@@ -9,8 +9,6 @@ import org.swyg.greensumer.api.dto.DocumentDto;
 import org.swyg.greensumer.api.service.KakaoCategorySearchService;
 import org.swyg.greensumer.domain.RecommendationEntity;
 import org.swyg.greensumer.repository.RecommendationEntityRepository;
-import org.swyg.greensumer.service.Base62Service;
-import org.swyg.greensumer.service.ZeroWasterShopEntitySearchService;
 
 import java.util.Collections;
 import java.util.Comparator;
