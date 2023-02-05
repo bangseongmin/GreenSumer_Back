@@ -84,4 +84,9 @@ public class ReviewPostController {
         reviewCommentService.deleteComment(postId, commentId, authentication.getName());
         return Response.success();
     }
+
+    @PostMapping("/{postId}/like")
+    public Response<Void> likeReviewPost(@PathVariable Long postId, Authentication authentication){
+        reviewPostService.likeReviewPost(postId, authentication.getName());
+    }
 }

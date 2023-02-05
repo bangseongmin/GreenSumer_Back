@@ -5,10 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.swyg.greensumer.domain.ProductEntity;
-import org.swyg.greensumer.domain.ReviewPostEntity;
-import org.swyg.greensumer.domain.ReviewPostViewerEntity;
-import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
@@ -16,10 +13,12 @@ import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.ReviewPostEntityRepository;
+import org.swyg.greensumer.repository.ReviewPostLikeEntityRepository;
 import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +29,7 @@ public class ReviewPostService {
     private final UserEntityRepositoryService userEntityRepositoryService;
     private final StoreService storeService;
     private final ImageService imageService;
+    private final ReviewPostLikeEntityRepository reviewPostLikeEntityRepository;
 
     @Transactional
     public void create(ReviewPostCreateRequest request, String username) {
@@ -113,4 +113,11 @@ public class ReviewPostService {
         }
     }
 
+    public void likeReviewPost(Long postId, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        ReviewPostEntity postEntity = getReviewPostEntityOrException(postId);
+
+        ReviewPostLikeEntity reviewPostLikeEntity = reviewPostLikeEntityRepository.save(ReviewPostLikeEntity.of(postEntity, userEntity));
+        postEntity.addLikes(reviewPostLikeEntity);
+    }
 }
