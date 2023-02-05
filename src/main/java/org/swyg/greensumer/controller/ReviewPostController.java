@@ -12,10 +12,7 @@ import org.swyg.greensumer.dto.request.ReviewCommentCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewCommentModifyRequest;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
-import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.ReviewCommentResponse;
-import org.swyg.greensumer.dto.response.ReviewPostResponse;
-import org.swyg.greensumer.dto.response.ReviewPostWithCommentResponse;
+import org.swyg.greensumer.dto.response.*;
 import org.swyg.greensumer.service.ReviewCommentService;
 import org.swyg.greensumer.service.ReviewPostService;
 
@@ -46,8 +43,13 @@ public class ReviewPostController {
     }
 
     @GetMapping
-    public Response<Page<ReviewPostResponse>> list(Pageable pageable, Authentication authentication) {
-        return Response.success(reviewPostService.list(pageable).map(ReviewPostResponse::fromReviewPost));
+    public Response<Page<ReviewPostsResponse>> list(Pageable pageable) {
+        return Response.success(reviewPostService.list(pageable).map(ReviewPostsResponse::fromReviewPost));
+    }
+
+    @GetMapping("/news")
+    public Response<Page<ReviewNewPostResponse>> newList(Pageable pageable) {
+        return Response.success(reviewPostService.newList(pageable).map(ReviewNewPostResponse::fromReviewPost));
     }
 
     @GetMapping("/{postId}")
@@ -86,7 +88,7 @@ public class ReviewPostController {
     }
 
     @PostMapping("/{postId}/like")
-    public Response<Void> likeReviewPost(@PathVariable Long postId, Authentication authentication){
+    public Response<Void> likeReviewPost(@PathVariable Long postId, Authentication authentication) {
         reviewPostService.likeReviewPost(postId, authentication.getName());
         return Response.success();
     }
