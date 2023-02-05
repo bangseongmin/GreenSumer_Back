@@ -12,10 +12,7 @@ import org.swyg.greensumer.dto.request.EventCommentCreateRequest;
 import org.swyg.greensumer.dto.request.EventCommentModifyRequest;
 import org.swyg.greensumer.dto.request.EventPostCreateRequest;
 import org.swyg.greensumer.dto.request.EventPostModifyRequest;
-import org.swyg.greensumer.dto.response.EventCommentResponse;
-import org.swyg.greensumer.dto.response.EventPostResponse;
-import org.swyg.greensumer.dto.response.EventPostWithCommentResponse;
-import org.swyg.greensumer.dto.response.Response;
+import org.swyg.greensumer.dto.response.*;
 import org.swyg.greensumer.service.EventCommentService;
 import org.swyg.greensumer.service.EventPostService;
 
@@ -82,5 +79,11 @@ public class EventController {
     public Response<Void> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Authentication authentication) {
         eventCommentService.deleteComment(postId, commentId, authentication.getName());
         return Response.success();
+    }
+
+    @PostMapping("/{postId}/like")
+    public Response<EventLikeCountResponse> likeEventPost(@PathVariable Long postId, Authentication authentication) {
+        EventPost eventPost = eventPostService.likeEventPost(postId, authentication.getName());
+        return Response.success(EventLikeCountResponse.fromEventPost(eventPost));
     }
 }

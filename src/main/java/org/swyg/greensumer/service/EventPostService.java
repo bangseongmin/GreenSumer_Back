@@ -5,10 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.swyg.greensumer.domain.EventPostEntity;
-import org.swyg.greensumer.domain.EventPostViewerEntity;
-import org.swyg.greensumer.domain.ProductEntity;
-import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.constant.EventStatus;
 import org.swyg.greensumer.dto.EventPost;
 import org.swyg.greensumer.dto.EventPostWithComment;
 import org.swyg.greensumer.dto.User;
@@ -17,8 +15,11 @@ import org.swyg.greensumer.dto.request.EventPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.EventPostEntityRepository;
+import org.swyg.greensumer.repository.EventPostLikeRepository;
 import org.swyg.greensumer.repository.EventPostViewerEntityRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +29,7 @@ public class EventPostService {
 
     private final EventPostEntityRepository eventPostEntityRepository;
     private final EventPostViewerEntityRepository eventPostViewerEntityRepository;
+    private final EventPostLikeRepository eventPostLikeRepository;
 
     private final UserEntityRepositoryService userEntityRepositoryService;
     private final StoreService storeService;
@@ -35,14 +37,25 @@ public class EventPostService {
 
     @Transactional
     public void create(EventPostCreateRequest request, String username) {
+        if(request.getImages().size() > 5){
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
+        }
+
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         storeService.isStoreManager(userEntity.getId(), request.getStoreId());
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
+
+        LocalDateTime startedAt = toLocalDateTime(request.getStartedAt());
+        LocalDateTime endedAt = toLocalDateTime(request.getStartedAt());
+        EventStatus eventStatus = VerifyEventStatus(startedAt, endedAt);
 
         EventPostEntity eventPostEntity = eventPostEntityRepository.save(EventPostEntity.builder()
                 .user(userEntity)
                 .title(request.getTitle())
                 .content(request.getContent())
+                .started_at(startedAt)
+                .ended_at(endedAt)
+                .status(eventStatus)
                 .build());
 
         if(productEntities.size() > 0) {
@@ -56,12 +69,20 @@ public class EventPostService {
 
     @Transactional
     public EventPost modify(EventPostModifyRequest request, Long postId, String username) {
+        if(request.getImages().size() > 5){
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
+        }
+
         EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
         isEventMine(eventPostEntity.getUser().getUsername(), username, postId);
 
-        eventPostEntity.updateEventPost(productEntities, request.getTitle(), request.getContent());
+        LocalDateTime startedAt = toLocalDateTime(request.getStartedAt());
+        LocalDateTime endedAt = toLocalDateTime(request.getStartedAt());
+        EventStatus eventStatus = VerifyEventStatus(startedAt, endedAt);
+
+        eventPostEntity.updateEventPost(productEntities, request.getTitle(), request.getContent(), startedAt, endedAt, eventStatus);
 
         if(request.getImages().size() > 0){
             eventPostEntity.addImages(imageService.getImages(request.getImages()));
@@ -110,9 +131,36 @@ public class EventPostService {
         });
     }
 
-    private void isEventMine(String writer, String username, Long postId){
-        if(!Objects.equals(writer, username)){
+    private void isEventMine(String writer, String username, Long postId) {
+        if (!Objects.equals(writer, username)) {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", username, postId));
         }
+    }
+
+    public EventPost likeEventPost(Long postId, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        EventPostEntity eventPostEntity = getEventPostEntityOrException(postId);
+
+        EventPostLikeEntity eventPostLikeEntity = eventPostLikeRepository.save(EventPostLikeEntity.of(eventPostEntity, userEntity));
+        eventPostEntity.addLikes(eventPostLikeEntity);
+
+        return EventPost.fromEntity(eventPostEntity);
+    }
+
+    private static EventStatus VerifyEventStatus(LocalDateTime startedAt, LocalDateTime endedAt) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(startedAt)) {
+            return EventStatus.READY;
+        } else if (now.isAfter(startedAt) && now.isBefore(endedAt)) {
+            return EventStatus.PROGRESSED;
+        } else {
+            return EventStatus.FINISHED;
+        }
+    }
+
+    private LocalDateTime toLocalDateTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(time, formatter);
     }
 }
