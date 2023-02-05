@@ -45,8 +45,6 @@ public class ReviewPostEntity extends PostEntity {
        this.user = user;
        this.title = title;
        this.content = content;
-       this.views = 0;
-       this.like = 0;
     }
 
     public static ReviewPostEntity of(UserEntity user, String title, String content) {
@@ -65,7 +63,6 @@ public class ReviewPostEntity extends PostEntity {
         }
         reviewPostViewerEntity.setReview(this);
         this.viewer.add(reviewPostViewerEntity);
-        this.views++;
     }
 
     public void addProducts(Collection<ProductEntity> productEntities) {
@@ -76,13 +73,11 @@ public class ReviewPostEntity extends PostEntity {
 
     public void addLikes(ReviewPostLikeEntity reviewPostLikeEntity){
         if(this.likes.remove(reviewPostLikeEntity)) {
-            this.like--;
             return;
         }
 
         reviewPostLikeEntity.setReview(this);
         this.likes.add(reviewPostLikeEntity);
-        this.like++;
     }
 
     @Override

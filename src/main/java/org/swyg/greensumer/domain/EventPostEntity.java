@@ -37,7 +37,6 @@ public class EventPostEntity extends PostEntity {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.views = 0;
     }
 
     @Builder
@@ -58,7 +57,6 @@ public class EventPostEntity extends PostEntity {
 
         eventPostViewerEntity.setEvent(this);
         this.viewer.add(eventPostViewerEntity);
-        this.views++;
     }
 
     public void addProducts(Collection<ProductEntity> productEntities) {

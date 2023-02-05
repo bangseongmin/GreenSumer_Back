@@ -30,7 +30,7 @@ public class EventPostWithComment {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getViews(),
+                entity.getViewer().size(),
                 entity.getProducts().stream()
                         .map(Product::fromEntity)
                         .collect(Collectors.toUnmodifiableSet()),
