@@ -18,7 +18,6 @@ import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +32,10 @@ public class ReviewPostService {
 
     @Transactional
     public void create(ReviewPostCreateRequest request, String username) {
+        if(request.getImages().size() > 5){
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
+        }
+
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
 
@@ -53,6 +56,10 @@ public class ReviewPostService {
 
     @Transactional
     public ReviewPost modify(ReviewPostModifyRequest request, Long postId, String username) {
+        if(request.getImages().size() > 5){
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
+        }
+
         ReviewPostEntity reviewPostEntity = getReviewPostEntityOrException(postId);
         isPostMine(reviewPostEntity.getUser().getUsername(), username, postId);
 
