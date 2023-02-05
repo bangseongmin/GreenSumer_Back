@@ -88,8 +88,8 @@ public class ReviewPostController {
     }
 
     @PostMapping("/{postId}/like")
-    public Response<Void> likeReviewPost(@PathVariable Long postId, Authentication authentication) {
-        reviewPostService.likeReviewPost(postId, authentication.getName());
-        return Response.success();
+    public Response<ReviewLikeCountResponse> likeReviewPost(@PathVariable Long postId, Authentication authentication) {
+        ReviewPost reviewPost = reviewPostService.likeReviewPost(postId, authentication.getName());
+        return Response.success(ReviewLikeCountResponse.fromReviewPost(reviewPost));
     }
 }

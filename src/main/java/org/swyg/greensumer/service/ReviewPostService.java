@@ -120,11 +120,13 @@ public class ReviewPostService {
         }
     }
 
-    public void likeReviewPost(Long postId, String username) {
+    public ReviewPost likeReviewPost(Long postId, String username) {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         ReviewPostEntity postEntity = getReviewPostEntityOrException(postId);
 
         ReviewPostLikeEntity reviewPostLikeEntity = reviewPostLikeEntityRepository.save(ReviewPostLikeEntity.of(postEntity, userEntity));
         postEntity.addLikes(reviewPostLikeEntity);
+
+        return ReviewPost.fromEntity(postEntity);
     }
 }
