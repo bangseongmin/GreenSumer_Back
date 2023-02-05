@@ -30,7 +30,7 @@ public class ProductEntity extends DateTimeEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
     private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
 
-    @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "post_id")
+    @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "review_id")
     private ReviewPostEntity reviewPost;
 
     @JsonIgnore @ManyToOne(optional = false, fetch = FetchType.EAGER) @JoinColumn(name = "event_id")

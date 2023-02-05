@@ -21,7 +21,7 @@ public class ReviewPostLikeEntity extends DateTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "post_id") private ReviewPostEntity review;
+    @ManyToOne @JoinColumn(name = "review_id") private ReviewPostEntity review;
     @ManyToOne @JoinColumn(name = "user_id") private UserEntity user;
 
     public ReviewPostLikeEntity() {}
