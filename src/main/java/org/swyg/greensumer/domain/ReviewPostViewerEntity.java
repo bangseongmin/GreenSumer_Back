@@ -12,8 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Entity
-@Table(name = "post_viewer")
-@SQLDelete(sql = "UPDATE post_viewer SET deleted_at = NOW() where id=?")
+@Table(name = "review_viewer")
+@SQLDelete(sql = "UPDATE review_viewer SET deleted_at = NOW() where id=?")
 @Where(clause = "deleted_at is NULL")
 public class ReviewPostViewerEntity extends DateTimeEntity {
 
@@ -21,7 +21,7 @@ public class ReviewPostViewerEntity extends DateTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "post_id") private ReviewPostEntity review;       // 양방향
+    @ManyToOne @JoinColumn(name = "review_id") private ReviewPostEntity review;       // 양방향
     @ManyToOne @JoinColumn(name = "user_id") private UserEntity user;         // 단방향
 
     public ReviewPostViewerEntity() {}
