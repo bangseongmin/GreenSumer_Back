@@ -3,9 +3,11 @@ package org.swyg.greensumer.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.swyg.greensumer.domain.constant.EventStatus;
 import org.swyg.greensumer.dto.EventPost;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,10 @@ public class EventPostResponse {
     private String title;
     private String content;
     private Integer views;
+    private Integer likes;
+    private EventStatus eventStatus;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
@@ -33,6 +39,10 @@ public class EventPostResponse {
                 eventPost.getTitle(),
                 eventPost.getContent(),
                 eventPost.getViews(),
+                eventPost.getLikes(),
+                eventPost.getEventStatus(),
+                eventPost.getStartedAt(),
+                eventPost.getEndedAt(),
                 eventPost.getRegisteredAt(),
                 eventPost.getUpdatedAt(),
                 eventPost.getDeletedAt()
