@@ -34,6 +34,7 @@ public enum ErrorCode {
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Event not founded"),
     OVER_IMAGE_COUNT(HttpStatus.CONFLICT, "Image count is over"),
     INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "Interview not founded"),
+    IMAGE_SIZE_OVER(HttpStatus.CONFLICT, "Image size is Over"),
     ;
 
     private HttpStatus status;

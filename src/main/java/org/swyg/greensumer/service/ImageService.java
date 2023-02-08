@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ImageService {
-
+    public final static int IMAGE_UPLOAD_MAX_COUNT = 5;
+    private final static long IMAGE_UPLOAD_MAX_SIZE = 10_000_001L;
     private final ImageEntityRepository imageEntityRepository;
     private final UserEntityRepositoryService userEntityRepositoryService;
 
@@ -34,11 +35,13 @@ public class ImageService {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         if (Objects.isNull(image)) {
-            throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_IS_NULL, String.format("Image is Null"));
+            throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_IS_NULL, "Image is Null");
         }
 
         String originFilename = image.getOriginalFilename();
         String savedFilename = getSavedFilename(originFilename);
+
+        validateImageSize(image.getSize(), originFilename);
 
         ImageEntity imageEntity = imageEntityRepository.save(
                 ImageEntity.of(ImageType.valueOf(type), userEntity, originFilename, savedFilename, ImageUtils.compressImage(image.getBytes()))
@@ -58,14 +61,19 @@ public class ImageService {
 
     @Transactional
     public List<Image> saveImages(ImagesCreateRequest request, String username) throws IOException {
+        if (request.getImages().size() > IMAGE_UPLOAD_MAX_COUNT) {
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
+        }
+
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
 
         List<ImageEntity> imageEntities = new ArrayList<>();
         ImageType type = ImageType.valueOf(request.getType());
 
         for (MultipartFile image : request.getImages()) {
-            String savedFilename = getSavedFilename(image.getOriginalFilename());
+            validateImageSize(image.getSize(), image.getOriginalFilename());
 
+            String savedFilename = getSavedFilename(image.getOriginalFilename());
             ImageEntity entity = ImageEntity.of(type, userEntity, image.getOriginalFilename(), savedFilename, ImageUtils.compressImage(image.getBytes()));
             entity.setProduct(null);
             entity.setStore(null);
@@ -76,10 +84,18 @@ public class ImageService {
         return imageEntityRepository.saveAll(imageEntities).stream().map(Image::fromEntity).collect(Collectors.toList());
     }
 
+    private void validateImageSize(long size, String filename) {
+        if (size >= IMAGE_UPLOAD_MAX_SIZE) {
+            throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_SIZE_OVER, String.format("%s Image size exceeds 10 MB. Check the Image Size", filename));
+        }
+    }
+
     public Image modifyImage(Long imageId, ImageModifyRequest request, String username) throws IOException {
         userEntityRepositoryService.loadUserByUsername(username);
 
         ImageEntity imageEntity = getImageEntityOrException(imageId);
+
+        validateImageSize(request.getImage().getSize(), imageEntity.getOriginFilename());
 
         imageEntity.setImageData(ImageUtils.compressImage(request.getImage().getBytes()));
         imageEntity.setImageType(ImageType.valueOf(request.getType()));
