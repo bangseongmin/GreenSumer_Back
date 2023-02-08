@@ -2,8 +2,6 @@ package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.Interview;
 import org.swyg.greensumer.dto.request.InterviewCreateRequest;
@@ -20,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/v1/interviews")
 public class InterviewController {
 
-    private InterviewService interviewService;
+    private final InterviewService interviewService;
 
     @PostMapping("/save")
     public Response<Void> saveInterview(@RequestBody InterviewCreateRequest request) {
@@ -45,26 +43,12 @@ public class InterviewController {
     @PutMapping
     public Response<Void> modifyInterview(@RequestBody InterviewModifyRequest request) {
         interviewService.modifyInterview(request);
-
         return Response.success();
     }
 
     @GetMapping
-    public Response<InterviewResponse> getInterviews(Pageable pageable) {
-        Page<Interview> interviewFromSeller = interviewService.getInterviewFromSeller(pageable);
-        Page<Interview> interviewsFromUser = interviewService.getInterviewsFromUser(pageable);
-        return Response.success(InterviewResponse.of(interviewFromSeller, interviewsFromUser));
-    }
-
-    @GetMapping("/user")
-    public Response<Page<Interview>> getInterviewsFromUser(Pageable pageable) {
-        Page<Interview> interviews = interviewService.getInterviewsFromUser(pageable);
-        return Response.success(interviews);
-    }
-
-    @GetMapping("/seller")
-    public Response<Page<Interview>> getInterviewsFromSeller(Pageable pageable) {
-        Page<Interview> interviews = interviewService.getInterviewsFromUser(pageable);
-        return Response.success(interviews);
+    public Response<InterviewResponse> getInterviews() {
+        List<Interview> interviews = interviewService.getInterviews();
+        return Response.success(InterviewResponse.of(interviews));
     }
 }

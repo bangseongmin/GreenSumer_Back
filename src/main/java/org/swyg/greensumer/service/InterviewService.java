@@ -11,17 +11,21 @@ import org.swyg.greensumer.dto.request.InterviewCreateRequest;
 import org.swyg.greensumer.dto.request.InterviewModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
+import org.swyg.greensumer.repository.InterviewCacheRepository;
 import org.swyg.greensumer.repository.InterviewEntityRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class InterviewService {
 
     private final InterviewEntityRepository interviewEntityRepository;
+    private final InterviewCacheRepository interviewCacheRepository;
 
     public void saveInterview(InterviewCreateRequest request) {
         interviewEntityRepository.save(InterviewEntity.builder()
@@ -42,6 +46,7 @@ public class InterviewService {
         }
 
         interviewEntityRepository.saveAll(list);
+        interviewCacheRepository.setInterviews(list.stream().map(Interview::fromInterviewEntity).collect(Collectors.toList()));
     }
 
     public void deleteInterview(Long interviewId) {
@@ -50,19 +55,31 @@ public class InterviewService {
 
     @Transactional
     public void modifyInterview(InterviewModifyRequest request) {
-        InterviewEntity interviewEntity = interviewEntityRepository.findById(Long.valueOf(request.getInterviewId())).orElseThrow(() -> {
+        InterviewEntity interviewEntity = interviewEntityRepository.findById((long) request.getInterviewId()).orElseThrow(() -> {
             throw new GreenSumerBackApplicationException(ErrorCode.INTERVIEW_NOT_FOUND, String.format("interview-%d not founded", request.getInterviewId()));
         });
 
         interviewEntity.updateInterview(request.getWriter(), request.getStore(), request.getOpinion(), request.getTarget());
+        interviewCacheRepository.modifyInterview(interviewEntity.getId(), Interview.fromInterviewEntity(interviewEntity));
+    }
+
+    public List<Interview> getInterviews() {
+        List<Interview> interviews = interviewCacheRepository.getInterviews();
+
+        if (interviews.isEmpty()) {
+            interviews.addAll(getInterviewsFromUser());
+            interviews.addAll(getInterviewFromSeller());
+        }
+
+        return interviews;
     }
 
 
-    public Page<Interview> getInterviewsFromUser(Pageable pageable) {
-        return interviewEntityRepository.findAllByTarget(UserRole.USER, pageable).map(Interview::fromInterviewEntity);
+    private List<Interview> getInterviewsFromUser() {
+        return interviewEntityRepository.findAllByTarget(UserRole.USER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 
-    public Page<Interview> getInterviewFromSeller(Pageable pageable) {
-        return interviewEntityRepository.findAllByTarget(UserRole.SELLER, pageable).map(Interview::fromInterviewEntity);
+    private List<Interview> getInterviewFromSeller() {
+        return interviewEntityRepository.findAllByTarget(UserRole.SELLER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 }
