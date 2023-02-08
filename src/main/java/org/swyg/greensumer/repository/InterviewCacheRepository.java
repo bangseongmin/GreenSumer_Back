@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Repository;
 import org.swyg.greensumer.dto.Interview;
-import org.swyg.greensumer.dto.request.InterviewModifyRequest;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -54,16 +53,10 @@ public class InterviewCacheRepository {
             List<Interview> list = new ArrayList<>();
             for (Object value : hashOperations.entries(getKey() + "SELLER").values()) {
                 list.add((Interview) value);
-
-                if(list.size() == 5)
-                    break;
             }
 
             for (Object value : hashOperations.entries(getKey() + "USER").values()) {
                 list.add((Interview) value);
-
-                if(list.size() == 10)
-                    break;
             }
 
             log.info("[InterviewCacheRepository findAll - success]");

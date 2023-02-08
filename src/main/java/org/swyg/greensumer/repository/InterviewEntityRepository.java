@@ -7,5 +7,5 @@ import org.swyg.greensumer.domain.constant.UserRole;
 import java.util.List;
 
 public interface InterviewEntityRepository extends JpaRepository<InterviewEntity, Long> {
-    List<InterviewEntity> findAllByTarget(UserRole role);
+    List<InterviewEntity> findAllByTargetOrderByIdDesc(UserRole role);
 }
