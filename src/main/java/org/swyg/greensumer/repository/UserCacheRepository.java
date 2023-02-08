@@ -26,7 +26,7 @@ public class UserCacheRepository {
 
     @PostConstruct
     public void init() {
-        valueOperations = redisTemplate.opsForValue();;
+        valueOperations = redisTemplate.opsForValue();
     }
 
     public void setUser(User user){

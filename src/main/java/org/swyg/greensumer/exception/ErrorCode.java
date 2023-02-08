@@ -33,6 +33,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(HttpStatus.CONFLICT, "Refresh Token is invalid"),
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Event not founded"),
     OVER_IMAGE_COUNT(HttpStatus.CONFLICT, "Image count is over"),
+    INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "Interview not founded"),
     ;
 
     private HttpStatus status;
