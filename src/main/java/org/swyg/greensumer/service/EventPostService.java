@@ -37,10 +37,6 @@ public class EventPostService {
 
     @Transactional
     public void create(EventPostCreateRequest request, String username) {
-        if(request.getImages().size() > 5){
-            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
-        }
-
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         storeService.isStoreManager(userEntity.getId(), request.getStoreId());
         List<ProductEntity> productEntities = storeService.getProductListOnStore(request.getProducts(), request.getStoreId());
@@ -58,18 +54,16 @@ public class EventPostService {
                 .status(eventStatus)
                 .build());
 
-        if(productEntities.size() > 0) {
+        if (productEntities.size() > 0) {
             eventPostEntity.addProducts(productEntities);
         }
 
-        if (request.getImages().size() > 0) {
-            eventPostEntity.addImages(imageService.getImages(request.getImages()));
-        }
+        addImages(request.getImages(), eventPostEntity);
     }
 
     @Transactional
     public EventPost modify(EventPostModifyRequest request, Long postId, String username) {
-        if(request.getImages().size() > 5){
+        if (request.getImages().size() > 5) {
             throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", request.getImages().size()));
         }
 
@@ -84,9 +78,7 @@ public class EventPostService {
 
         eventPostEntity.updateEventPost(productEntities, request.getTitle(), request.getContent(), startedAt, endedAt, eventStatus);
 
-        if(request.getImages().size() > 0){
-            eventPostEntity.addImages(imageService.getImages(request.getImages()));
-        }
+        addImages(request.getImages(), eventPostEntity);
 
         return EventPost.fromEntity(eventPostEntity);
     }
@@ -118,7 +110,7 @@ public class EventPostService {
 
         EventPostViewerEntity eventPostViewerEntity = eventPostViewerEntityRepository.findByEvent_IdAndUser_Id(postId, userEntity.getId())
                 .orElseGet(() -> eventPostViewerEntityRepository.save(EventPostViewerEntity.of(eventPostEntity, userEntity))
-        );
+                );
 
         eventPostEntity.addViewer(eventPostViewerEntity);
 
@@ -162,5 +154,15 @@ public class EventPostService {
     private LocalDateTime toLocalDateTime(String time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(time, formatter);
+    }
+
+    private void addImages(List<Long> images, EventPostEntity eventPostEntity) {
+        int size = images.size();
+
+        if (size > 0 && size < 5) {
+            eventPostEntity.addImages(imageService.getImages(images));
+        } else if (size > 5) {
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", size));
+        }
     }
 }
