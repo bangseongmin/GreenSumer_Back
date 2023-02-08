@@ -86,7 +86,7 @@ public class ImageService {
 
     private void validateImageSize(long size, String filename) {
         if (size >= IMAGE_UPLOAD_MAX_SIZE) {
-            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("%s Image size exceeds 10 MB. Check the Image Size", filename));
+            throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_SIZE_OVER, String.format("%s Image size exceeds 10 MB. Check the Image Size", filename));
         }
     }
 
