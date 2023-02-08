@@ -1,8 +1,6 @@
 package org.swyg.greensumer.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.swyg.greensumer.domain.InterviewEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
@@ -17,7 +15,6 @@ import org.swyg.greensumer.repository.InterviewEntityRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -46,7 +43,10 @@ public class InterviewService {
         }
 
         interviewEntityRepository.saveAll(list);
-        interviewCacheRepository.setInterviews(list.stream().map(Interview::fromInterviewEntity).collect(Collectors.toList()));
+
+        List<Interview> interviews = getInterviewsFromUser();
+        interviews.addAll(getInterviewsFromSeller());
+        interviewCacheRepository.setInterviews(interviews);
     }
 
     public void deleteInterview(Long interviewId) {
@@ -68,7 +68,7 @@ public class InterviewService {
 
         if (interviews.isEmpty()) {
             interviews.addAll(getInterviewsFromUser());
-            interviews.addAll(getInterviewFromSeller());
+            interviews.addAll(getInterviewsFromSeller());
         }
 
         return interviews;
@@ -76,10 +76,10 @@ public class InterviewService {
 
 
     private List<Interview> getInterviewsFromUser() {
-        return interviewEntityRepository.findAllByTarget(UserRole.USER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
+        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.USER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 
-    private List<Interview> getInterviewFromSeller() {
-        return interviewEntityRepository.findAllByTarget(UserRole.SELLER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
+    private List<Interview> getInterviewsFromSeller() {
+        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.SELLER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 }
