@@ -78,10 +78,4 @@ public class UserController {
         return Response.success();
     }
 
-    @PutMapping("/user")
-    public Response<UpdateUserResponse> updateUser(@RequestBody UpdateUserRequest request, Authentication authentication) {
-        User user = userService.updateUserInfo(request, authentication.getName());
-        return Response.success(UpdateUserResponse.fromUser(user));
-    }
-
 }
