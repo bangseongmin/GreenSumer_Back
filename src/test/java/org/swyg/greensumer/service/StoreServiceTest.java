@@ -212,7 +212,7 @@ class StoreServiceTest {
         given(productEntityRepository.findAllByStore(storeEntity, pageable)).willReturn(Page.empty());
 
         // When
-        Page<Product> products = sut.getProductList(storeEntity.getId(), pageable);
+        Page<Product> products = sut.getStoreWithProductList(storeEntity.getId(), pageable);
 
         //Then
         assertThat(products).isEmpty();

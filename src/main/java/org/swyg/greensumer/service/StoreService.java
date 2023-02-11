@@ -148,7 +148,7 @@ public class StoreService {
         productEntityRepository.delete(productEntity);
     }
 
-    public Page<StoreProduct> getProductList(Long storeId, Pageable pageable) {
+    public Page<StoreProduct> getStoreWithProductList(Long storeId, Pageable pageable) {
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
 
         return storeProductEntityRepository.findAllByStore(storeEntity, pageable).map(StoreProduct::fromEntity);
@@ -190,7 +190,7 @@ public class StoreService {
         });
     }
 
-    public List<ProductEntity> getProductList(List<Long> productsId) {
+    public List<ProductEntity> getStoreWithProductList(List<Long> productsId) {
         return productEntityRepository.findAllByIdIn(productsId);
     }
 

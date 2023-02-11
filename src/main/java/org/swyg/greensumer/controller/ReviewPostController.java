@@ -18,7 +18,7 @@ import org.swyg.greensumer.service.ReviewPostService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/api/v1/reviews")
 public class ReviewPostController {
 
     private final ReviewPostService reviewPostService;

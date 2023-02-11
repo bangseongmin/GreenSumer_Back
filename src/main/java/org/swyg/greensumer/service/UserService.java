@@ -13,10 +13,7 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
-import org.swyg.greensumer.dto.request.UpdateUserRequest;
-import org.swyg.greensumer.dto.request.UserLoginRequest;
-import org.swyg.greensumer.dto.request.UserLogoutRequest;
-import org.swyg.greensumer.dto.request.UserSignUpRequest;
+import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.SellerStoreEntityRepository;
@@ -152,5 +149,9 @@ public class UserService {
         return User.fromEntity(userEntity);
     }
 
+    public void requestLevelUp(RequestLevelUp request, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        userEntity.updateRole(request.getRole());
+    }
 }
 
