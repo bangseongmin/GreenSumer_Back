@@ -3,6 +3,7 @@ package org.swyg.greensumer.domain;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -66,4 +67,7 @@ public class UserEntity extends DateTimeEntity {
         this.email = email;
     }
 
+    public void updateRole(String role) {
+        this.roles.add(UserRole.valueOf(role).toString());
+    }
 }
