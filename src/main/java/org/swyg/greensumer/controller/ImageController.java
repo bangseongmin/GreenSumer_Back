@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class ImageController {
 
     private final ImageService imageService;

@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/maps")
+@RequestMapping("/api/maps")
 public class MapController {
 
     private final ZeroWasteShopRecommendationService zeroWasteShopRecommendationService;

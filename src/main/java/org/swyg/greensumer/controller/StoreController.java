@@ -15,7 +15,7 @@ import org.swyg.greensumer.dto.response.*;
 import org.swyg.greensumer.service.StoreService;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stores")
+@RequestMapping("/api/stores")
 @RestController
 public class StoreController {
 
