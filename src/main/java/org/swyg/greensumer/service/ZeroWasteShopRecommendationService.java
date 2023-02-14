@@ -9,7 +9,6 @@ import org.swyg.greensumer.api.dto.DocumentDto;
 import org.swyg.greensumer.api.dto.KakaoApiResponseDto;
 import org.swyg.greensumer.api.service.KakaoAddressSearchService;
 import org.swyg.greensumer.domain.RecommendationEntity;
-import org.swyg.greensumer.domain.RecommendationService;
 import org.swyg.greensumer.dto.ZeroWasteShopResponse;
 import org.swyg.greensumer.dto.request.ZeroWasteShopRequest;
 

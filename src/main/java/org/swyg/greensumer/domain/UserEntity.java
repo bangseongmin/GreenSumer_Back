@@ -3,8 +3,10 @@ package org.swyg.greensumer.domain;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,13 +30,18 @@ public class UserEntity extends DateTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", length = 50) private String username;
-    @Column(name = "password") private String password;
-    @Column(nullable = false, length = 100) private String email;
+    @Column(nullable = false, length = 50) private String username;
     @Column(nullable = false, length = 50) private String nickname;
+    @Column(nullable = false, length = 50) private String fullname;
 
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(nullable = false, length = 100) private String email;
+
+    @Column(nullable = false) private String password;
+
+    @Column(nullable = false) private LocalDateTime birth;
+    @Column(nullable = false) private boolean gender;
+
+    @Column(name = "role") @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -60,4 +67,7 @@ public class UserEntity extends DateTimeEntity {
         this.email = email;
     }
 
+    public void updateRole(String role) {
+        this.roles.add(UserRole.valueOf(role).toString());
+    }
 }

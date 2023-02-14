@@ -1,4 +1,4 @@
-package org.swyg.greensumer.repository;
+package org.swyg.greensumer.repository.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class UserCacheRepository {
 
     @PostConstruct
     public void init() {
-        valueOperations = redisTemplate.opsForValue();;
+        valueOperations = redisTemplate.opsForValue();
     }
 
     public void setUser(User user){

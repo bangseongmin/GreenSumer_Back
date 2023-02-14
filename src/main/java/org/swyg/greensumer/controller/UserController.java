@@ -1,13 +1,11 @@
 package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.UpdateUserResponse;
 import org.swyg.greensumer.dto.response.UserSignUpResponse;
 import org.swyg.greensumer.dto.response.UsernameResponse;
 import org.swyg.greensumer.service.UserService;
@@ -15,7 +13,7 @@ import org.swyg.greensumer.service.VerificationService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -76,12 +74,6 @@ public class UserController {
         userService.findPassword(request.getUsername(), request.getEmail(), request.getCode(), request.getPassword());
 
         return Response.success();
-    }
-
-    @PutMapping("/user")
-    public Response<UpdateUserResponse> updateUser(@RequestBody UpdateUserRequest request, Authentication authentication) {
-        User user = userService.updateUserInfo(request, authentication.getName());
-        return Response.success(UpdateUserResponse.fromUser(user));
     }
 
 }

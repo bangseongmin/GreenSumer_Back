@@ -21,7 +21,7 @@ import java.util.Objects;
 @Where(clause = "deleted_at is NULL")
 public class ReviewCommentEntity extends CommentEntity {
 
-    @ManyToOne(optional = false) @JoinColumn(name = "post_id")
+    @ManyToOne(optional = false) @JoinColumn(name = "review_id")
     private ReviewPostEntity reviewPost;
 
     public ReviewCommentEntity() {}

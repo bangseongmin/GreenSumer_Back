@@ -17,7 +17,4 @@ public abstract class PostEntity extends DateTimeEntity {
 
     @Column(name = "title", length = 50) protected String title;
     @Column(name = "content", columnDefinition = "TEXT")  protected String content;
-
-    @Column(columnDefinition = "Integer default 0", nullable = false)
-    protected Integer views;
 }

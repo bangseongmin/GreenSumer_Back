@@ -13,15 +13,13 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
-import org.swyg.greensumer.dto.request.UpdateUserRequest;
-import org.swyg.greensumer.dto.request.UserLoginRequest;
-import org.swyg.greensumer.dto.request.UserLogoutRequest;
-import org.swyg.greensumer.dto.request.UserSignUpRequest;
+import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.SellerStoreEntityRepository;
+import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -37,8 +35,10 @@ public class UserService {
 
     private final BCryptPasswordEncoder encoder;
 
-    @Value("${jwt.secret-key}") private String secretKey;
-    @Value("${jwt.token.expired-time-ms}") private Long expiredTimeMs;
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+    @Value("${jwt.token.expired-time-ms}")
+    private Long expiredTimeMs;
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
@@ -56,7 +56,10 @@ public class UserService {
                 .username(request.getUsername())
                 .password(encoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
+                .fullname(request.getName())
                 .email(request.getEmail())
+                .birth(LocalDateTime.parse(request.getBirth()))
+                .gender(request.isGender())
                 .roles(Collections.singletonList(UserRole.USER.name()))
                 .build());
 
@@ -91,11 +94,11 @@ public class UserService {
         UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
         User user = User.fromEntity(userEntity);
 
-        if(ObjectUtils.isEmpty(refreshTokenFromRedis)) {
+        if (ObjectUtils.isEmpty(refreshTokenFromRedis)) {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_TOKEN, "Invalid Access Token");
         }
 
-        if(!refreshToken.equals(refreshTokenFromRedis.substring(1, refreshTokenFromRedis.length()-1))) {
+        if (!refreshToken.equals(refreshTokenFromRedis.substring(1, refreshTokenFromRedis.length() - 1))) {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, "Refresh Token is invalid.");
         }
 
@@ -146,5 +149,9 @@ public class UserService {
         return User.fromEntity(userEntity);
     }
 
+    public void requestLevelUp(RequestLevelUp request, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        userEntity.updateRole(request.getRole());
+    }
 }
 

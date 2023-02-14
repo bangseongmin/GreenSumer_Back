@@ -15,7 +15,7 @@ import org.swyg.greensumer.dto.response.*;
 import org.swyg.greensumer.service.StoreService;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stores")
+@RequestMapping("/api/stores")
 @RestController
 public class StoreController {
 
@@ -80,9 +80,8 @@ public class StoreController {
     }
 
     @GetMapping("/{storeId}/products")
-    public Response<Page<StoreProductResponse>> getProductList(@PathVariable Long storeId, Authentication authentication, Pageable pageable
-    ) {
-        return Response.success(storeService.getProductList(storeId, pageable).map(StoreProductResponse::fromStoreProduct));
+    public Response<Page<StoreProductResponse>> getStoreWithProductList(@PathVariable Long storeId, Pageable pageable) {
+        return Response.success(storeService.getStoreWithProductList(storeId, pageable).map(StoreProductResponse::fromStoreProduct));
     }
 
     @GetMapping("/{storeId}/products/{productId}")

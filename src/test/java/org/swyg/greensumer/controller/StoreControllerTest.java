@@ -427,7 +427,7 @@ class StoreControllerTest {
     @WithMockUser
     @Test
     void givenStoreId_whenRequestingProductListInStore_thenReturnProductListInStore() throws Exception {
-        given(storeService.getProductList(any(), any(Pageable.class))).willReturn(Page.empty());
+        given(storeService.getStoreWithProductList(any(), any(Pageable.class))).willReturn(Page.empty());
 
         mvc.perform(get("/api/v1/stores/1/products"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

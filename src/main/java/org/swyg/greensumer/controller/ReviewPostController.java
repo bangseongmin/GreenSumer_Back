@@ -12,16 +12,13 @@ import org.swyg.greensumer.dto.request.ReviewCommentCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewCommentModifyRequest;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
-import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.ReviewCommentResponse;
-import org.swyg.greensumer.dto.response.ReviewPostResponse;
-import org.swyg.greensumer.dto.response.ReviewPostWithCommentResponse;
+import org.swyg.greensumer.dto.response.*;
 import org.swyg.greensumer.service.ReviewCommentService;
 import org.swyg.greensumer.service.ReviewPostService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/api/reviews")
 public class ReviewPostController {
 
     private final ReviewPostService reviewPostService;
@@ -46,8 +43,13 @@ public class ReviewPostController {
     }
 
     @GetMapping
-    public Response<Page<ReviewPostResponse>> list(Pageable pageable, Authentication authentication) {
-        return Response.success(reviewPostService.list(pageable).map(ReviewPostResponse::fromReviewPost));
+    public Response<Page<ReviewPostsResponse>> list(Pageable pageable) {
+        return Response.success(reviewPostService.list(pageable).map(ReviewPostsResponse::fromReviewPost));
+    }
+
+    @GetMapping("/news")
+    public Response<Page<ReviewNewPostResponse>> newList(Pageable pageable) {
+        return Response.success(reviewPostService.list(pageable).map(ReviewNewPostResponse::fromReviewPost));
     }
 
     @GetMapping("/{postId}")
@@ -83,5 +85,11 @@ public class ReviewPostController {
     public Response<Void> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Authentication authentication) {
         reviewCommentService.deleteComment(postId, commentId, authentication.getName());
         return Response.success();
+    }
+
+    @PostMapping("/{postId}/like")
+    public Response<ReviewLikeCountResponse> likeReviewPost(@PathVariable Long postId, Authentication authentication) {
+        ReviewPost reviewPost = reviewPostService.likeReviewPost(postId, authentication.getName());
+        return Response.success(ReviewLikeCountResponse.fromReviewPost(reviewPost));
     }
 }

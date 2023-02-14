@@ -5,21 +5,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.swyg.greensumer.domain.ProductEntity;
-import org.swyg.greensumer.domain.ReviewPostEntity;
-import org.swyg.greensumer.domain.ReviewPostViewerEntity;
-import org.swyg.greensumer.domain.UserEntity;
+import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.constant.ImageType;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.ReviewPostEntityRepository;
-import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostLikeEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostViewerEntityRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.swyg.greensumer.service.ImageService.IMAGE_UPLOAD_MAX_COUNT;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +32,7 @@ public class ReviewPostService {
     private final UserEntityRepositoryService userEntityRepositoryService;
     private final StoreService storeService;
     private final ImageService imageService;
+    private final ReviewPostLikeEntityRepository reviewPostLikeEntityRepository;
 
     @Transactional
     public void create(ReviewPostCreateRequest request, String username) {
@@ -46,9 +49,7 @@ public class ReviewPostService {
             reviewPostEntity.addProducts(productEntities);
         }
 
-        if(request.getImages().size() > 0){
-            reviewPostEntity.addImages(imageService.getImages(request.getImages()));
-        }
+        addImages(request.getImages(), reviewPostEntity);
     }
 
     @Transactional
@@ -60,9 +61,7 @@ public class ReviewPostService {
 
         reviewPostEntity.updateReviewPost(request.getTitle(), request.getContent(), productEntities);
 
-        if(request.getImages().size() > 0){
-            reviewPostEntity.addImages(imageService.getImages(request.getImages()));
-        }
+        addImages(request.getImages(), reviewPostEntity);
 
         return ReviewPost.fromEntity(reviewPostEntity);
     }
@@ -113,4 +112,23 @@ public class ReviewPostService {
         }
     }
 
+    public ReviewPost likeReviewPost(Long postId, String username) {
+        UserEntity userEntity = userEntityRepositoryService.findByUsernameOrException(username);
+        ReviewPostEntity postEntity = getReviewPostEntityOrException(postId);
+
+        ReviewPostLikeEntity reviewPostLikeEntity = reviewPostLikeEntityRepository.save(ReviewPostLikeEntity.of(postEntity, userEntity));
+        postEntity.addLikes(reviewPostLikeEntity);
+
+        return ReviewPost.fromEntity(postEntity);
+    }
+
+    private void addImages(List<Long> images, ReviewPostEntity reviewPostEntity) {
+        int size = images.size();
+
+        if (size > 0 && size < IMAGE_UPLOAD_MAX_COUNT) {
+            reviewPostEntity.addImages(imageService.searchImages(images, ImageType.REVIEW).stream().map(ReviewImageEntity::fromImageEntity).collect(Collectors.toList()));
+        } else if (size > IMAGE_UPLOAD_MAX_COUNT) {
+            throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", size));
+        }
+    }
 }

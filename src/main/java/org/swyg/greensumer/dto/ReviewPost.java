@@ -17,6 +17,8 @@ public class ReviewPost {
     private String title;
     private String content;
     private Integer views;
+    private Integer likes;
+    private Set<ReviewComment> comments;
     private Set<Product> products;
     private User user;
     private Timestamp registeredAt;
@@ -28,7 +30,11 @@ public class ReviewPost {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getViews(),
+                entity.getViewer().size(),
+                entity.getLikes().size(),
+                entity.getComments().stream()
+                        .map(ReviewComment::fromEntity)
+                        .collect(Collectors.toUnmodifiableSet()),
                 entity.getProducts().stream()
                         .map(Product::fromEntity)
                         .collect(Collectors.toUnmodifiableSet()),

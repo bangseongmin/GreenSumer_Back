@@ -31,7 +31,10 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND_ON_STORE(HttpStatus.NOT_FOUND, "Product not registered in the store"),
     IMAGE_IS_NULL(HttpStatus.NO_CONTENT, "Image is null"),
     INVALID_REFRESH_TOKEN(HttpStatus.CONFLICT, "Refresh Token is invalid"),
-    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Event not founded")
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Event not founded"),
+    OVER_IMAGE_COUNT(HttpStatus.CONFLICT, "Image count is over"),
+    INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "Interview not founded"),
+    IMAGE_SIZE_OVER(HttpStatus.CONFLICT, "Image size is Over"),
     ;
 
     private HttpStatus status;
