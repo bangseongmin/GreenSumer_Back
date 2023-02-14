@@ -18,7 +18,7 @@ import org.swyg.greensumer.service.EventPostService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/events")
+@RequestMapping("/api/events")
 public class EventController {
 
     private final EventPostService eventPostService;

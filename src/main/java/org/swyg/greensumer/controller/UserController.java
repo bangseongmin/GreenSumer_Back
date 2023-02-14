@@ -13,7 +13,7 @@ import org.swyg.greensumer.service.VerificationService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;

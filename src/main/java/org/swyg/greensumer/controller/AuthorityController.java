@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/update")
+@RequestMapping("/api/update")
 public class AuthorityController {
 
     private final UserService userService;
