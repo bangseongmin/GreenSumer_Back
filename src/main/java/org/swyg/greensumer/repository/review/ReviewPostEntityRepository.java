@@ -1,4 +1,4 @@
-package org.swyg.greensumer.repository;
+package org.swyg.greensumer.repository.review;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

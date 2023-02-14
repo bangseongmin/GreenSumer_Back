@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ImageCreateRequest {
     private MultipartFile image;
-    private String type;
+    private String type;            // REVIEW, EVENT, PRODUCT, STORE
 }

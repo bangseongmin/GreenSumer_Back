@@ -17,6 +17,10 @@ import org.swyg.greensumer.dto.Product;
 import org.swyg.greensumer.dto.SellerStore;
 import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.repository.*;
+import org.swyg.greensumer.repository.store.ProductEntityRepository;
+import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
+import org.swyg.greensumer.repository.store.StoreEntityRepository;
+import org.swyg.greensumer.repository.user.UserEntityRepository;
 
 import java.util.Optional;
 

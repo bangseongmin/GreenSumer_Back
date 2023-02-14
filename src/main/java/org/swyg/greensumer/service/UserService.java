@@ -16,7 +16,7 @@ import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.SellerStoreEntityRepository;
+import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
 import java.time.LocalDateTime;
