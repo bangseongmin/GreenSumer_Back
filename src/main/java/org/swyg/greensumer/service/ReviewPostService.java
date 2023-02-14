@@ -6,18 +6,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.constant.ImageType;
 import org.swyg.greensumer.dto.ReviewPost;
 import org.swyg.greensumer.dto.ReviewPostWithComment;
 import org.swyg.greensumer.dto.request.ReviewPostCreateRequest;
 import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.ReviewPostEntityRepository;
-import org.swyg.greensumer.repository.ReviewPostLikeEntityRepository;
-import org.swyg.greensumer.repository.ReviewPostViewerEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostLikeEntityRepository;
+import org.swyg.greensumer.repository.review.ReviewPostViewerEntityRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.swyg.greensumer.service.ImageService.IMAGE_UPLOAD_MAX_COUNT;
 
@@ -124,7 +126,7 @@ public class ReviewPostService {
         int size = images.size();
 
         if (size > 0 && size < IMAGE_UPLOAD_MAX_COUNT) {
-            reviewPostEntity.addImages(imageService.getImages(images));
+            reviewPostEntity.addImages(imageService.searchImages(images, ImageType.REVIEW).stream().map(ReviewImageEntity::fromImageEntity).collect(Collectors.toList()));
         } else if (size > IMAGE_UPLOAD_MAX_COUNT) {
             throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", size));
         }

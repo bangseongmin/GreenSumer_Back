@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.constant.ImageType;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.*;
 import org.swyg.greensumer.dto.request.ProductCreateRequest;
@@ -14,7 +15,10 @@ import org.swyg.greensumer.dto.request.StoreCreateRequest;
 import org.swyg.greensumer.dto.request.StoreModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.*;
+import org.swyg.greensumer.repository.store.ProductEntityRepository;
+import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
+import org.swyg.greensumer.repository.store.StoreEntityRepository;
+import org.swyg.greensumer.repository.store.StoreProductEntityRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +31,6 @@ public class StoreService {
     private final ProductEntityRepository productEntityRepository;
     private final SellerStoreEntityRepository sellerStoreEntityRepository;
     private final AddressService addressService;
-    private final ImageEntityRepository imageEntityRepository;
     private final StoreProductEntityRepository storeProductEntityRepository;
     private final ImageService imageService;
     private final UserEntityRepositoryService userEntityRepositoryService;
@@ -52,7 +55,7 @@ public class StoreService {
         );
 
         if (request.getImages().size() > 0) {
-            storeEntity.addImages(imageService.getImages(request.getImages()));
+            storeEntity.addImages(imageService.searchImages(request.getImages(), ImageType.STORE).stream().map(StoreImageEntity::fromImageEntity).collect(Collectors.toList()));
         }
 
         // 4. 가게 정보 반환
@@ -70,7 +73,7 @@ public class StoreService {
         storeEntity.updateAddress(addressService.updateAddress(storeEntity.getAddress().getId(), request.getAddress(), request.getRoadname(), request.getLat(), request.getLng()));
 
         if (request.getImages().size() > 0) {
-            storeEntity.addImages(imageService.getImages(request.getImages()));
+            storeEntity.addImages(imageService.searchImages(request.getImages(), ImageType.STORE).stream().map(StoreImageEntity::fromImageEntity).collect(Collectors.toList()));
         }
 
         return Store.fromEntity(storeEntity);
@@ -105,9 +108,7 @@ public class StoreService {
         ProductEntity productEntity = ProductEntity.of(request.getName(), request.getPrice(), request.getStock(), request.getDescription());
 
         if (request.getImages().size() != 0) {
-            List<ImageEntity> imageEntities = imageEntityRepository.findAllByIdIn(request.getImages());
-
-            productEntity.addImages(imageEntities);
+            productEntity.addImages(imageService.searchImages(request.getImages(), ImageType.PRODUCT).stream().map(ProductImageEntity::fromImageEntity).collect(Collectors.toList()));
         }
 
         ProductEntity savedEntity = productEntityRepository.save(productEntity);
@@ -128,9 +129,8 @@ public class StoreService {
 
         productEntity.updateProductInfo(request.getName(), request.getDescription(), request.getPrice(), request.getStock());
 
-        if (request.getImages().size() > 0) {
-            productEntity.addImages(imageService.getImages(request.getImages()));
-        }
+        if (request.getImages().size() > 0)
+            productEntity.addImages(imageService.searchImages(request.getImages(), ImageType.PRODUCT).stream().map(ProductImageEntity::fromImageEntity).collect(Collectors.toList()));
 
         return Product.fromEntity(productEntity);
     }

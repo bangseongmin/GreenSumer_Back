@@ -45,7 +45,7 @@ public class StoreEntity extends DateTimeEntity {
     private Set<StoreProductEntity> storeProducts = new LinkedHashSet<>();
 
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = {CascadeType.ALL} )
-    private Set<ImageEntity> logos = new LinkedHashSet<>();
+    private Set<StoreImageEntity> logos = new LinkedHashSet<>();
 
     public StoreEntity(){}
 
@@ -99,15 +99,14 @@ public class StoreEntity extends DateTimeEntity {
         this.storeProducts.clear();
     }
 
-    // image
-    public void addImages(Collection<ImageEntity> images) {
+    public void addImages(Collection<StoreImageEntity> images) {
         images.forEach(e -> e.setStore(this));
         this.logos.clear();
         this.logos.addAll(images);
     }
 
-    public void deleteImages(Collection<ImageEntity> images) {
-        this.logos.retainAll(images);
+    public void deleteImages(Collection<StoreImageEntity> images) {
+        this.logos.removeAll(images);
     }
 
     public void clearImages() {

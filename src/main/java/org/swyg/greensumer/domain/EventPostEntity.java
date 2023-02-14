@@ -28,7 +28,7 @@ public class EventPostEntity extends PostEntity {
     private Set<EventCommentEntity> comments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "event", orphanRemoval = true, cascade = {CascadeType.ALL})
-    private Set<ImageEntity> images = new LinkedHashSet<>();
+    private Set<EventImageEntity> images = new LinkedHashSet<>();
 
     @ToString.Exclude @OneToMany(fetch = FetchType.EAGER, mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<EventPostViewerEntity> viewer = new LinkedHashSet<>();
@@ -59,7 +59,7 @@ public class EventPostEntity extends PostEntity {
         return new EventPostEntity(user, title, content, started_at, ended_at, status);
     }
 
-    public void addImages(Collection<ImageEntity> images) {
+    public void addImages(Collection<EventImageEntity> images) {
         images.forEach(e -> e.setEvent(this));
         this.images.clear();
         this.images.addAll(images);

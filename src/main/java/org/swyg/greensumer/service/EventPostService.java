@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.domain.constant.EventStatus;
+import org.swyg.greensumer.domain.constant.ImageType;
 import org.swyg.greensumer.dto.EventPost;
 import org.swyg.greensumer.dto.EventPostWithComment;
 import org.swyg.greensumer.dto.User;
@@ -14,14 +15,15 @@ import org.swyg.greensumer.dto.request.EventPostCreateRequest;
 import org.swyg.greensumer.dto.request.EventPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.EventPostEntityRepository;
-import org.swyg.greensumer.repository.EventPostLikeRepository;
-import org.swyg.greensumer.repository.EventPostViewerEntityRepository;
+import org.swyg.greensumer.repository.event.EventPostEntityRepository;
+import org.swyg.greensumer.repository.event.EventPostLikeRepository;
+import org.swyg.greensumer.repository.event.EventPostViewerEntityRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -160,7 +162,7 @@ public class EventPostService {
         int size = images.size();
 
         if (size > 0 && size < 5) {
-            eventPostEntity.addImages(imageService.getImages(images));
+            eventPostEntity.addImages(imageService.searchImages(images, ImageType.EVENT).stream().map(EventImageEntity::fromImageEntity).collect(Collectors.toList()));
         } else if (size > 5) {
             throw new GreenSumerBackApplicationException(ErrorCode.OVER_IMAGE_COUNT, String.format("Max Image count is 5, but requesting size is %s", size));
         }

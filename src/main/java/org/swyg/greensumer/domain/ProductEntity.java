@@ -45,7 +45,7 @@ public class ProductEntity extends DateTimeEntity {
 
     @OrderBy("id asc")  // 아이디 순으로 정렬
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private Set<ImageEntity> images = new LinkedHashSet<>();
+    private Set<ProductImageEntity> images = new LinkedHashSet<>();
 
     public void setReviewPost(ReviewPostEntity reviewPost) {
         this.reviewPost = reviewPost;
@@ -64,15 +64,15 @@ public class ProductEntity extends DateTimeEntity {
         this.storeProducts.clear();
     }
 
-    public void addImages(Collection<ImageEntity> images) {
+    public void addImages(Collection<ProductImageEntity> images) {
         images.forEach(e -> e.setProduct(this));
         this.images.clear();
         this.images.addAll(images);
     }
 
-    public void deleteImages(Collection<ImageEntity> images) {
+    public void deleteImages(Collection<ProductImageEntity> images) {
         images.forEach(e -> e.setProduct(this));
-        this.images.retainAll(images);
+        this.images.removeAll(images);
     }
 
     public void clearImages() {

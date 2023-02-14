@@ -37,30 +37,29 @@ public class ImageController {
 
     @PostMapping(value = "/images")
     public Response<List<ImageCreateResponse>> saveImages(@ModelAttribute ImagesCreateRequest request, Authentication authentication) throws IOException {
-        List<Image> images = imageService.saveImages(request, authentication.getName());
+        List<Image> images = imageService.saveImages(request, request.getType(), authentication.getName());
 
         return Response.success(images.stream().map(ImageCreateResponse::fromImage).collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/image/{imageId}")
-    public ResponseEntity<?> searchImage(@PathVariable Long imageId, Authentication authentication) {
-        Image image = imageService.searchImage(imageId, authentication.getName());
+    public ResponseEntity<?> searchImage(@PathVariable Long imageId, @RequestParam(value = "type") String type) {
+        byte[] image = imageService.searchImage(imageId, type);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
-                .body(image.getImageData());
+                .body(image);
     }
 
     @PutMapping(value = "/image/{imageId}")
-    public ResponseEntity<?> modifyImage(@PathVariable Long imageId, @ModelAttribute ImageModifyRequest request, Authentication authentication) throws IOException {
-        Image image = imageService.modifyImage(imageId, request, authentication.getName());
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(image.getImageData());
+    public Response<Void> modifyImage(@PathVariable Long imageId, @ModelAttribute ImageModifyRequest request, Authentication authentication) throws IOException {
+        imageService.modifyImage(imageId, request, authentication.getName());
+        return Response.success();
     }
 
     @DeleteMapping(value = "/image/{imageId}")
-    public Response<Void> removeImage(@PathVariable Long imageId, Authentication authentication) {
-        imageService.removeImage(imageId, authentication.getName());
+    public Response<Void> removeImage(@PathVariable Long imageId, @RequestParam(value = "type") String type, Authentication authentication) {
+        imageService.removeImage(imageId, type, authentication.getName());
         return Response.success();
     }
 
