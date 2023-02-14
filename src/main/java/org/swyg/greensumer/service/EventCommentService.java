@@ -9,7 +9,7 @@ import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.EventComment;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.EventCommentEntityRepository;
+import org.swyg.greensumer.repository.event.EventCommentEntityRepository;
 
 @RequiredArgsConstructor
 @Service

@@ -9,8 +9,8 @@ import org.swyg.greensumer.dto.request.InterviewCreateRequest;
 import org.swyg.greensumer.dto.request.InterviewModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.InterviewCacheRepository;
-import org.swyg.greensumer.repository.InterviewEntityRepository;
+import org.swyg.greensumer.repository.interview.InterviewCacheRepository;
+import org.swyg.greensumer.repository.interview.InterviewEntityRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.swyg.greensumer.repository;
+package org.swyg.greensumer.repository.interview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

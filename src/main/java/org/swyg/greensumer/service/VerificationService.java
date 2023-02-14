@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.dto.Verification;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.VerificationCacheRepository;
+import org.swyg.greensumer.repository.user.VerificationCacheRepository;
 
 import java.sql.Timestamp;
 import java.time.Instant;

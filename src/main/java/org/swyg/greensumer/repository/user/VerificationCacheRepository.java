@@ -1,4 +1,4 @@
-package org.swyg.greensumer.repository;
+package org.swyg.greensumer.repository.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,13 +1,11 @@
 package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.UpdateUserResponse;
 import org.swyg.greensumer.dto.response.UserSignUpResponse;
 import org.swyg.greensumer.dto.response.UsernameResponse;
 import org.swyg.greensumer.service.UserService;
