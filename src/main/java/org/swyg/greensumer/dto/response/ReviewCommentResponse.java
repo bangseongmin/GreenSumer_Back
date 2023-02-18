@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.ReviewComment;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -15,9 +16,9 @@ public class ReviewCommentResponse {
     private Long reviewPostId;
     private String username;
     private String content;
-    private Timestamp registeredAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static ReviewCommentResponse fromReviewComment(ReviewComment comment) {
         return new ReviewCommentResponse(

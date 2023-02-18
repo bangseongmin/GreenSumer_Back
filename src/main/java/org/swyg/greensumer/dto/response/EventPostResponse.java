@@ -25,9 +25,9 @@ public class EventPostResponse {
     private EventStatus eventStatus;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
-    private Timestamp registeredAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static EventPostResponse fromEventPost(EventPost eventPost) {
         return new EventPostResponse(

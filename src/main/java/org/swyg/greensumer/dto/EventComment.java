@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.EventCommentEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -15,9 +16,9 @@ public class EventComment {
     private String content;
     private User user;
     private EventPost post;
-    private Timestamp registeredAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static EventComment fromEntity(EventCommentEntity entity) {
         return new EventComment(

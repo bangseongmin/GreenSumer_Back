@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,9 +23,9 @@ public class ReviewPostWithComment {
     private Set<Product> products;
     private User user;
     private Set<ReviewComment> reviewComments;
-    private Timestamp registeredAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static ReviewPostWithComment fromEntity(ReviewPostEntity entity) {
         return new ReviewPostWithComment(

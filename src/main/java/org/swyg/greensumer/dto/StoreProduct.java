@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.StoreProductEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -14,8 +15,8 @@ public class StoreProduct {
     private Long id;
     private Store store;
     private Product product;
-    private Timestamp registeredAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime deletedAt;
 
     public static StoreProduct fromEntity(StoreProductEntity entity) {
         return new StoreProduct(

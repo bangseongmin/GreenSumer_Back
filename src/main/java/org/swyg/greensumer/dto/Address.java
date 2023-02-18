@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.AddressEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -16,9 +17,9 @@ public class Address {
     private String roadName;
     private Double lat;
     private Double lng;
-    private Timestamp registeredAt;
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime registeredAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static Address fromEntity(AddressEntity entity){
         return new Address(
