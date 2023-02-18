@@ -19,7 +19,8 @@ import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -49,7 +50,7 @@ public class UserService {
     }
 
     @Transactional
-    public User signup(UserSignUpRequest request) {
+    public void signup(UserSignUpRequest request) {
         userEntityRepositoryService.existUsername(request.getUsername());
 
         UserEntity userEntity = userEntityRepositoryService.save(UserEntity.builder()
@@ -58,12 +59,10 @@ public class UserService {
                 .nickname(request.getNickname())
                 .fullname(request.getName())
                 .email(request.getEmail())
-                .birth(LocalDateTime.parse(request.getBirth()))
+                .birth(LocalDate.parse(request.getBirth(), DateTimeFormatter.ISO_DATE))
                 .gender(request.isGender())
-                .roles(Collections.singletonList(UserRole.USER.name()))
+                .roles(Collections.singletonList(UserRole.USER.toString()))
                 .build());
-
-        return User.fromEntity(userEntity);
     }
 
     private void mappingSellerAndStore(UserEntity userEntity, AddressEntity addressEntity) {

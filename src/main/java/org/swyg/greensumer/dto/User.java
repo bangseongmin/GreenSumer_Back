@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.swyg.greensumer.domain.UserEntity;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String email;
     private String fullname;
     private String nickname;
-    private LocalDateTime birth;
+    private LocalDate birth;
     private boolean gender;
     private String roles;
     private Timestamp registeredAt;

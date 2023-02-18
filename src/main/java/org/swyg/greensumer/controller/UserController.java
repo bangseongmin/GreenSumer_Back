@@ -6,7 +6,6 @@ import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
 import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.UserSignUpResponse;
 import org.swyg.greensumer.dto.response.UsernameResponse;
 import org.swyg.greensumer.service.UserService;
 import org.swyg.greensumer.service.VerificationService;
@@ -20,9 +19,9 @@ public class UserController {
     private final VerificationService verificationService;
 
     @PostMapping("/sign-up")
-    public Response<UserSignUpResponse> signup(@RequestBody UserSignUpRequest request) {
-        User user = userService.signup(request);
-        return Response.success(UserSignUpResponse.fromUser(user));
+    public Response<Void> signup(@RequestBody UserSignUpRequest request) {
+        userService.signup(request);
+        return Response.success();
     }
 
     @PostMapping("/login")

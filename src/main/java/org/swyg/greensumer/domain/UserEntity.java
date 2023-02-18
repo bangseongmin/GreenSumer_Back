@@ -6,7 +6,7 @@ import org.hibernate.annotations.Where;
 import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +38,7 @@ public class UserEntity extends DateTimeEntity {
 
     @Column(nullable = false) private String password;
 
-    @Column(nullable = false) private LocalDateTime birth;
+    @Column(nullable = false) private LocalDate birth;
     @Column(nullable = false) private boolean gender;
 
     @Column(name = "role") @ElementCollection(fetch = FetchType.EAGER)

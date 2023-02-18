@@ -11,17 +11,18 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.swyg.greensumer.dto.request.UserSignUpRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.service.UserService;
 import org.swyg.greensumer.service.VerificationService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.swyg.greensumer.fixture.Fixtures.*;
-import static org.swyg.greensumer.fixture.RequestFixture.*;
+import static org.swyg.greensumer.fixture.RequestFixture.UserSignUpRequest;
 
 @DisplayName("View 컨트롤러 - 유저")
 @ActiveProfiles("test")
@@ -43,39 +44,39 @@ class UserControllerTest {
     }
 
     @DisplayName("[view][POST] 회원가입 요청 - 정상 호출")
+    @WithMockUser
     @Test
     void givenUserInfo_whenRequestingSignUp_thenReturnUserInfo() throws Exception {
-        when(userService.signup(any())).thenReturn(getUser());
+        // given
+        willDoNothing().given(userService).signup(any(UserSignUpRequest.class));
 
-        mvc.perform(post("/api/v1/users/sign-up")
+        // when & then
+        mvc.perform(post("/api/users/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(getUserSignUpRequest()))
+                        .content(objectMapper.writeValueAsBytes(UserSignUpRequest()))
+                        .with(csrf())
                 )
                 .andExpect(status().isOk());
+
+        verify(userService, times(1)).signup(any(UserSignUpRequest.class));
     }
 
     @DisplayName("[view][POST] 회원가입 요청 - 이미 존재하는 아이디인 경우")
+    @WithMockUser
     @Test
     void givenUserInfo_whenRequestingSignUp_thenThrowDuplicatedUsernameException() throws Exception {
-        when(userService.signup(any())).thenThrow(new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME));
+        // given
+        willThrow(new GreenSumerBackApplicationException(ErrorCode.DUPLICATED_USERNAME)).given(userService).signup(any(UserSignUpRequest.class));
 
-        mvc.perform(post("/api/v1/users/sign-up")
+        // when & then
+        mvc.perform(post("/api/users/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(getUserSignUpRequest()))
+                        .content(objectMapper.writeValueAsBytes(UserSignUpRequest()))
+                        .with(csrf())
                 )
                 .andExpect(status().isConflict());
-    }
 
-    @DisplayName("[view][POST] 판매자로 회원가입 요청 - 존재하지 않은 주소 정보인 경우")
-    @Test
-    void givenUserInfo_whenRequestingSignUp_thenThrowStoreNotFoundException() throws Exception {
-        when(userService.signup(any())).thenThrow(new GreenSumerBackApplicationException(ErrorCode.STORE_NOT_FOUND));
-
-        mvc.perform(post("/api/v1/users/sign-up")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(getUserSignUpRequest()))
-                )
-                .andExpect(status().isNotFound());
+        verify(userService, times(1)).signup(any(UserSignUpRequest.class));
     }
 
     @DisplayName("[view][POST] 로그인 요청 - 정상 호출")
