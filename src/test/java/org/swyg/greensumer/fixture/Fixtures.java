@@ -1,14 +1,11 @@
 package org.swyg.greensumer.fixture;
 
-import org.swyg.greensumer.domain.*;
-import org.swyg.greensumer.domain.constant.StoreType;
+import org.swyg.greensumer.domain.ReviewCommentEntity;
+import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.domain.constant.UserRole;
-import org.swyg.greensumer.dto.*;
+import org.swyg.greensumer.dto.User;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Collections;
 
 public class Fixtures {
     private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjczMDIwMDYwLCJleHAiOjE2NzU2MTIwNjB9.USuRnODheSfeL65rpXqQOMkVLnOqCtSacrJsLNQXSNg";
@@ -35,6 +32,22 @@ public class Fixtures {
     private static final String roadname = "roadname";
     private static final UserRole userRole = UserRole.USER;
     private static final UserRole sellerRole = UserRole.SELLER;
+
+    public static UserEntity userEntity(){
+        return UserEntity.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .fullname(name)
+                .nickname(nickname)
+                .gender(true)
+                .roles(Collections.singletonList(UserRole.USER.toString()))
+                .build();
+    }
+
+    public static User getUser() {
+        return User.fromEntity(userEntity());
+    }
 
     public static ReviewPost getReviewPost() {
         return new ReviewPost(id, title, content, image, getProduct(), getUser(), getNow(), null, null);

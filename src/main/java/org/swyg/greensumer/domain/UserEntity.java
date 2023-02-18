@@ -41,6 +41,7 @@ public class UserEntity extends DateTimeEntity implements Serializable {
     @Column(nullable = false, length = 50) private String username;
     @Column(nullable = false, length = 50) private String nickname;
     @Column(nullable = false, length = 50) private String fullname;
+    @Column(nullable = false, length = 50) private String phone;
 
     @Column(nullable = false, length = 100) private String email;
 

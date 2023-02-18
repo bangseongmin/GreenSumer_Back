@@ -63,8 +63,8 @@ public class UserController {
     }
 
     @GetMapping("/find/username")
-    public Response<UsernameResponse> findUsername(@RequestBody UsernameRequest request) {
-        User user = userService.findUsername(request.getEmail(), request.getCode());
+    public Response<UsernameResponse> findUsername(@RequestParam String email, @RequestParam String code) {
+        User user = userService.findUsername(email, code);
         return Response.success(UsernameResponse.of(user));
     }
 

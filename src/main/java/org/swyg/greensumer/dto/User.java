@@ -30,6 +30,7 @@ public class User implements UserDetails{
     private String username;
     private String password;
     private String email;
+    private String phone;
     private String fullname;
     private String nickname;
     private boolean gender;
@@ -50,6 +51,7 @@ public class User implements UserDetails{
                 entity.getUsername(),
                 entity.getPassword(),
                 entity.getEmail(),
+                entity.getPhone(),
                 entity.getFullname(),
                 entity.getNickname(),
                 entity.isGender(),

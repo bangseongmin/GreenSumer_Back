@@ -6,15 +6,18 @@ import org.swyg.greensumer.dto.request.*;
 public class RequestFixture {
     private static final Integer productId = 1;
     private static final Integer storeId = 1;
-    private static final String username = "username";
-    private static final String password = "password";
-    private static final String email = "email";
-    private static final String nickname = "nickname";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String EMAIL = "email@email.com";
+    private static final String NICKNAME = "nickname";
     private static final String title = "title";
+    private static final String BIRTH = "2000-10-01";
+    private static final String PHONE = "010-1234-1234";
+    private static final boolean GENDER = true;
     private static final String content = "content";
     private static final String image = "image";
     private static final String comment = "comment";
-    private static final String name = "name";
+    private static final String NAME = "name";
     private static final String storeType = StoreType.FOOD.toString();
     private static final String description = "description";
     private static final String address = "address";
@@ -22,12 +25,36 @@ public class RequestFixture {
     private static final Double lat = 123.123123123;
     private static final Double lng = 123.123123123;
     private static final String logo = "logo";
-    private static final String code = "code";
+    private static final String CODE = "code";
     private static final String roadname = "roadname";
     private static final int price = 5000;
     private static final int stock = 5;
     private static final int modifiedPrice = price + 1000;
     private static final int modifiedStock = stock + 1;
+
+    public static UserSignUpRequest UserSignUpRequest() {
+        return UserSignUpRequest.of(USERNAME, PASSWORD, NAME, BIRTH, NICKNAME, EMAIL, PHONE, GENDER);
+    }
+
+    public static UserLoginRequest UserLoginRequest() {
+        return UserLoginRequest.of(USERNAME, PASSWORD);
+    }
+
+    public static VerificationRequest VerificationRequest() {
+        return VerificationRequest.of(EMAIL);
+    }
+
+    public static VerificationCheckRequest VerificationCheckRequest() {
+        return VerificationCheckRequest.of(EMAIL, CODE);
+    }
+
+    public static UsernameRequest UsernameRequest() {
+        return UsernameRequest.of(EMAIL, CODE);
+    }
+
+    public static PasswordUpdateRequest PasswordUpdateRequest() {
+        return PasswordUpdateRequest.of(USERNAME, EMAIL, CODE, PASSWORD);
+    }
 
     public static ReviewPostCreateRequest getReviewPostCreateRequest() {
         return ReviewPostCreateRequest.of(productId, title, content, image);
@@ -46,46 +73,44 @@ public class RequestFixture {
     }
 
     public static StoreCreateRequest getStoreCreateRequest() {
-        return StoreCreateRequest.of(name, storeType, description, address, roadname, hours, lat, lng, logo);
+        return StoreCreateRequest.of(NAME, storeType, description, address, roadname, hours, lat, lng, logo);
     }
 
     public static StoreModifyRequest getStoreModifyRequest() {
-        return StoreModifyRequest.of(name, storeType, description, address, hours, roadname, lat, lng, logo);
+        return StoreModifyRequest.of(NAME, storeType, description, address, hours, roadname, lat, lng, logo);
     }
 
     public static ProductCreateRequest getProductCreateRequest() {
-        return ProductCreateRequest.of(name, price, stock, description, image);
+        return ProductCreateRequest.of(NAME, price, stock, description, image);
     }
 
     public static ProductModifyRequest getProductModifyRequest() {
-        return ProductModifyRequest.of(name, modifiedPrice, modifiedStock, description, image);
+        return ProductModifyRequest.of(NAME, modifiedPrice, modifiedStock, description, image);
     }
 
-    public static UserSignUpRequest getUserSignUpRequest() {
-        return UserSignUpRequest.of(username, password, email, nickname, storeId, address, lat, lng);
-    }
 
     public static UserLoginRequest getUserLoginRequest() {
-        return UserLoginRequest.of(username, password);
+        return UserLoginRequest.of(USERNAME, PASSWORD);
     }
 
     public static VerificationRequest getVerificationRequest() {
-        return VerificationRequest.of(email);
+        return VerificationRequest.of(EMAIL);
     }
 
     public static VerificationCheckRequest getVerificationCheckRequest() {
-        return VerificationCheckRequest.of(email, code);
+        return VerificationCheckRequest.of(EMAIL, code);
     }
 
     public static UsernameRequest getUsernameRequest() {
-        return UsernameRequest.of(email, code);
+        return UsernameRequest.of(EMAIL, code);
     }
 
     public static PasswordUpdateRequest getPasswordUpdateRequest() {
-        return PasswordUpdateRequest.of(username, email, code, password);
+        return PasswordUpdateRequest.of(USERNAME, EMAIL, code, PASSWORD);
     }
 
     public static UpdateUserRequest getUpdateUserRequest(){
-        return UpdateUserRequest.of(username, password, email, nickname, address, lat, lng);
+        return UpdateUserRequest.of(USERNAME, PASSWORD, EMAIL, NICKNAME, address, lat, lng);
     }
+
 }

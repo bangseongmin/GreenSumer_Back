@@ -14,6 +14,7 @@ public class UserSignUpResponse {
     private String username;
     private String nickname;
     private String fullname;
+    private String phone;
     private LocalDate birth;
     private boolean gender;
     private String email;
@@ -25,6 +26,7 @@ public class UserSignUpResponse {
                 user.getUsername(),
                 user.getNickname(),
                 user.getFullname(),
+                user.getPhone(),
                 user.getBirth(),
                 user.isGender(),
                 user.getEmail(),

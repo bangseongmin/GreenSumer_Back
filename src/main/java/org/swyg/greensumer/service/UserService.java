@@ -20,6 +20,7 @@ import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
 import org.swyg.greensumer.utils.JwtTokenUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Objects;
@@ -59,6 +60,7 @@ public class UserService {
                 .nickname(request.getNickname())
                 .fullname(request.getName())
                 .email(request.getEmail())
+                .phone(request.getPhone())
                 .birth(LocalDate.parse(request.getBirth(), DateTimeFormatter.ISO_DATE))
                 .gender(request.isGender())
                 .roles(Collections.singletonList(UserRole.USER.toString()))
