@@ -31,6 +31,8 @@ public class RequestFixture {
     private static final int stock = 5;
     private static final int modifiedPrice = price + 1000;
     private static final int modifiedStock = stock + 1;
+    private static final String AccessToken = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwiaWF0IjoxNjc2NzkwNDgwLCJleHAiOjE2NzY3OTIyODB9.NhUIC2NSpLU1dBpoyQWjGU9O-nNfMczerYl-naPrihk";
+    private static final String RefreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzY3OTA0ODAsImV4cCI6MTY3NzM5NTI4MH0.Bk5sjSRHUaM-H0A1y_OloAwvX0G0HcJOLRND_H6yws0";
 
     public static UserSignUpRequest UserSignUpRequest() {
         return UserSignUpRequest.of(USERNAME, PASSWORD, NAME, BIRTH, NICKNAME, EMAIL, PHONE, GENDER);
@@ -48,69 +50,16 @@ public class RequestFixture {
         return VerificationCheckRequest.of(EMAIL, CODE);
     }
 
-    public static UsernameRequest UsernameRequest() {
-        return UsernameRequest.of(EMAIL, CODE);
-    }
-
     public static PasswordUpdateRequest PasswordUpdateRequest() {
         return PasswordUpdateRequest.of(USERNAME, EMAIL, CODE, PASSWORD);
     }
 
-    public static ReviewPostCreateRequest getReviewPostCreateRequest() {
-        return ReviewPostCreateRequest.of(productId, title, content, image);
+    public static UserLogoutRequest UserLogoutRequest() {
+        return UserLogoutRequest.of(AccessToken, RefreshToken);
     }
 
-    public static ReviewPostModifyRequest getReviewPostModifyRequest() {
-        return ReviewPostModifyRequest.of(productId, title, content, image);
-    }
-
-    public static ReviewCommentCreateRequest getReviewCommentCreateRequest() {
-        return ReviewCommentCreateRequest.of(comment);
-    }
-
-    public static ReviewCommentModifyRequest getReviewCommentModifyRequest() {
-        return ReviewCommentModifyRequest.of(comment);
-    }
-
-    public static StoreCreateRequest getStoreCreateRequest() {
-        return StoreCreateRequest.of(NAME, storeType, description, address, roadname, hours, lat, lng, logo);
-    }
-
-    public static StoreModifyRequest getStoreModifyRequest() {
-        return StoreModifyRequest.of(NAME, storeType, description, address, hours, roadname, lat, lng, logo);
-    }
-
-    public static ProductCreateRequest getProductCreateRequest() {
-        return ProductCreateRequest.of(NAME, price, stock, description, image);
-    }
-
-    public static ProductModifyRequest getProductModifyRequest() {
-        return ProductModifyRequest.of(NAME, modifiedPrice, modifiedStock, description, image);
-    }
-
-
-    public static UserLoginRequest getUserLoginRequest() {
-        return UserLoginRequest.of(USERNAME, PASSWORD);
-    }
-
-    public static VerificationRequest getVerificationRequest() {
-        return VerificationRequest.of(EMAIL);
-    }
-
-    public static VerificationCheckRequest getVerificationCheckRequest() {
-        return VerificationCheckRequest.of(EMAIL, code);
-    }
-
-    public static UsernameRequest getUsernameRequest() {
-        return UsernameRequest.of(EMAIL, code);
-    }
-
-    public static PasswordUpdateRequest getPasswordUpdateRequest() {
-        return PasswordUpdateRequest.of(USERNAME, EMAIL, code, PASSWORD);
-    }
-
-    public static UpdateUserRequest getUpdateUserRequest(){
-        return UpdateUserRequest.of(USERNAME, PASSWORD, EMAIL, NICKNAME, address, lat, lng);
+    public static UserReissueRequest UserReissueRequest() {
+        return UserReissueRequest.of(AccessToken, RefreshToken);
     }
 
 }

@@ -103,10 +103,7 @@ public class UserService {
             throw new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION, "Refresh Token is invalid.");
         }
 
-        TokenInfo tokenInfo = JwtTokenUtils.createTokenInfo(user, secretKey);
-        userEntityRepositoryService.setRefreshToken(user, tokenInfo.getRefreshToken());
-
-        return tokenInfo;
+        return JwtTokenUtils.reIssue(user, secretKey, refreshToken);
     }
 
     public void logout(UserLogoutRequest logout) {

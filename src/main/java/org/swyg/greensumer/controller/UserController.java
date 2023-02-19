@@ -30,13 +30,13 @@ public class UserController {
         return Response.success(tokens);
     }
 
-    @PostMapping("/logout")
+    @DeleteMapping("/logout")
     public Response<Void> logout(@RequestBody UserLogoutRequest logout) {
         userService.logout(logout);
         return Response.success();
     }
 
-    @PostMapping("/reissue")
+    @PutMapping("/reissue")
     public Response<TokenInfo> reissue(@RequestBody UserReissueRequest reissue) {
         TokenInfo tokens = userService.reissue(reissue.getAccessToken(), reissue.getRefreshToken());
         return Response.success(tokens);
