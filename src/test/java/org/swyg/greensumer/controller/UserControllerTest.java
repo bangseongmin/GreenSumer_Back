@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.swyg.greensumer.config.SecurityConfig;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.request.UserLoginRequest;
+import org.swyg.greensumer.dto.request.UserLogoutRequest;
 import org.swyg.greensumer.dto.request.UserSignUpRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
@@ -26,6 +27,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.swyg.greensumer.fixture.Fixtures.getTokenInfo;
 import static org.swyg.greensumer.fixture.Fixtures.getUser;
 import static org.swyg.greensumer.fixture.RequestFixture.*;
 
@@ -291,6 +293,34 @@ class UserControllerTest {
                         .with(csrf())
                 )
                 .andExpect(status().isConflict());
+    }
+
+    @DisplayName("[view][DELETE] 로그아웃 - 정상호출")
+    @WithMockUser
+    @Test
+    void givenAccessTokenAndRefreshToken_whenRequestingLogout_thenReturnNothing() throws Exception {
+        willDoNothing().given(userService).logout(any(UserLogoutRequest.class));
+
+        mvc.perform(delete("/api/users/logout")
+                        .content(objectMapper.writeValueAsBytes(UserLogoutRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("[view][PUT] Access Token 재발급 - 정상호출")
+    @WithMockUser
+    @Test
+    void givenAccessTokenAndRefreshToken_whenRequestingReIssueAccessToken_thenReturnToken() throws Exception {
+        given(userService.reissue(anyString(), anyString())).willReturn(getTokenInfo());
+
+        mvc.perform(put("/api/users/reissue")
+                        .content(objectMapper.writeValueAsBytes(UserReissueRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andExpect(status().isOk());
     }
 
 //    @DisplayName("[view][PUT] 사용자 정보 변경 요청 - 정상 호출")

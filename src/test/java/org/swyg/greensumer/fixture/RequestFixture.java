@@ -3,6 +3,8 @@ package org.swyg.greensumer.fixture;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.request.*;
 
+import java.util.List;
+
 public class RequestFixture {
     private static final Integer productId = 1;
     private static final Integer storeId = 1;
@@ -19,20 +21,22 @@ public class RequestFixture {
     private static final String comment = "comment";
     private static final String NAME = "name";
     private static final String storeType = StoreType.FOOD.toString();
-    private static final String description = "description";
-    private static final String address = "address";
-    private static final String hours = "hours";
-    private static final Double lat = 123.123123123;
-    private static final Double lng = 123.123123123;
+    private static final String DESCRIPTION = "description";
+    private static final String ADDRESS = "address";
+    private static final String HOURS = "hours";
+    private static final Double LAT = 123.123123123;
+    private static final Double LNG = 123.123123123;
     private static final String logo = "logo";
     private static final String CODE = "code";
-    private static final String roadname = "roadname";
-    private static final int price = 5000;
-    private static final int stock = 5;
-    private static final int modifiedPrice = price + 1000;
-    private static final int modifiedStock = stock + 1;
+    private static final String ROADNAME = "roadname";
+    private static final int PRICE = 5000;
+    private static final int STOCK = 5;
+    private static final int modifiedPrice = PRICE + 1000;
+    private static final int modifiedStock = STOCK + 1;
+    private static final String URL = "http://www.naver.cion";
     private static final String AccessToken = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwiaWF0IjoxNjc2NzkwNDgwLCJleHAiOjE2NzY3OTIyODB9.NhUIC2NSpLU1dBpoyQWjGU9O-nNfMczerYl-naPrihk";
     private static final String RefreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzY3OTA0ODAsImV4cCI6MTY3NzM5NTI4MH0.Bk5sjSRHUaM-H0A1y_OloAwvX0G0HcJOLRND_H6yws0";
+    private static final List<Long> IMAGES = List.of(1L, 2L, 3L);
 
     public static UserSignUpRequest UserSignUpRequest() {
         return UserSignUpRequest.of(USERNAME, PASSWORD, NAME, BIRTH, NICKNAME, EMAIL, PHONE, GENDER);
@@ -60,6 +64,22 @@ public class RequestFixture {
 
     public static UserReissueRequest UserReissueRequest() {
         return UserReissueRequest.of(AccessToken, RefreshToken);
+    }
+
+    public static StoreCreateRequest StoreCreateRequest() {
+        return StoreCreateRequest.of(NAME, StoreType.CLOTHES.toString(), DESCRIPTION, HOURS, IMAGES, ADDRESS, ROADNAME, URL, PHONE, LAT, LNG);
+    }
+
+    public static StoreModifyRequest StoreModifyRequest() {
+        return StoreModifyRequest.of(NAME, StoreType.CLOTHES.toString(), DESCRIPTION, HOURS, IMAGES, ADDRESS, ROADNAME, URL, PHONE, LAT, LNG);
+    }
+
+    public static ProductCreateRequest ProductCreateRequest() {
+        return ProductCreateRequest.of(NAME, PRICE, STOCK, DESCRIPTION, IMAGES);
+    }
+
+    public static ProductModifyRequest ProductModifyRequest() {
+        return ProductModifyRequest.of(NAME, PRICE, STOCK, DESCRIPTION, IMAGES);
     }
 
 }
