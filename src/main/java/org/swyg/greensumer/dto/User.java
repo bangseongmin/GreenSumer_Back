@@ -18,8 +18,8 @@ import org.swyg.greensumer.domain.UserEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -46,6 +46,8 @@ public class User implements UserDetails{
     private LocalDateTime deletedAt;
 
     public static User fromEntity(UserEntity entity){
+        System.out.println("[User]" + entity.getRoles().toString());
+
         return new User(
                 entity.getId(),
                 entity.getUsername(),
@@ -66,7 +68,22 @@ public class User implements UserDetails{
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRoles()));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+
+        System.out.println("[ROLE] = " + roles);
+
+        if(roles.contains("[") && roles.contains("]")) {
+            roles = roles.substring(1, roles.length()-1);
+        }
+
+        for(String role : roles.split(",")){
+            authorities.add(new SimpleGrantedAuthority(role.trim()));
+        }
+
+        System.out.println("[ROLES]" + authorities);
+
+        return authorities;
     }
 
     @Override @JsonIgnore public boolean isAccountNonExpired() { return this.deletedAt == null; }
