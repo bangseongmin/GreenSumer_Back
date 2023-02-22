@@ -424,7 +424,7 @@ class ReviewPostControllerTest {
         // Given
         willThrow(new GreenSumerBackApplicationException(ErrorCode.INVALID_PERMISSION)).given(reviewCommentService).deleteComment(any(), any(), anyString());
 
-        mvc.perform(delete("/api/v1/posts/1/comments/1")
+        mvc.perform(delete("/api/reviews/1/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
                 )
@@ -437,7 +437,7 @@ class ReviewPostControllerTest {
     void givenCommendId_whenRequestDeleteCommentAtNotExistPost_thenThrowPostNotFoundException() throws Exception {
         willThrow(new GreenSumerBackApplicationException(ErrorCode.POST_NOT_FOUND)).given(reviewCommentService).deleteComment(any(), any(), any());
 
-        mvc.perform(put("/api/v1/posts/1/comment/1")
+        mvc.perform(put("/api/reviews/1/comment/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
                 )
@@ -450,7 +450,7 @@ class ReviewPostControllerTest {
     void givenCommendId_whenRequestDeleteComment_thenThrowCommentNotFoundException() throws Exception {
         willThrow(new GreenSumerBackApplicationException(ErrorCode.COMMENT_NOT_FOUND)).given(reviewCommentService).deleteComment(any(), any(), any());
 
-        mvc.perform(put("/api/v1/posts/1/comment/1")
+        mvc.perform(put("/api/reviews/1/comment/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
                 )
