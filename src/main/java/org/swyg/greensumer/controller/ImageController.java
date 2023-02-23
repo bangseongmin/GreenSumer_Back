@@ -7,17 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.swyg.greensumer.dto.Image;
-import org.swyg.greensumer.dto.request.ImageCreateRequest;
 import org.swyg.greensumer.dto.request.ImageModifyRequest;
 import org.swyg.greensumer.dto.request.ImagesCreateRequest;
-import org.swyg.greensumer.dto.response.ImageCreateResponse;
 import org.swyg.greensumer.dto.response.Response;
 import org.swyg.greensumer.service.ImageService;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController

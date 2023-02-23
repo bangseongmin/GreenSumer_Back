@@ -20,12 +20,15 @@ import java.time.LocalDateTime;
 public abstract class DateTimeEntity {
 
     @CreatedDate @Column(name = "regitered_at", updatable = false)
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     public LocalDateTime registeredAt;
 
     @LastModifiedDate @Column(name = "updated_at")
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     public LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     public LocalDateTime deletedAt;
 
 }

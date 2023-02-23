@@ -3,6 +3,7 @@ package org.swyg.greensumer.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.Product;
@@ -22,17 +23,17 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping
-    public Response<StoreCreateResponse> create(@RequestBody StoreCreateRequest request) {
-        Store store = storeService.create(request);
+    public Response<Void> create(@RequestBody StoreCreateRequest request, Authentication authentication) {
+        storeService.create(request, authentication.getName());
 
-        return Response.success(StoreCreateResponse.fromStore(store));
+        return Response.success();
     }
 
     @PutMapping("/{storeId}")
-    public Response<StoreResponse> modify(@PathVariable Long storeId, @RequestBody StoreModifyRequest request, Authentication authentication) {
-        Store store = storeService.modify(storeId, request, authentication.getName());
+    public Response<Void> modify(@PathVariable Long storeId, @RequestBody StoreModifyRequest request, Authentication authentication) {
+        storeService.modify(storeId, request, authentication.getName());
 
-        return Response.success(StoreResponse.fromStore(store));
+        return Response.success();
     }
 
     @DeleteMapping("/{storeId}")

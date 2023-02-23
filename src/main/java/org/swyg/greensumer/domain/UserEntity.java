@@ -9,15 +9,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.swyg.greensumer.domain.constant.UserRole;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Builder
 @ToString(callSuper = true)
@@ -47,12 +45,13 @@ public class UserEntity extends DateTimeEntity implements Serializable {
 
     @Column(nullable = false) private String password;
 
+    @JsonSerialize(using = LocalDateSerializer.class) @JsonDeserialize(using = LocalDateDeserializer.class)
     @Column(nullable = false) private LocalDate birth;
     @Column(nullable = false) private boolean gender;
 
     @Column(name = "role") @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private Set<UserRole> roles = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -76,7 +75,7 @@ public class UserEntity extends DateTimeEntity implements Serializable {
         this.email = email;
     }
 
-    public void updateRole(String role) {
-        this.roles.add(UserRole.valueOf(role).toString());
+    public void updateRole(UserRole role) {
+        this.roles.add(role);
     }
 }
