@@ -22,27 +22,19 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/images")
 public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping(value = "/image")
-    public Response<ImageCreateResponse> saveImage(@ModelAttribute ImageCreateRequest request, Authentication authentication) throws IOException {
+    @PostMapping
+    public Response<Void> saveImages(@ModelAttribute ImagesCreateRequest request, Authentication authentication) throws IOException {
+        imageService.saveImages(request, request.getType(), authentication.getName());
 
-        Image image = imageService.saveImage(request.getImage(), request.getType(), authentication.getName());
-
-        return Response.success(ImageCreateResponse.fromImage(image));
+        return Response.success();
     }
 
-    @PostMapping(value = "/images")
-    public Response<List<ImageCreateResponse>> saveImages(@ModelAttribute ImagesCreateRequest request, Authentication authentication) throws IOException {
-        List<Image> images = imageService.saveImages(request, request.getType(), authentication.getName());
-
-        return Response.success(images.stream().map(ImageCreateResponse::fromImage).collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/image/{imageId}")
+    @GetMapping("/{imageId}")
     public ResponseEntity<?> searchImage(@PathVariable Long imageId, @RequestParam(value = "type") String type) {
         byte[] image = imageService.searchImage(imageId, type);
 
@@ -51,13 +43,13 @@ public class ImageController {
                 .body(image);
     }
 
-    @PutMapping(value = "/image/{imageId}")
+    @PutMapping( "/{imageId}")
     public Response<Void> modifyImage(@PathVariable Long imageId, @ModelAttribute ImageModifyRequest request, Authentication authentication) throws IOException {
         imageService.modifyImage(imageId, request, authentication.getName());
         return Response.success();
     }
 
-    @DeleteMapping(value = "/image/{imageId}")
+    @DeleteMapping("/{imageId}")
     public Response<Void> removeImage(@PathVariable Long imageId, @RequestParam(value = "type") String type, Authentication authentication) {
         imageService.removeImage(imageId, type, authentication.getName());
         return Response.success();
