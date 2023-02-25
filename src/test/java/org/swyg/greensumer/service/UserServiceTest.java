@@ -13,12 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.swyg.greensumer.domain.UserEntity;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
-import org.swyg.greensumer.dto.request.UpdateUserRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.user.UserCacheRepository;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
