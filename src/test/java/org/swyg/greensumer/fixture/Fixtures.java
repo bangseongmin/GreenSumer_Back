@@ -1,13 +1,15 @@
 package org.swyg.greensumer.fixture;
 
 import org.swyg.greensumer.domain.*;
+import org.swyg.greensumer.domain.constant.EventStatus;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.domain.constant.UserRole;
-import org.swyg.greensumer.dto.Store;
-import org.swyg.greensumer.dto.StoreProduct;
-import org.swyg.greensumer.dto.TokenInfo;
-import org.swyg.greensumer.dto.User;
+import org.swyg.greensumer.dto.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Fixtures {
@@ -40,6 +42,7 @@ public class Fixtures {
 
     public static UserEntity userEntity(){
         return UserEntity.builder()
+                .id(id)
                 .username(username)
                 .password(password)
                 .email(email)
@@ -47,6 +50,7 @@ public class Fixtures {
                 .nickname(nickname)
                 .phone(phone)
                 .gender(true)
+                .birth(LocalDate.now())
                 .roles(getRoles())
                 .build();
     }
@@ -66,7 +70,7 @@ public class Fixtures {
                 .build();
     }
 
-    public static StoreEntity StoreEntity() {
+    public static StoreEntity storeEntity() {
         return StoreEntity.builder()
                 .id(id)
                 .name(name)
@@ -76,12 +80,13 @@ public class Fixtures {
                 .url(url)
                 .hours(hours)
                 .address(addressEntity())
-                .logos(Set.of(StoreImageEntity()))
+                .logos(Set.of(storeImageEntity()))
                 .build();
     }
 
-    private static StoreImageEntity StoreImageEntity() {
+    public static StoreImageEntity storeImageEntity() {
         return StoreImageEntity.builder()
+                .id(id)
                 .originFilename("original")
                 .savedFilename("savedFile")
                 .userEntity(userEntity())
@@ -89,7 +94,7 @@ public class Fixtures {
                 .build();
     }
 
-    private static ProductImageEntity ProductImageEntity() {
+    private static ProductImageEntity productImageEntity() {
         return ProductImageEntity.builder()
                 .originFilename("original")
                 .savedFilename("savedFile")
@@ -98,8 +103,8 @@ public class Fixtures {
                 .build();
     }
 
-    public static Store Store() {
-        return Store.fromEntity(StoreEntity());
+    public static Store store() {
+        return Store.fromEntity(storeEntity());
     }
 
     public static AddressEntity addressEntity() {
@@ -112,26 +117,109 @@ public class Fixtures {
                 .build();
     }
 
-    public static ProductEntity ProductEntity() {
+    public static ProductEntity productEntity() {
         return ProductEntity.builder()
                 .id(1L)
                 .name(name)
                 .price(price)
                 .description(description)
-                .images(Set.of(ProductImageEntity()))
+                .images(Set.of(productImageEntity()))
                 .stock(1)
                 .build();
     }
 
-    public static StoreProductEntity StoreProductEntity() {
+    public static StoreProductEntity storeProductEntity() {
         return StoreProductEntity.builder()
-                .store(StoreEntity())
-                .product(ProductEntity())
+                .store(storeEntity())
+                .product(productEntity())
                 .build();
     }
 
-    public static StoreProduct StoreProduct() {
-        return StoreProduct.fromEntity(StoreProductEntity());
+    public static StoreProduct storeProduct() {
+        return StoreProduct.fromEntity(storeProductEntity());
+    }
+
+    public static ReviewPostEntity reviewPostEntity() {
+        return ReviewPostEntity.of(userEntity(), title, content, "★★★★★");
+    }
+
+    public static ReviewPostWithComment reviewPostWithComment() {
+        return ReviewPostWithComment.fromEntity(reviewPostEntity());
+    }
+
+    public static ReviewPost reviewPost() {
+        return ReviewPost.fromEntity(reviewPostEntity());
+    }
+
+    public static ReviewComment reviewComment() {
+        return ReviewComment.fromEntity(reviewCommentEntity());
+    }
+
+    public static ReviewCommentEntity reviewCommentEntity() {
+        return ReviewCommentEntity.of(reviewPostEntity(), userEntity(), content);
+    }
+
+    public static EventPostWithComment eventPostWithComment() {
+        return EventPostWithComment.fromEntity(eventPostEntity());
+    }
+
+    public static EventPostEntity eventPostEntity() {
+        return EventPostEntity.builder()
+                .user(userEntity())
+                .title(title)
+                .content(content)
+                .started_at(LocalDateTime.now())
+                .ended_at(LocalDateTime.now().plusDays(30L))
+                .status(EventStatus.PROGRESSED)
+                .build();
+    }
+
+    public static EventPost eventPost() {
+        return EventPost.fromEntity(eventPostEntity());
+    }
+
+    public static EventCommentEntity eventCommentEntity() {
+        return EventCommentEntity.builder()
+                .user(userEntity())
+                .eventPost(eventPostEntity())
+                .content(content)
+                .build();
+    }
+
+    public static EventComment eventComment() {
+        return EventComment.fromEntity(eventCommentEntity());
+    }
+
+    public static byte[] image() {
+        return new byte[]{};
+    }
+
+    public static InterviewEntity interviewEntity() {
+        return InterviewEntity.builder()
+                .id(id)
+                .writer(username)
+                .opinion(content)
+                .storeName(name)
+                .target(UserRole.ROLE_USER)
+                .build();
+    }
+
+    public static Interview interview() {
+        return Interview.fromInterviewEntity(interviewEntity());
+    }
+
+    public static List<Interview> interviews() {
+        return List.of(interview());
+    }
+
+    public static SellerStoreEntity sellerStoreEntity() {
+        return SellerStoreEntity.of(storeEntity(), userEntity());
+    }
+
+    public static List<StoreImageEntity> storeImageEntities() {
+        List<StoreImageEntity> storeImageEntities = new ArrayList<>();
+        storeImageEntities.add(storeImageEntity());
+        return storeImageEntities;
     }
 
 }
