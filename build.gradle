@@ -38,6 +38,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.assertj:assertj-core:3.20.2"
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
