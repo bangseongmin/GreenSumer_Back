@@ -46,8 +46,6 @@ public class User implements UserDetails{
     private LocalDateTime deletedAt;
 
     public static User fromEntity(UserEntity entity){
-        System.out.println("[User]" + entity.getRoles().toString());
-
         return new User(
                 entity.getId(),
                 entity.getUsername(),

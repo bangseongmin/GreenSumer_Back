@@ -1,4 +1,4 @@
-package org.swyg.greensumer.utils;
+package org.swyg.greensumer.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

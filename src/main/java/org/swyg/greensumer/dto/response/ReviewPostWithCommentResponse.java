@@ -18,7 +18,7 @@ public class ReviewPostWithCommentResponse {
     private Long id;
     private String title;
     private String content;
-    private String scope;
+    private String rating;
     private Integer views;
     private Set<ProductResponse> products;
     private UserResponse user;
@@ -32,7 +32,7 @@ public class ReviewPostWithCommentResponse {
                 postWithComment.getId(),
                 postWithComment.getTitle(),
                 postWithComment.getContent(),
-                postWithComment.getScope(),
+                postWithComment.getRating(),
                 postWithComment.getViews(),
                 postWithComment.getProducts().stream()
                         .map(ProductResponse::fromProduct)

@@ -70,7 +70,7 @@ public class UserController {
 
     @PutMapping("/find/password")
     public Response<Void> findPassword(@RequestBody PasswordUpdateRequest request) {
-        userService.findPassword(request.getUsername(), request.getEmail(), request.getCode(), request.getPassword());
+        userService.findPassword(request);
 
         return Response.success();
     }

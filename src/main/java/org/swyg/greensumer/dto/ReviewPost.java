@@ -34,7 +34,7 @@ public class ReviewPost {
                 entity.getContent(),
                 entity.getViewer().size(),
                 entity.getLikes().size(),
-                entity.getScope(),
+                entity.getRating(),
                 entity.getComments().stream()
                         .map(ReviewComment::fromEntity)
                         .collect(Collectors.toUnmodifiableSet()),

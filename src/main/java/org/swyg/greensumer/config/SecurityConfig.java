@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.swyg.greensumer.exception.CustomAuthenticationEntryPoint;
-import org.swyg.greensumer.jwt.JwtAccessDeniedHandler;
 import org.swyg.greensumer.service.UserEntityRepositoryService;
 
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ public class SecurityConfig {
     @Value("${jwt.secret-key}") private String key;
     // private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final UserEntityRepositoryService userEntityRepositoryService;
 
     @Bean

@@ -2,10 +2,11 @@ package org.swyg.greensumer.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.swyg.greensumer.domain.constant.UserRole;
 import org.swyg.greensumer.dto.User;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor

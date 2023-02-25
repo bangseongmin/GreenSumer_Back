@@ -29,24 +29,8 @@ public class InterviewService {
                 .storeName(request.getStore())
                 .writer(request.getWriter())
                 .opinion(request.getOpinion())
+                .target(UserRole.valueOf(request.getTarget()))
                 .build());
-    }
-
-    public void saveInterviews(List<InterviewCreateRequest> requests) {
-        List<InterviewEntity> list = new ArrayList<>();
-        for (InterviewCreateRequest request : requests) {
-            list.add(InterviewEntity.builder()
-                    .storeName(request.getStore())
-                    .writer(request.getWriter())
-                    .opinion(request.getOpinion())
-                    .build());
-        }
-
-        interviewEntityRepository.saveAll(list);
-
-        List<Interview> interviews = getInterviewsFromUser();
-        interviews.addAll(getInterviewsFromSeller());
-        interviewCacheRepository.setInterviews(interviews);
     }
 
     public void deleteInterview(Long interviewId) {
@@ -54,12 +38,12 @@ public class InterviewService {
     }
 
     @Transactional
-    public void modifyInterview(InterviewModifyRequest request) {
-        InterviewEntity interviewEntity = interviewEntityRepository.findById((long) request.getInterviewId()).orElseThrow(() -> {
-            throw new GreenSumerBackApplicationException(ErrorCode.INTERVIEW_NOT_FOUND, String.format("interview-%d not founded", request.getInterviewId()));
+    public void modifyInterview(Long interviewId, InterviewModifyRequest request) {
+        InterviewEntity interviewEntity = interviewEntityRepository.findById(interviewId).orElseThrow(() -> {
+            throw new GreenSumerBackApplicationException(ErrorCode.INTERVIEW_NOT_FOUND, String.format("interview-%d not founded", request.getStore()));
         });
 
-        interviewEntity.updateInterview(request.getWriter(), request.getStore(), request.getOpinion(), request.getTarget());
+        interviewEntity.updateInterview(request.getWriter(), request.getStore(), request.getOpinion(), UserRole.valueOf(request.getTarget()));
         interviewCacheRepository.modifyInterview(interviewEntity.getId(), Interview.fromInterviewEntity(interviewEntity));
     }
 
@@ -76,10 +60,10 @@ public class InterviewService {
 
 
     private List<Interview> getInterviewsFromUser() {
-        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.USER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
+        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.ROLE_USER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 
     private List<Interview> getInterviewsFromSeller() {
-        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.SELLER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
+        return interviewEntityRepository.findAllByTargetOrderByIdDesc(UserRole.ROLE_SELLER).stream().map(Interview::fromInterviewEntity).limit(5).collect(Collectors.toList());
     }
 }
