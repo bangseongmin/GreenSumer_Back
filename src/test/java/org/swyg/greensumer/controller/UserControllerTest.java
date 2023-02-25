@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.swyg.greensumer.config.SecurityConfig;
 import org.swyg.greensumer.dto.TokenInfo;
+import org.swyg.greensumer.dto.request.PasswordUpdateRequest;
 import org.swyg.greensumer.dto.request.UserLoginRequest;
 import org.swyg.greensumer.dto.request.UserLogoutRequest;
 import org.swyg.greensumer.dto.request.UserSignUpRequest;
@@ -257,7 +258,7 @@ class UserControllerTest {
     @WithMockUser
     @Test
     void givenPasswordUpdateRequest_whenRequestingUpdatePassword_thenReturnUsername() throws Exception {
-        willDoNothing().given(userService).findPassword(anyString(), anyString(), anyString(), anyString());
+        willDoNothing().given(userService).findPassword(any(PasswordUpdateRequest.class));
 
         mvc.perform(put("/api/users/find/password")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -271,7 +272,7 @@ class UserControllerTest {
     @WithMockUser
     @Test
     void givenPasswordUpdateRequest_whenRequestingUpdatePassword_thenThrowUserNotFoundException() throws Exception {
-        willThrow(new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND)).given(userService).findPassword(anyString(), anyString(), anyString(), anyString());
+        willThrow(new GreenSumerBackApplicationException(ErrorCode.USER_NOT_FOUND)).given(userService).findPassword(any(PasswordUpdateRequest.class));
 
         mvc.perform(put("/api/users/find/password")
                         .content(objectMapper.writeValueAsBytes(PasswordUpdateRequest()))
@@ -285,7 +286,7 @@ class UserControllerTest {
     @WithMockUser
     @Test
     void givenPasswordUpdateRequest_whenRequestingUpdatePassword_thenThrowSameAsPreviousPasswordException() throws Exception {
-        willThrow(new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD)).given(userService).findPassword(anyString(), anyString(), anyString(), anyString());
+        willThrow(new GreenSumerBackApplicationException(ErrorCode.SAME_AS_PREVIOUS_PASSWORD)).given(userService).findPassword(any(PasswordUpdateRequest.class));
 
         mvc.perform(put("/api/users/find/password")
                         .content(objectMapper.writeValueAsBytes(PasswordUpdateRequest()))
