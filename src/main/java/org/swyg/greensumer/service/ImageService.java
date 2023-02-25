@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.domain.constant.ImageType;
-import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.request.ImageModifyRequest;
 import org.swyg.greensumer.dto.request.ImagesCreateRequest;
 import org.swyg.greensumer.exception.ErrorCode;
@@ -15,7 +14,10 @@ import org.swyg.greensumer.repository.images.*;
 import org.swyg.greensumer.utils.ImageUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor

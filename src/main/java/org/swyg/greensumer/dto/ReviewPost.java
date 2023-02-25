@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.ReviewPostEntity;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;

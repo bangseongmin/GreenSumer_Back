@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.EventPostEntity;
 import org.swyg.greensumer.domain.constant.EventStatus;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;

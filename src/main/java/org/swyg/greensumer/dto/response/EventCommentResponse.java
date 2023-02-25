@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.EventComment;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter

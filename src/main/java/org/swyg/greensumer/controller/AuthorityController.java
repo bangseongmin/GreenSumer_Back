@@ -14,8 +14,6 @@ import org.swyg.greensumer.dto.response.Response;
 import org.swyg.greensumer.dto.response.UpdateUserResponse;
 import org.swyg.greensumer.service.UserService;
 
-import javax.transaction.Transactional;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor

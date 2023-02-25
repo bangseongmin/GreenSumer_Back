@@ -3,7 +3,6 @@ package org.swyg.greensumer.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.swyg.greensumer.domain.constant.UserRole;
 
 @Getter
 @NoArgsConstructor

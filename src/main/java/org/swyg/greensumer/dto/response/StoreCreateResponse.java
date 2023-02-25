@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.Store;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 

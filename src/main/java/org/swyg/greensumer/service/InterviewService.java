@@ -13,7 +13,6 @@ import org.swyg.greensumer.repository.interview.InterviewCacheRepository;
 import org.swyg.greensumer.repository.interview.InterviewEntityRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

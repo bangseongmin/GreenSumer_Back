@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.StoreProductEntity;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
