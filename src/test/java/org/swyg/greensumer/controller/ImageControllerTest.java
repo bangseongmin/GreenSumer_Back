@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.swyg.greensumer.fixture.Fixtures.Image;
+import static org.swyg.greensumer.fixture.Fixtures.image;
 import static org.swyg.greensumer.fixture.RequestFixture.*;
 
 @DisplayName("View 컨트롤러 - 이미지 등록")
@@ -113,7 +113,7 @@ class ImageControllerTest {
     @Test
     void givenImageId_whenRequestingImage_thenReturnImage() throws Exception {
         // Given
-        willReturn(Image()).given(imageService).searchImage(any(), anyString());
+        willReturn(image()).given(imageService).searchImage(any(), anyString());
 
         // When & Then
         mvc.perform(get("/api/images/1")

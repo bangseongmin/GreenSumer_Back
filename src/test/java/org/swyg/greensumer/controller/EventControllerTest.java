@@ -14,7 +14,6 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.swyg.greensumer.dto.request.EventPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.service.EventCommentService;
@@ -67,7 +66,7 @@ class EventControllerTest {
     @Test
     void givenNothing_whenRequestingEventPost_thenReturnsEventPost() throws Exception {
         // Given
-        willReturn(EventPostWithComment()).given(eventPostService).getPostAndComments(any(), anyString());
+        willReturn(eventPostWithComment()).given(eventPostService).getPostAndComments(any(), anyString());
 
         // When & Then
         mvc.perform(get("/api/events/1")
@@ -81,7 +80,7 @@ class EventControllerTest {
     @Test
     void givenNothing_whenRequestingEventPost_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(EventPostWithComment()).given(eventPostService).getPostAndComments(any(), anyString());
+        willReturn(eventPostWithComment()).given(eventPostService).getPostAndComments(any(), anyString());
 
         // When & Then
         mvc.perform(get("/api/events/1")
@@ -155,7 +154,7 @@ class EventControllerTest {
     @Test
     void givenReviewPostInfo_whenRequestingModifyPost_thenSaveReviewPost() throws Exception {
         // Given
-        willReturn(EventPost()).given(eventPostService).modify(any(), any(), anyString());
+        willReturn(eventPost()).given(eventPostService).modify(any(), any(), anyString());
 
         // When & Then
         mvc.perform(put("/api/events/1")
@@ -171,7 +170,7 @@ class EventControllerTest {
     @Test
     void givenReviewPostInfo_whenRequestingModifyPost_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(EventPost()).given(eventPostService).modify(any(), any(), anyString());
+        willReturn(eventPost()).given(eventPostService).modify(any(), any(), anyString());
 
         // When & Then
         mvc.perform(put("/api/events/1")
@@ -327,7 +326,7 @@ class EventControllerTest {
     @Test
     void givenCommendIdAndComment_whenRequestModifyEventPostComment_thenReturnNothing() throws Exception {
         // Given
-        willReturn(EventComment()).given(eventCommentService).modifyComment(any(), any(), any(),anyString());
+        willReturn(eventComment()).given(eventCommentService).modifyComment(any(), any(), any(),anyString());
 
         // When & Then
         mvc.perform(put("/api/events/1/comments/1")
@@ -343,7 +342,7 @@ class EventControllerTest {
     @Test
     void givenCommendIdAndComment_whenRequestModifyEventPostCommentNoLogin_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(EventComment()).given(eventCommentService).modifyComment(any(), any(), any(),anyString());
+        willReturn(eventComment()).given(eventCommentService).modifyComment(any(), any(), any(),anyString());
 
         // When & Then
         mvc.perform(put("/api/events/1/comments/1")

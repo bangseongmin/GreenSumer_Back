@@ -14,7 +14,6 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.swyg.greensumer.dto.request.ReviewPostModifyRequest;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.service.ReviewCommentService;
@@ -68,7 +67,7 @@ class ReviewPostControllerTest {
     @Test
     void givenNothing_whenRequestingReviewPost_thenReturnsReviewPost() throws Exception {
         // Given
-        willReturn(ReviewPostWithComment()).given(reviewPostService).getPostAndComments(any(), anyString());
+        willReturn(reviewPostWithComment()).given(reviewPostService).getPostAndComments(any(), anyString());
 
         // When & Then
         mvc.perform(get("/api/reviews/1")
@@ -82,7 +81,7 @@ class ReviewPostControllerTest {
     @Test
     void givenNothing_whenRequestingReviewPostNotLogin_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(ReviewPostWithComment()).given(reviewPostService).getPostAndComments(any(), anyString());
+        willReturn(reviewPostWithComment()).given(reviewPostService).getPostAndComments(any(), anyString());
 
         // When & Then
         mvc.perform(get("/api/reviews/1")
@@ -156,7 +155,7 @@ class ReviewPostControllerTest {
     @Test
     void givenReviewPostInfo_whenRequestingModifyPost_thenReturnReviewPost() throws Exception {
         // Given
-        willReturn(ReviewPost()).given(reviewPostService).modify(any(), any(), anyString());
+        willReturn(reviewPost()).given(reviewPostService).modify(any(), any(), anyString());
 
         // When & Then
         mvc.perform(put("/api/reviews/1")
@@ -172,7 +171,7 @@ class ReviewPostControllerTest {
     @Test
     void givenReviewPostInfo_whenRequestingModifyPostNotLogin_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(ReviewPost()).given(reviewPostService).modify(any(), any(), anyString());
+        willReturn(reviewPost()).given(reviewPostService).modify(any(), any(), anyString());
 
         // When & Then
         mvc.perform(put("/api/reviews/1")
@@ -328,7 +327,7 @@ class ReviewPostControllerTest {
     @Test
     void givenCommendIdAndComment_whenRequestModifyReviewPostComment_thenReturnNothing() throws Exception {
         // Given
-        willReturn(ReviewComment()).given(reviewCommentService).modifyComment(any(), any(), any(),anyString());
+        willReturn(reviewComment()).given(reviewCommentService).modifyComment(any(), any(), any(),anyString());
 
         // When & Then
         mvc.perform(put("/api/reviews/1/comments/1")
@@ -344,7 +343,7 @@ class ReviewPostControllerTest {
     @Test
     void givenCommendIdAndComment_whenRequestModifyReviewPostCommentNoLogin_thenThrowUnAuthorizedException() throws Exception {
         // Given
-        willReturn(ReviewComment()).given(reviewCommentService).modifyComment(any(), any(), any(),anyString());
+        willReturn(reviewComment()).given(reviewCommentService).modifyComment(any(), any(), any(),anyString());
 
         // When & Then
         mvc.perform(put("/api/reviews/1/comments/1")

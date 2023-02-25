@@ -532,7 +532,7 @@ class StoreControllerTest {
     @Test
     void givenStoreIdAndProductId_whenRequestingProductInStore_thenReturnProduct() throws Exception {
         // Given
-        willReturn(StoreProduct()).given(storeService).getProduct(any(), any());
+        willReturn(storeProduct()).given(storeService).getProduct(any(), any());
 
         // When & Then
         mvc.perform(get("/api/stores/1/products/1")
@@ -546,7 +546,7 @@ class StoreControllerTest {
     @Test
     void givenStoreIdAndProductId_whenRequestingProductInStoreNotLogin_thenThrowUnauthorizedException() throws Exception {
         // Given
-        willReturn(StoreProduct()).given(storeService).getProduct(any(), any());
+        willReturn(storeProduct()).given(storeService).getProduct(any(), any());
 
         // When & Then
         mvc.perform(get("/api/stores/1/products/1")

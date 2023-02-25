@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.swyg.greensumer.fixture.Fixtures.Interviews;
+import static org.swyg.greensumer.fixture.Fixtures.interviews;
 import static org.swyg.greensumer.fixture.RequestFixture.InterviewCreateRequest;
 import static org.swyg.greensumer.fixture.RequestFixture.InterviewModifyRequest;
 
@@ -144,7 +144,7 @@ class InterviewControllerTest {
     @Test
     void givenNothing_whenRequestingInterviews_thenReturnListInterview() throws Exception {
         // Given
-        willReturn(Interviews()).given(interviewService).getInterviews();
+        willReturn(interviews()).given(interviewService).getInterviews();
 
         // When & Then
         mvc.perform(get("/api/interviews")
