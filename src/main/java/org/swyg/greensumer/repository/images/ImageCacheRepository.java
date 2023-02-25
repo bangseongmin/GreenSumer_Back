@@ -4,14 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Repository;
 import org.swyg.greensumer.domain.ImageEntity;
 import org.swyg.greensumer.domain.constant.ImageType;
+import org.swyg.greensumer.dto.User;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static org.swyg.greensumer.repository.user.UserCacheRepository.CACHE_TTL;
 
 @Slf4j
 @Repository
@@ -27,6 +31,8 @@ public class ImageCacheRepository {
     }
 
     public void setImages(ImageType type, List<ImageEntity> images) {
+        this.valueOperations = redisTemplate.opsForValue();
+
         if (Objects.isNull(images) || Objects.isNull(type)) {
             log.error("Required subKey or value must not be null");
             return;
@@ -35,7 +41,7 @@ public class ImageCacheRepository {
         try {
             String key = getKey() + type;
             for (ImageEntity image : images) {
-                valueOperations.set(key + image.getId(), image);
+                valueOperations.set(key + image.getId(), image.getImageData(), CACHE_TTL);
             }
 
             log.info("[ImageCacheRepository save - success]");
@@ -44,22 +50,9 @@ public class ImageCacheRepository {
         }
     }
 
-    public List<ImageEntity> getImages(ImageType type, List<Long> images) {
-        String key = getKey() + type;
-
-        List<ImageEntity> list = new ArrayList<>();
-
-        for (Long id : images) {
-            ImageEntity imageData = (ImageEntity) valueOperations.get(key + id);
-            list.add(imageData);
-        }
-
-        return list;
-    }
-
     public byte[] getImage(ImageType type, Long id) {
         String key = getKey() + type;
-        return (byte[])valueOperations.get(key + id);
+        return (byte[]) valueOperations.get(key + id);
     }
 
     private String getKey() {
