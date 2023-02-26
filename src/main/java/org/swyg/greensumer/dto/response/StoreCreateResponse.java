@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.Store;
-import org.swyg.greensumer.dto.StoreImage;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class StoreCreateResponse {
     private String hours;
     private Double lat;
     private Double lng;
-    private Set<StoreImage> images;
+    private Set<ImageResponse> images;
     private LocalDateTime registeredAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
@@ -34,7 +34,9 @@ public class StoreCreateResponse {
                 store.getHours(),
                 store.getAddress().getLat(),
                 store.getAddress().getLng(),
-                store.getLogos(),
+                store.getLogos().stream()
+                        .map(ImageResponse::fromImage)
+                        .collect(Collectors.toUnmodifiableSet()),
                 store.getRegisteredAt(),
                 store.getUpdatedAt(),
                 store.getDeletedAt()

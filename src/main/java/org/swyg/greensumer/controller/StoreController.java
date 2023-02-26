@@ -6,10 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.Product;
-import org.swyg.greensumer.dto.request.ProductCreateRequest;
-import org.swyg.greensumer.dto.request.ProductModifyRequest;
-import org.swyg.greensumer.dto.request.StoreCreateRequest;
-import org.swyg.greensumer.dto.request.StoreModifyRequest;
+import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.dto.response.ProductResponse;
 import org.swyg.greensumer.dto.response.Response;
 import org.swyg.greensumer.dto.response.StoreProductResponse;
@@ -98,7 +95,22 @@ public class StoreController {
     @PostMapping("/cash")
     public Response<Void> saveStoreCash(Authentication authentication) {
         storeService.saveAll();
+        return Response.success();
+    }
+
+    @PutMapping("/{storeId}/images")
+    public Response<Void> saveImagesAtStore(@PathVariable Long storeId, @RequestBody ConnectionImageRequest request, Authentication authentication) {
+        storeService.connectImagesAtStore(storeId, request);
 
         return Response.success();
     }
+
+    @PutMapping("/{productId}/images/")
+    public Response<Void> connectImagesAtProduct(@PathVariable Long productId, @RequestBody ConnectionImageRequest request, Authentication authentication) {
+        storeService.connectImagesAtProduct(productId, request);
+
+        return Response.success();
+    }
+
+
 }
