@@ -26,7 +26,7 @@ public class Store {
     private String hours;
     private String phone;
     private String url;
-    private Set<StoreImage> logos;
+    private Set<Image> logos;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime registeredAt;
@@ -45,7 +45,7 @@ public class Store {
                 entity.getPhone(),
                 entity.getUrl(),
                 entity.getLogos().stream()
-                        .map(StoreImage::fromEntity)
+                        .map(Image::fromStoreImageEntity)
                         .collect(Collectors.toUnmodifiableSet()),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
