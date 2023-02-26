@@ -205,4 +205,8 @@ public class StoreService {
                 .stream().map(StoreProductEntity::getProduct).collect(Collectors.toList());
     }
 
+
+    public Long listCount() {
+        return storeEntityRepository.count();
+    }
 }

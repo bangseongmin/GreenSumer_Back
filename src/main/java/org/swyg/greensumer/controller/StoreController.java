@@ -46,10 +46,14 @@ public class StoreController {
         return Response.success(storeService.list(pageable, authentication.getName()).map(StoreResponse::fromStore));
     }
 
-    @GetMapping("/my")
-    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+    @GetMapping("/count")
+    public Response<Long> list(Authentication authentication) {
+        return Response.success(storeService.listCount());
+    }
 
-        return Response.success(storeService.mylist(pageable, authentication.getName()).map(SellerStoreResponse::fromSellerStore));
+    @GetMapping("/my")
+    public Response<Page<StoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+        return Response.success(storeService.mylist(pageable, authentication.getName()).map(StoreResponse::fromSellerStore));
     }
 
     @PostMapping("/{storeId}/products")

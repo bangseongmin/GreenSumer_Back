@@ -10,10 +10,9 @@ import org.swyg.greensumer.domain.StoreEntity;
 import java.util.Optional;
 
 public interface StoreEntityRepository extends JpaRepository<StoreEntity, Long> {
-    boolean existsByName(String name);
 
+    Page<StoreEntity> findAll(Pageable pageable);
     Page<StoreEntity> findAllBySellerStores(SellerStoreEntity sellerStoreEntity, Pageable pageable);
-    Optional<StoreEntity> findByName(String name);
 
     Optional<StoreEntity> findByNameAndAddress(String name, AddressEntity address);
     Optional<StoreEntity> findByAddress_Id(Long id);
