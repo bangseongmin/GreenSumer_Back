@@ -10,7 +10,10 @@ import org.swyg.greensumer.dto.request.ProductCreateRequest;
 import org.swyg.greensumer.dto.request.ProductModifyRequest;
 import org.swyg.greensumer.dto.request.StoreCreateRequest;
 import org.swyg.greensumer.dto.request.StoreModifyRequest;
-import org.swyg.greensumer.dto.response.*;
+import org.swyg.greensumer.dto.response.ProductResponse;
+import org.swyg.greensumer.dto.response.Response;
+import org.swyg.greensumer.dto.response.StoreProductResponse;
+import org.swyg.greensumer.dto.response.StoreResponse;
 import org.swyg.greensumer.service.StoreService;
 
 @RequiredArgsConstructor
@@ -46,10 +49,14 @@ public class StoreController {
         return Response.success(storeService.list(pageable, authentication.getName()).map(StoreResponse::fromStore));
     }
 
-    @GetMapping("/my")
-    public Response<Page<SellerStoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+    @GetMapping("/count")
+    public Response<Long> list(Authentication authentication) {
+        return Response.success(storeService.listCount());
+    }
 
-        return Response.success(storeService.mylist(pageable, authentication.getName()).map(SellerStoreResponse::fromSellerStore));
+    @GetMapping("/my")
+    public Response<Page<StoreResponse>> mylist(Pageable pageable, Authentication authentication) {
+        return Response.success(storeService.mylist(pageable, authentication.getName()).map(StoreResponse::fromSellerStore));
     }
 
     @PostMapping("/{storeId}/products")
@@ -86,5 +93,12 @@ public class StoreController {
     @GetMapping("/{storeId}/products/{productId}")
     public Response<StoreProductResponse> getProduct(@PathVariable Long storeId, @PathVariable Long productId, Authentication authentication) {
         return Response.success(StoreProductResponse.fromStoreProduct(storeService.getProduct(storeId, productId)));
+    }
+
+    @PostMapping("/cash")
+    public Response<Void> saveStoreCash(Authentication authentication) {
+        storeService.saveAll();
+
+        return Response.success();
     }
 }

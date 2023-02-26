@@ -1,6 +1,11 @@
 package org.swyg.greensumer.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.domain.StoreEntity;
@@ -10,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store {
@@ -20,9 +26,13 @@ public class Store {
     private String hours;
     private String phone;
     private String url;
-    private Set<Image> logos;
+    private Set<StoreImage> logos;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime registeredAt;
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime updatedAt;
+    @JsonSerialize(using = LocalDateTimeSerializer.class) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime deletedAt;
 
     public static Store fromEntity(StoreEntity entity){
@@ -35,7 +45,7 @@ public class Store {
                 entity.getPhone(),
                 entity.getUrl(),
                 entity.getLogos().stream()
-                        .map(Image::fromEntity)
+                        .map(StoreImage::fromEntity)
                         .collect(Collectors.toUnmodifiableSet()),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
