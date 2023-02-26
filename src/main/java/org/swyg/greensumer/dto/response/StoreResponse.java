@@ -1,21 +1,24 @@
 package org.swyg.greensumer.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.swyg.greensumer.dto.Image;
 import org.swyg.greensumer.dto.SellerStore;
 import org.swyg.greensumer.dto.Store;
+import org.swyg.greensumer.dto.StoreImage;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreResponse {
     private Long id;
-    private String name;
+    private String storeName;
     private String description;
     private String address;
     private String hours;
@@ -23,7 +26,7 @@ public class StoreResponse {
     private String url;
     private Double lat;
     private Double lng;
-    private Set<Image> images;
+    private Set<StoreImage> images;
 
     public static StoreResponse fromStore(Store store) {
         return new StoreResponse(

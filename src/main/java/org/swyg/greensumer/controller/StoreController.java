@@ -91,4 +91,11 @@ public class StoreController {
     public Response<StoreProductResponse> getProduct(@PathVariable Long storeId, @PathVariable Long productId, Authentication authentication) {
         return Response.success(StoreProductResponse.fromStoreProduct(storeService.getProduct(storeId, productId)));
     }
+
+    @PostMapping("/cash")
+    public Response<Void> saveStoreCash(Authentication authentication) {
+        storeService.saveAll();
+
+        return Response.success();
+    }
 }

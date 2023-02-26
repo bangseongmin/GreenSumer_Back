@@ -8,6 +8,7 @@ import org.swyg.greensumer.api.service.KakaoAddressSearchService;
 import org.swyg.greensumer.domain.RecommendationEntity;
 import org.swyg.greensumer.dto.ZeroWasteShopResponse;
 import org.swyg.greensumer.dto.request.ZeroWasteShopRequest;
+import org.swyg.greensumer.repository.store.StoreEntityRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +38,7 @@ public class ZeroWasteShopRecommendationService {
 
         List<RecommendationEntity> recommendations = recommendationService.buildRecommendationList(convertToDouble(request.getLat()), convertToDouble(request.getLng()));
 
-        return recommendationService.saveAll(recommendations)
-                .stream()
+        return recommendations.stream()
                 .map(this::convertToRecommendation)
                 .collect(Collectors.toList());
     }
@@ -49,10 +49,13 @@ public class ZeroWasteShopRecommendationService {
 
     private ZeroWasteShopResponse convertToRecommendation(RecommendationEntity recommendation) {
         return ZeroWasteShopResponse.builder()
+                .shopId(recommendation.getTargetId())
                 .shopName(recommendation.getTargetShopName())
                 .shopAddress(recommendation.getTargetAddress())
-                .directionUrl(baseUrl + base62Service.encodeDirectionId(recommendation.getId()))
-                .roadViewUrl(ROAD_VIEW_BASE_URL + recommendation.getTargetLatitude() + ", " + recommendation.getTargetLongitude())
+                .shopHours(recommendation.getTargetHours())
+                .shopPhone(recommendation.getTargetPhone())
+                .shopSns(recommendation.getTargetSns())
+                .shopDescription(recommendation.getTargetDescription())
                 .distance(String.format("%.2f km", recommendation.getDistance()))
                 .build();
     }
