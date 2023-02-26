@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.*;
 import org.swyg.greensumer.domain.constant.StoreType;
 import org.swyg.greensumer.dto.*;
-import org.swyg.greensumer.dto.request.ProductCreateRequest;
-import org.swyg.greensumer.dto.request.ProductModifyRequest;
-import org.swyg.greensumer.dto.request.StoreCreateRequest;
-import org.swyg.greensumer.dto.request.StoreModifyRequest;
+import org.swyg.greensumer.dto.request.*;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
 import org.swyg.greensumer.repository.images.ProductImageEntityRepository;
@@ -231,5 +228,19 @@ public class StoreService {
     public void saveAll() {
         // redis
         storeEntityRepository.findAll().stream().forEach(storeEntity -> storeCacheRepository.save(Store.fromEntity(storeEntity)));
+    }
+
+    @Transactional
+    public void connectImagesAtStore(Long storeId, ConnectionImageRequest request) {
+        StoreEntity storeEntity = getStoreEntityOrException(storeId);
+
+        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(request.getImages()));
+    }
+
+    @Transactional
+    public void connectImagesAtProduct(Long storeId, ConnectionImageRequest request) {
+        StoreEntity storeEntity = storeEntityRepository.getReferenceById(storeId);
+
+        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(request.getImages()));
     }
 }

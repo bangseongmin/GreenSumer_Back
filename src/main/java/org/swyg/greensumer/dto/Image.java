@@ -22,6 +22,15 @@ public class Image {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+    public static Image fromEntity(ImageEntity entity) {
+        return Image.builder()
+                .id(entity.getId())
+                .username(entity.getUserEntity().getUsername())
+                .originFilename(entity.getOriginFilename())
+                .savedFilename(entity.getSavedFilename())
+                .build();
+    }
+
     public static Image fromStoreImageEntity(StoreImageEntity entity) {
         return Image.builder()
                 .id(entity.getId())
