@@ -8,7 +8,6 @@ import org.swyg.greensumer.api.service.KakaoAddressSearchService;
 import org.swyg.greensumer.domain.RecommendationEntity;
 import org.swyg.greensumer.dto.ZeroWasteShopResponse;
 import org.swyg.greensumer.dto.request.ZeroWasteShopRequest;
-import org.swyg.greensumer.repository.store.StoreEntityRepository;
 
 import java.util.Collections;
 import java.util.List;

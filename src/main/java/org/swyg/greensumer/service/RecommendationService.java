@@ -5,17 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.swyg.greensumer.api.dto.DocumentDto;
 import org.swyg.greensumer.api.service.KakaoCategorySearchService;
 import org.swyg.greensumer.domain.RecommendationEntity;
-import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.repository.RecommendationEntityRepository;
 import org.swyg.greensumer.repository.store.StoreEntityRepository;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j

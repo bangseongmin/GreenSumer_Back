@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.swyg.greensumer.dto.Store;
-import org.swyg.greensumer.dto.ZeroWasteShop;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

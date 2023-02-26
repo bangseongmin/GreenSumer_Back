@@ -2,13 +2,13 @@ package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.swyg.greensumer.dto.ZeroWasteShopResponse;
 import org.swyg.greensumer.dto.request.ZeroWasteShopRequest;
 import org.swyg.greensumer.dto.response.Response;
-import org.swyg.greensumer.dto.response.StoreResponse;
-import org.swyg.greensumer.service.RecommendationService;
-import org.swyg.greensumer.service.StoreService;
 import org.swyg.greensumer.service.ZeroWasteShopRecommendationService;
 
 import java.util.List;

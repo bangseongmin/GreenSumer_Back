@@ -10,7 +10,10 @@ import org.swyg.greensumer.dto.request.ProductCreateRequest;
 import org.swyg.greensumer.dto.request.ProductModifyRequest;
 import org.swyg.greensumer.dto.request.StoreCreateRequest;
 import org.swyg.greensumer.dto.request.StoreModifyRequest;
-import org.swyg.greensumer.dto.response.*;
+import org.swyg.greensumer.dto.response.ProductResponse;
+import org.swyg.greensumer.dto.response.Response;
+import org.swyg.greensumer.dto.response.StoreProductResponse;
+import org.swyg.greensumer.dto.response.StoreResponse;
 import org.swyg.greensumer.service.StoreService;
 
 @RequiredArgsConstructor
