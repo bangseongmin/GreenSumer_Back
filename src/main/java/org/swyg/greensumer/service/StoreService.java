@@ -47,15 +47,7 @@ public class StoreService {
         });
 
         // 3. 가게 객체 생성
-        StoreEntity storeEntity = StoreEntity.of(
-                request.getName(),
-                request.getDescription(),
-                StoreType.valueOf(request.getType().toUpperCase()),
-                addressEntity,
-                request.getHours(),
-                request.getPhone(),
-                request.getUrl()
-        );
+        StoreEntity storeEntity = StoreEntity.of(request.getName(), request.getDescription(), StoreType.valueOf(request.getType().toUpperCase()), addressEntity, request.getHours(), request.getUrl(), request.getPhone());
 
         if (request.getImages().size() > 0) {
             storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(request.getImages()));
@@ -63,9 +55,8 @@ public class StoreService {
 
         StoreEntity storeEntity1 = storeEntityRepository.save(storeEntity);
 
-        SellerStoreEntity sellerStoreEntity = SellerStoreEntity.of(storeEntity1, userEntity);
+        SellerStoreEntity sellerStoreEntity = sellerStoreEntityRepository.save(SellerStoreEntity.of(storeEntity, userEntity));
         storeEntity.addSellerStore(sellerStoreEntity);
-        sellerStoreEntityRepository.save(sellerStoreEntity);
 
         storeCacheRepository.save(Store.fromEntity(storeEntity1));
     }
