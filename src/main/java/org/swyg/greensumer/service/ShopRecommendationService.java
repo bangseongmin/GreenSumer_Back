@@ -19,14 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ZeroWasteShopRecommendationService {
 
-    private final KakaoAddressSearchService kakaoAddressSearchService;
     private final RecommendationService recommendationService;
-    private final Base62Service base62Service;
-
-    @Value("${zerowasteshop.recommendation.base.url}")
-    private String baseUrl;
-
-    private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
 
     public List<ZeroWasteShopResponse> recommendZeroWasteShopList(ZeroWasteShopRequest request) {
 
