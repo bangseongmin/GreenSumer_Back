@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.domain.AddressEntity;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.AddressEntityRepository;
+import org.swyg.greensumer.repository.store.AddressEntityRepository;
 
 @RequiredArgsConstructor
 @Service
