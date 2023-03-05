@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConnectionImageRequest {
-
-    private List<Long> images;
+    private Long start;
+    private Long end;
 }
