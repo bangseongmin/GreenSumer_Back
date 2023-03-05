@@ -18,6 +18,7 @@ import org.swyg.greensumer.repository.store.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -225,13 +226,19 @@ public class StoreService {
     public void connectImagesAtStore(Long storeId, ConnectionImageRequest request) {
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
 
-        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(request.getImages()));
+        List<Long> images = LongStream.iterate(request.getStart(), i -> i+1)
+                        .limit(request.getEnd()).boxed().toList();
+
+        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(images));
     }
 
     @Transactional
     public void connectImagesAtProduct(Long storeId, ConnectionImageRequest request) {
         StoreEntity storeEntity = storeEntityRepository.getReferenceById(storeId);
 
-        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(request.getImages()));
+        List<Long> images = LongStream.iterate(request.getStart(), i -> i+1)
+                .limit(request.getEnd()).boxed().toList();
+
+        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(images));
     }
 }
