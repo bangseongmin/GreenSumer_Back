@@ -14,8 +14,8 @@ import org.swyg.greensumer.dto.SellerStore;
 import org.swyg.greensumer.dto.Store;
 import org.swyg.greensumer.exception.ErrorCode;
 import org.swyg.greensumer.exception.GreenSumerBackApplicationException;
-import org.swyg.greensumer.repository.store.AddressEntityRepository;
 import org.swyg.greensumer.repository.images.StoreImageEntityRepository;
+import org.swyg.greensumer.repository.store.AddressEntityRepository;
 import org.swyg.greensumer.repository.store.ProductEntityRepository;
 import org.swyg.greensumer.repository.store.SellerStoreEntityRepository;
 import org.swyg.greensumer.repository.store.StoreEntityRepository;
@@ -29,7 +29,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.*;
 import static org.swyg.greensumer.fixture.Fixtures.*;
-import static org.swyg.greensumer.fixture.Fixtures.storeImageEntities;
 import static org.swyg.greensumer.fixture.RequestFixture.StoreCreateRequest;
 import static org.swyg.greensumer.fixture.RequestFixture.StoreModifyRequest;
 
