@@ -1,12 +1,10 @@
 package org.swyg.greensumer.repository.store;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.swyg.greensumer.dto.Address;
 
