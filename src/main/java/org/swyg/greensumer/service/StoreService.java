@@ -192,7 +192,7 @@ public class StoreService {
     }
 
     public List<ProductEntity> getProductListOnStore(List<Long> productsId, Long storeId) {
-        return storeProductEntityRepository.findAllByStore_IdAndProductIn(storeId, productsId)
+        return storeProductEntityRepository.findAllByStore_IdAndProduct_IdIn(storeId, productsId)
                 .stream().map(StoreProductEntity::getProduct).collect(Collectors.toList());
     }
 
