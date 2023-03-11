@@ -233,12 +233,9 @@ public class StoreService {
     }
 
     @Transactional
-    public void connectImagesAtProduct(Long storeId, ConnectionImageRequest request) {
-        StoreEntity storeEntity = storeEntityRepository.getReferenceById(storeId);
+    public void connectImagesAtProduct(Long productId, ConnectionImageRequest request) {
+        ProductEntity product = getProductEntityOrException(productId);
 
-        List<Long> images = LongStream.iterate(request.getStart(), i -> i+1)
-                .limit(request.getEnd()).boxed().toList();
-
-        storeEntity.addImages(storeImageEntityRepository.findAllByIdIn(images));
+        product.addImage(productImageEntityRepository.findById(request.getStart()).orElseThrow(() -> {throw new GreenSumerBackApplicationException(ErrorCode.IMAGE_NOT_FOUND);}) );
     }
 }
