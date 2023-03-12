@@ -81,7 +81,7 @@ public class StoreService {
         User user = (User) userEntityRepositoryService.loadUserByUsername(username);
         StoreEntity storeEntity = getStoreEntityOrException(storeId);
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
-        storeEntity.clear();
+//        storeEntity.clear();      << 테스트시 에러 발생: java.lang.unsupportedoperationexception
 
         storeEntityRepository.deleteById(storeId);
     }
@@ -104,17 +104,18 @@ public class StoreService {
         SellerStoreEntity storeManager = isStoreManager(user.getId(), storeId);
         ProductEntity productEntity = ProductEntity.of(request.getName(), request.getPrice(), request.getStock(), request.getDescription());
 
-        if (request.getImages().size() != 0) {
+        if (request.getImages().size() > 0) {
             productEntity.addImages(productImageEntityRepository.findAllByIdIn(request.getImages()));
         }
 
-        ProductEntity savedEntity = productEntityRepository.save(productEntity);
+        productEntity = productEntityRepository.save(productEntity);
 
-        StoreProductEntity storeProductEntity = storeProductEntityRepository.save(StoreProductEntity.of(storeEntity, savedEntity));
+        StoreProductEntity storeProductEntity = storeProductEntityRepository.save(StoreProductEntity.of(storeEntity, productEntity));
         storeEntity.addStoreProduct(storeProductEntity);
-        savedEntity.addStoreProduct(storeProductEntity);
 
-        return Product.fromEntity(savedEntity);
+        // TODO: 제품 캐싱
+
+        return Product.fromEntity(productEntity);
     }
 
     @Transactional

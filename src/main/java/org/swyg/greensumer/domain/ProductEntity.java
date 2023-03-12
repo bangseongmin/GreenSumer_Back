@@ -65,7 +65,6 @@ public class ProductEntity extends DateTimeEntity {
 
     public void addImage(ProductImageEntity images) {
         images.setProduct(this);
-        this.images.clear();
         this.images.add(images);
     }
 
