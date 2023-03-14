@@ -1,6 +1,7 @@
 package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
@@ -34,7 +35,7 @@ public class UserController {
         return Response.success(tokens);
     }
 
-    @PostMapping("/api/users/rogin")
+    @PostMapping(path = "/api/users/rogin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public TokenInfo login2(@RequestBody UserLoginRequest request) {
         TokenInfo tokens = userService.login(request);
         return tokens;
