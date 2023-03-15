@@ -19,11 +19,6 @@ public class AuthorityController {
 
     private final UserService userService;
 
-    @GetMapping("/test")
-    public Response<Void> test() {
-        return Response.success();
-    }
-
     @PutMapping("/user")
     public Response<UpdateUserResponse> updateUser(@RequestBody UpdateUserRequest request, Authentication authentication) {
         User user = userService.updateUserInfo(request, authentication.getName());

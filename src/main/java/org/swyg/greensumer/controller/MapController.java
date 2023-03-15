@@ -18,11 +18,6 @@ public class MapController {
 
     private final ShopRecommendationService shopRecommendationService;
 
-    @GetMapping("/test")
-    public Response<Void> test() {
-        return Response.success();
-    }
-
     @PostMapping
     public Response<List<ZeroWasteShopResponse>> recommend(@RequestBody ZeroWasteShopRequest request){
         List<ZeroWasteShopResponse> zeroWasteShopResponses = shopRecommendationService.recommendZeroWasteShopList(request);
