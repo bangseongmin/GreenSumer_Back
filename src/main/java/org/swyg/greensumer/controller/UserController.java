@@ -1,7 +1,6 @@
 package org.swyg.greensumer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.swyg.greensumer.dto.TokenInfo;
 import org.swyg.greensumer.dto.User;
