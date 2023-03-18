@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.swyg.greensumer.dto.Verification;
@@ -26,6 +27,7 @@ public class VerificationService {
     private final JavaMailSender mailSender;
     private final VerificationCacheRepository verificationCacheRepository;
 
+    @Async
     @Transactional
     public void sendMail(String email) {
         try{
@@ -39,10 +41,10 @@ public class VerificationService {
             mailSender.send(message);
 
             verificationCacheRepository.setVerification(Verification.of(email, code));
-            log.info("send Mail to {}", email);
+            log.info("sent Mail to {}", email);
 
         }catch (Exception e){
-            throw new GreenSumerBackApplicationException(ErrorCode.MAIL_SEND_ERROR, String.format("%s cant sent Mail", email));
+            throw new GreenSumerBackApplicationException(ErrorCode.MAIL_SEND_ERROR, String.format("%s can't sent Mail", email));
         }
     }
 
